@@ -30,3 +30,8 @@ the Sandbox. This is done via command line. Commands:
 - go
 - pause
 - terminate
+
+REMEMBER WHEN DEVELOPING:
+
+- do some water physics (something with shaders)
+- do some sound physics

@@ -1,6 +1,6 @@
 use crate::behavior::Behavior;
-use crate::wave::WaveApp;
 use crate::wave::bundles::resource::ResourceBundle;
+use crate::wave::WaveApp;
 
 pub struct ResourceLoadBehavior;
 impl Behavior<WaveApp> for ResourceLoadBehavior {

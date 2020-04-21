@@ -1,5 +1,6 @@
 use crate::app::Application;
 use crate::behavior::Behavior;
+use crate::wave::bundles::resource::ResourceBundle;
 use crate::wave::bundles::window::WindowBundle;
 use std::time::{Duration, Instant};
 use winit::dpi::PhysicalSize;
@@ -7,7 +8,6 @@ use winit::event::{Event, StartCause, WindowEvent};
 use winit::event_loop::{ControlFlow, EventLoop};
 use winit::platform::macos::WindowBuilderExtMacOS;
 use winit::window::WindowBuilder;
-use crate::wave::bundles::resource::ResourceBundle;
 
 mod behavior;
 mod bundles;
