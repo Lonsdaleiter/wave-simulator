@@ -22,5 +22,6 @@ vertex UiFragmentInStruct vertex_ui(device UiVertexStruct *vertexArray [[ buffer
 fragment float4 fragment_ui(UiFragmentInStruct in [[stage_in]],
                             constant float4 &color [[ buffer(0) ]])
 {
-    return color;
+    return float4(0.0, 1.0, 1.0, 1.0);
+    // return color;
 }

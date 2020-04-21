@@ -43,8 +43,8 @@ impl ResourceBundle {
         ];
         let quad = device.new_buffer_with_bytes(
             q_data.as_ptr() as *const c_void,
-            4 * q_size.len(),
-            0b1000,
+            4 * q_data.len() as u64,
+            0,
         );
 
         let surface = CAMetalLayer::new();

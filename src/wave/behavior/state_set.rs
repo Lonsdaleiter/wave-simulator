@@ -45,6 +45,7 @@ impl Behavior<WaveApp> for StateSetBehavior {
                     1,
                     0,
                 );
+                render_encoder.draw_primitives(3, 0, 6, 1, 0);
                 render_encoder.end_encoding();
 
                 command_buffer.present_drawable(drawable);
