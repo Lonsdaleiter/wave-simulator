@@ -11,7 +11,7 @@ impl Behavior<WaveApp> for ResourceLoadBehavior {
         //
     }
 
-    fn on_resize(&self, _state: &mut WaveApp) {
+    fn on_resize(&self, _state: &mut WaveApp, _size: (u32, u32)) {
         //
     }
 

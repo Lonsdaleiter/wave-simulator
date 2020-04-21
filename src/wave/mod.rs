@@ -40,7 +40,7 @@ impl Application for WaveApp {
                 Event::NewEvents(cause) => match cause {
                     StartCause::ResumeTimeReached {
                         start: _,
-                        requested_resume,
+                        requested_resume: _,
                     } => {
                         behavior.update(&mut self);
                         before = Instant::now();
@@ -58,7 +58,7 @@ impl Application for WaveApp {
                     event,
                 } => match event {
                     WindowEvent::Resized(size) => {
-                        behavior.on_resize(&mut self);
+                        behavior.on_resize(&mut self, (size.width, size.height));
                     }
                     WindowEvent::CloseRequested => {
                         *control_flow = ControlFlow::Exit;

@@ -6,6 +6,6 @@ mod behavior;
 mod wave;
 
 fn main() {
-    let mut wave_app = WaveApp::new();
+    let wave_app = WaveApp::new();
     wave_app.execute();
 }
