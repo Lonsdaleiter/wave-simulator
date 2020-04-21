@@ -1,6 +1,7 @@
 use crate::behavior::Behavior;
 use crate::wave::bundles::resource::ResourceBundle;
 use crate::wave::WaveApp;
+use crate::wave::behavior::state_set::StateSetBehavior;
 
 pub struct ResourceLoadBehavior;
 impl Behavior<WaveApp> for ResourceLoadBehavior {
@@ -9,10 +10,8 @@ impl Behavior<WaveApp> for ResourceLoadBehavior {
         state.resource_bundle = Some(resource_bundle);
     }
 
-    fn update(&self, state: &mut WaveApp) -> Option<Box<dyn Behavior<WaveApp>>> {
-        state.window_bundle.window.request_redraw();
-
-        None
+    fn update(&self, _state: &mut WaveApp) -> Option<Box<dyn Behavior<WaveApp>>> {
+        Some(Box::new(StateSetBehavior))
     }
 
     fn draw(&self, _state: &mut WaveApp) {
@@ -23,7 +22,7 @@ impl Behavior<WaveApp> for ResourceLoadBehavior {
         //
     }
 
-    fn on_destroy(&self, _state: &mut WaveApp) {
+    fn on_death(&self, _state: &mut WaveApp) {
         //
     }
 }

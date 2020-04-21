@@ -52,6 +52,7 @@ impl Application for WaveApp {
                         let b = behavior.update(&mut self);
                         match b {
                             Some(b) => {
+                                behavior.on_death(&mut self);
                                 b.init(&mut self);
                                 behavior = b
                             }
@@ -66,7 +67,7 @@ impl Application for WaveApp {
                     behavior.draw(&mut self);
                 }
                 Event::LoopDestroyed => {
-                    behavior.on_destroy(&mut self);
+                    behavior.on_death(&mut self);
                 }
                 Event::WindowEvent {
                     window_id: _,
