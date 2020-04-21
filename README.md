@@ -10,8 +10,8 @@ The Wave Simulator can be thought of as a zero player game, like
 a cellular automata: all that is required is the initial state.
 
 The simulation has two states: on and off. When on, the user cannot
-affect the state of the Sandbox except to stop or pause it. When off, the user
-can affect the state of the Sandbox.
+affect the state of the Sandbox except to stop or pause it and move their camera.
+When off, the user can affect the state of the Sandbox.
 
 The Sandbox section is the world which the user modifies. The Sandbox
 consists of objects which are tagged and from which the user can
@@ -35,3 +35,4 @@ REMEMBER WHEN DEVELOPING:
 
 - do some water physics (something with shaders)
 - do some sound physics
+- THE SANDBOX IS 3D; THE UI IS 2D
