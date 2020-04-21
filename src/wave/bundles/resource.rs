@@ -1,16 +1,18 @@
 use crate::wave::WaveApp;
 use cull_canyon::{
-    set_layer_for_raw_window_handle, CAMetalLayer, MTLCommandQueue, MTLCompileOptions, MTLDevice,
-    MTLRenderPipelineColorAttachmentDescriptor, MTLRenderPipelineDescriptor,
+    set_layer_for_raw_window_handle, CAMetalLayer, MTLBuffer, MTLCommandQueue, MTLCompileOptions,
+    MTLDevice, MTLRenderPipelineColorAttachmentDescriptor, MTLRenderPipelineDescriptor,
     MTLRenderPipelineState, MTLVertexAttributeDescriptor, MTLVertexBufferLayoutDescriptor,
     MTLVertexDescriptor,
 };
+use std::os::raw::c_void;
 
 pub struct ResourceBundle {
     pub device: MTLDevice,
     pub command_queue: MTLCommandQueue,
     pub surface: CAMetalLayer,
     pub ui_pipeline: MTLRenderPipelineState,
+    pub quad: MTLBuffer,
 }
 
 impl ResourceBundle {
@@ -28,6 +30,22 @@ impl ResourceBundle {
         let device = devices.into_iter().find_map(|d| Some(d)).unwrap();
 
         let command_queue = device.new_command_queue();
+
+        let q_data = [
+            // triangle 1
+            -1.0f32, -1.0, 0.0, 1.0, // v1
+            -1.0, 1.0, 0.0, 1.0, // v2
+            1.0, 1.0, 0.0, 1.0, // v3
+            // triangle 2
+            1.0, 1.0, 0.0, 1.0, // v3
+            1.0, -1.0, 0.0, 1.0, // v4
+            -1.0f32, -1.0, 0.0, 1.0, // v1
+        ];
+        let quad = device.new_buffer_with_bytes(
+            q_data.as_ptr() as *const c_void,
+            4 * q_size.len(),
+            0b1000,
+        );
 
         let surface = CAMetalLayer::new();
         surface.set_device(device.clone());
@@ -105,6 +123,7 @@ impl ResourceBundle {
             command_queue,
             surface,
             ui_pipeline,
+            quad,
         }
     }
 }

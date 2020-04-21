@@ -39,12 +39,9 @@ impl Behavior<WaveApp> for StateSetBehavior {
                 });
                 render_encoder.set_render_pipeline_state(bundle.ui_pipeline.clone());
                 // TODO set the rest of the stuff here
+                render_encoder.set_vertex_buffer(bundle.quad.clone(), 0, 0);
                 render_encoder.set_fragment_bytes(
-                    {
-                        let k = 0.0;
-                        let k: *const f32 = &k;
-                        k as *const c_void
-                    },
+                    [1.0, 1.0, 1.0, 1.0].as_ptr() as *const c_void,
                     1,
                     0,
                 );
