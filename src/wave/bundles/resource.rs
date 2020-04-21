@@ -1,9 +1,5 @@
 use crate::wave::WaveApp;
-use cull_canyon::{
-    set_layer_for_raw_window_handle, CAMetalLayer, MTLCommandQueue, MTLCompileOptions, MTLDevice,
-    MTLRenderPipelineColorAttachmentDescriptor, MTLRenderPipelineDescriptor,
-    MTLRenderPipelineState,
-};
+use cull_canyon::{set_layer_for_raw_window_handle, CAMetalLayer, MTLCommandQueue, MTLCompileOptions, MTLDevice, MTLRenderPipelineColorAttachmentDescriptor, MTLRenderPipelineDescriptor, MTLRenderPipelineState, MTLVertexDescriptor};
 
 pub struct ResourceBundle {
     pub device: MTLDevice,
@@ -51,6 +47,11 @@ impl ResourceBundle {
                     let desc = MTLRenderPipelineDescriptor::new();
                     desc.set_vertex_function(vertex);
                     desc.set_fragment_function(fragment);
+                    desc.set_vertex_descriptor({
+                        let desc = MTLVertexDescriptor::new();
+                        // TODO add the properties here
+                        desc
+                    });
                     let color_attachments = desc.get_color_attachments();
                     color_attachments.set_object_at_indexed_subscript(
                         {

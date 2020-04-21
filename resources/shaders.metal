@@ -12,7 +12,8 @@ struct UiFragmentStruct {
 
 // vertex shader function
 vertex UiFragmentStruct vertex_ui(device UiVertexStruct* vertexArray [[ buffer(0) ]],
-                                unsigned int vid [[ vertex_id ]])
+                                  device float4 colour [[ buffer(1) ]]
+                                  unsigned int vid [[ vertex_id ]])
 {
     UiFragmentStruct out;
     out.position = vertexArray[vid].position;
