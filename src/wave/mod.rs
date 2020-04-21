@@ -1,12 +1,13 @@
 use crate::app::Application;
 use crate::behavior::Behavior;
+use crate::wave::bundles::window::WindowBundle;
 use std::time::{Duration, Instant};
 use winit::dpi::PhysicalSize;
 use winit::event::{Event, StartCause, WindowEvent};
 use winit::event_loop::{ControlFlow, EventLoop};
 use winit::platform::macos::WindowBuilderExtMacOS;
 use winit::window::WindowBuilder;
-use crate::wave::bundles::window::WindowBundle;
+use crate::wave::bundles::resource::ResourceBundle;
 
 mod behavior;
 mod bundles;
@@ -15,6 +16,7 @@ const FPS: f32 = 60.0;
 
 pub struct WaveApp {
     pub window_bundle: WindowBundle,
+    pub resource_bundle: Option<ResourceBundle>,
 }
 
 impl Application for WaveApp {
@@ -27,9 +29,8 @@ impl Application for WaveApp {
             .unwrap();
 
         WaveApp {
-            window_bundle: WindowBundle {
-                window
-            }
+            window_bundle: WindowBundle { window },
+            resource_bundle: None,
         }
     }
 
@@ -53,8 +54,8 @@ impl Application for WaveApp {
                             Some(b) => {
                                 b.init(&mut self);
                                 behavior = b
-                            },
-                            _ => {},
+                            }
+                            _ => {}
                         };
 
                         before = Instant::now();
