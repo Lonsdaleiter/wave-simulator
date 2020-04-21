@@ -50,7 +50,10 @@ impl Application for WaveApp {
                     } => {
                         let b = behavior.update(&mut self);
                         match b {
-                            Some(b) => behavior = b,
+                            Some(b) => {
+                                b.init(&mut self);
+                                behavior = b
+                            },
                             _ => {},
                         };
 
