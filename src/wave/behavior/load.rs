@@ -1,7 +1,7 @@
 use crate::behavior::Behavior;
+use crate::wave::behavior::state_set::StateSetBehavior;
 use crate::wave::bundles::resource::ResourceBundle;
 use crate::wave::WaveApp;
-use crate::wave::behavior::state_set::StateSetBehavior;
 
 pub struct ResourceLoadBehavior;
 impl Behavior<WaveApp> for ResourceLoadBehavior {

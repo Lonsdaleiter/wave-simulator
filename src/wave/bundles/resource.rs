@@ -9,6 +9,7 @@ use cull_canyon::{
 pub struct ResourceBundle {
     pub device: MTLDevice,
     pub command_queue: MTLCommandQueue,
+    pub surface: CAMetalLayer,
     pub ui_pipeline: MTLRenderPipelineState,
 }
 
@@ -102,6 +103,7 @@ impl ResourceBundle {
         ResourceBundle {
             device,
             command_queue,
+            surface,
             ui_pipeline,
         }
     }
