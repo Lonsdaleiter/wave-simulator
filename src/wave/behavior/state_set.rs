@@ -41,7 +41,7 @@ impl Behavior<WaveApp> for StateSetBehavior {
                 // TODO set the rest of the stuff here
                 render_encoder.set_vertex_buffer(bundle.quad.clone(), 0, 0);
                 render_encoder.set_fragment_bytes(
-                    [1.0, 1.0, 1.0, 1.0].as_ptr() as *const c_void,
+                    [1.0f32, 0.0, 1.0, 1.0].as_ptr() as *const c_void,
                     16,
                     0,
                 );
