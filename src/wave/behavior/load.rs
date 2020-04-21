@@ -3,8 +3,14 @@ use crate::wave::WaveApp;
 
 pub struct ResourceLoadBehavior;
 impl Behavior<WaveApp> for ResourceLoadBehavior {
-    fn update(&self, _state: &mut WaveApp) {
+    fn init(&self, _state: &mut WaveApp) {
         //
+    }
+
+    fn update(&self, state: &mut WaveApp) -> Option<Box<dyn Behavior<WaveApp>>> {
+        state.window_bundle.window.request_redraw();
+
+        None
     }
 
     fn draw(&self, _state: &mut WaveApp) {

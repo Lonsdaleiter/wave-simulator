@@ -36,6 +36,7 @@ impl Application for WaveApp {
     fn execute(mut self, event_loop: EventLoop<()>) {
         let mut behavior: Box<dyn Behavior<WaveApp>> =
             Box::new(behavior::load::ResourceLoadBehavior);
+        behavior.init(&mut self);
 
         let mut before = Instant::now();
         let duration = Duration::from_millis((1000.0 / FPS) as u64);
@@ -47,7 +48,12 @@ impl Application for WaveApp {
                         start: _,
                         requested_resume: _,
                     } => {
-                        behavior.update(&mut self);
+                        let b = behavior.update(&mut self);
+                        match b {
+                            Some(b) => behavior = b,
+                            _ => {},
+                        };
+
                         before = Instant::now();
                     }
                     _ => {}
