@@ -52,7 +52,6 @@ impl Behavior<WaveApp> for StateSetBehavior {
                     desc
                 });
                 render_encoder.set_render_pipeline_state(bundle.ui_pipeline.clone());
-                // TODO set the rest of the stuff here
                 render_encoder.set_vertex_buffer(bundle.quad.clone(), 0, 0);
                 render_encoder.set_vertex_buffer(
                     bundle.transformation_buffer.clone(),
