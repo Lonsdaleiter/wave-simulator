@@ -36,3 +36,5 @@ REMEMBER WHEN DEVELOPING:
 - do some water physics (something with shaders)
 - do some sound physics
 - THE SANDBOX IS 3D; THE UI IS 2D
+- give waves their own pipeline and shaders
+(stencil for determining if can progress?)

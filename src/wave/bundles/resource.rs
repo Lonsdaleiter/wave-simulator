@@ -13,6 +13,7 @@ pub struct ResourceBundle {
     pub surface: CAMetalLayer,
     pub ui_pipeline: MTLRenderPipelineState,
     pub quad: MTLBuffer,
+    pub transformation_buffer: MTLBuffer,
 }
 
 impl ResourceBundle {
@@ -46,6 +47,10 @@ impl ResourceBundle {
             4 * q_data.len() as u64,
             0,
         );
+
+        // write-combined cpu-cache
+        // stores 16 f32s
+        let transformation_buffer = device.new_buffer_with_length(64, 1);
 
         let surface = CAMetalLayer::new();
         surface.set_device(device.clone());
@@ -124,6 +129,7 @@ impl ResourceBundle {
             surface,
             ui_pipeline,
             quad,
+            transformation_buffer,
         }
     }
 }
