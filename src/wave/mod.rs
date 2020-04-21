@@ -6,22 +6,19 @@ use winit::event::{Event, StartCause, WindowEvent};
 use winit::event_loop::{ControlFlow, EventLoop};
 use winit::platform::macos::WindowBuilderExtMacOS;
 use winit::window::WindowBuilder;
+use crate::wave::bundles::window::WindowBundle;
 
 mod behavior;
+mod bundles;
 
 const FPS: f32 = 60.0;
 
 pub struct WaveApp {
-    //
+    pub window_bundle: WindowBundle,
 }
 
 impl Application for WaveApp {
-    fn new() -> Self {
-        WaveApp {}
-    }
-
-    fn execute(mut self) {
-        let event_loop = EventLoop::new();
+    fn new(event_loop: &EventLoop<()>) -> Self {
         let window = WindowBuilder::new()
             .with_inner_size(PhysicalSize::new(1280, 720))
             .with_title("Wave Simulator")
@@ -29,6 +26,14 @@ impl Application for WaveApp {
             .build(&event_loop)
             .unwrap();
 
+        WaveApp {
+            window_bundle: WindowBundle {
+                window
+            }
+        }
+    }
+
+    fn execute(mut self, event_loop: EventLoop<()>) {
         let mut behavior: Box<dyn Behavior<WaveApp>> =
             Box::new(behavior::load::ResourceLoadBehavior);
 
