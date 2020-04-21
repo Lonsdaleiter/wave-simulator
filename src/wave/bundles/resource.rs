@@ -42,31 +42,34 @@ impl ResourceBundle {
                 MTLCompileOptions::new(),
             )
             .unwrap();
-        let static_vertex = library.new_function_with_name("vertex_static").unwrap();
-        let static_fragment = library.new_function_with_name("fragment_static").unwrap();
 
-        let static_pipeline = device
-            .new_render_pipeline_state_with_descriptor({
-                let desc = MTLRenderPipelineDescriptor::new();
-                desc.set_vertex_function(static_vertex);
-                desc.set_fragment_function(static_fragment);
-                let color_attachments = desc.get_color_attachments();
-                color_attachments.set_object_at_indexed_subscript(
-                    {
-                        let color_attachment = MTLRenderPipelineColorAttachmentDescriptor::new();
-                        color_attachment.set_blending_enabled(true);
-                        color_attachment.set_source_rgb_blend_factor(4); // src alpha
-                        color_attachment.set_destination_rgb_blend_factor(5); // 1 - src alpha
-                        color_attachment.set_source_alpha_blend_factor(1); // 1
-                        color_attachment.set_destination_alpha_blend_factor(5); // 1 - src alpha
-                        color_attachment.set_pixel_format(80); // bgra8unorm
-                        color_attachment
-                    },
-                    0,
-                );
-                desc
-            })
-            .unwrap();
+        let static_pipeline = {
+            let vertex = library.new_function_with_name("vertex_static").unwrap();
+            let fragment = library.new_function_with_name("fragment_static").unwrap();
+            device
+                .new_render_pipeline_state_with_descriptor({
+                    let desc = MTLRenderPipelineDescriptor::new();
+                    desc.set_vertex_function(vertex);
+                    desc.set_fragment_function(fragment);
+                    let color_attachments = desc.get_color_attachments();
+                    color_attachments.set_object_at_indexed_subscript(
+                        {
+                            let color_attachment =
+                                MTLRenderPipelineColorAttachmentDescriptor::new();
+                            color_attachment.set_blending_enabled(true);
+                            color_attachment.set_source_rgb_blend_factor(4); // src alpha
+                            color_attachment.set_destination_rgb_blend_factor(5); // 1 - src alpha
+                            color_attachment.set_source_alpha_blend_factor(1); // 1
+                            color_attachment.set_destination_alpha_blend_factor(5); // 1 - src alpha
+                            color_attachment.set_pixel_format(80); // bgra8unorm
+                            color_attachment
+                        },
+                        0,
+                    );
+                    desc
+                })
+                .unwrap()
+        };
 
         ResourceBundle {
             device,
