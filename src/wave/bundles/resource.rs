@@ -8,7 +8,7 @@ use cull_canyon::{
 pub struct ResourceBundle {
     pub device: MTLDevice,
     pub command_queue: MTLCommandQueue,
-    pub static_pipeline: MTLRenderPipelineState,
+    pub ui_pipeline: MTLRenderPipelineState,
 }
 
 impl ResourceBundle {
@@ -43,9 +43,9 @@ impl ResourceBundle {
             )
             .unwrap();
 
-        let static_pipeline = {
-            let vertex = library.new_function_with_name("vertex_static").unwrap();
-            let fragment = library.new_function_with_name("fragment_static").unwrap();
+        let ui_pipeline = {
+            let vertex = library.new_function_with_name("vertex_ui").unwrap();
+            let fragment = library.new_function_with_name("fragment_ui").unwrap();
             device
                 .new_render_pipeline_state_with_descriptor({
                     let desc = MTLRenderPipelineDescriptor::new();
@@ -74,7 +74,7 @@ impl ResourceBundle {
         ResourceBundle {
             device,
             command_queue,
-            static_pipeline,
+            ui_pipeline,
         }
     }
 }

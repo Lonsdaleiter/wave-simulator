@@ -2,30 +2,25 @@
 
 using namespace metal;
 
-struct VertexStruct {
+struct UiVertexStruct {
 	float4 position;
-	float2 textureCoords;
 };
 
-struct FragmentStruct {
+struct UiFragmentStruct {
     float4 position [[position]];
-    float2 textureCoords;
 };
 
 // vertex shader function
-vertex FragmentStruct vertex_static(device VertexStruct* vertexArray [[ buffer(0) ]],
-                                    unsigned int vid [[ vertex_id ]])
+vertex UiFragmentStruct vertex_ui(device UiVertexStruct* vertexArray [[ buffer(0) ]],
+                                unsigned int vid [[ vertex_id ]])
 {
-    FragmentStruct out;
+    UiFragmentStruct out;
     out.position = vertexArray[vid].position;
-    out.textureCoords = vertexArray[vid].textureCoords;
     return out;
 }
 
 // fragment shader function
-fragment float4 fragment_static(FragmentStruct in [[stage_in]],
-                                texture2d<float> texture [[texture(0)]],
-                                sampler sam [[sampler(0)]])
+fragment float4 fragment_ui(UiFragmentStruct in [[stage_in]])
 {
-    return texture.sample(sam, in.textureCoords);
+    return float4(1.0, 1.0, 1.0, 1.0);
 }
