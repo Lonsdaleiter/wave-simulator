@@ -31,7 +31,8 @@ fragment float4 text_frag(TextFragmentStruct in [[stage_in]],
                           texture2d<float> texture [[texture(0)]],
                           sampler sam [[sampler(0)]])
 {
-    // return float4(color, texture.sample(sam, in.textureCoords).a);
+    return float4(color, texture.sample(sam, in.textureCoords).a);
     // return float4(color, 1.0);
-    return float4(in.textureCoords, 0.0, 1.0);
+    // return float4(in.textureCoords, 0.0, 1.0);
+    // return texture.sample(sam, (in.position.x + 1.0) / 2.0, (-in.position.y + 1.0) / 2.0);
 }

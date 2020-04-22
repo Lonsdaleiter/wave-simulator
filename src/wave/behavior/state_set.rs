@@ -58,7 +58,7 @@ impl Behavior<WaveApp> for StateSetBehavior {
                         .as_ref()
                         .unwrap()
                         .letter_map
-                        .get(&'a')
+                        .get(&'q')
                         .unwrap()
                         .buffer
                         .clone(),
@@ -72,7 +72,7 @@ impl Behavior<WaveApp> for StateSetBehavior {
                         .unwrap()
                         .atlas_texture
                         .clone(),
-                    1,
+                    0,
                 );
                 render_encoder.set_fragment_sampler_state(
                     state.terminal_bundle.as_ref().unwrap().sampler.clone(),
