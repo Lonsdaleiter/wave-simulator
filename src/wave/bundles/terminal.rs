@@ -158,6 +158,15 @@ impl TerminalBundle {
                 4 * info.width as u64, // 4 because rgba8unorm is 4 bytes per pixel
             );
 
+            // let mut k = vec![0; info.buffer_size()];
+            // atlas_texture.get_bytes(
+            //     k.as_mut_ptr() as *mut c_void,
+            //     4 * info.width as u64,
+            //     (0, 0, info.width as u64, info.height as u64),
+            //     0,
+            // );
+            // assert_eq!(k, img);
+
             resource_bundle
                 .device
                 .new_sampler_state_with_descriptor(MTLSamplerDescriptor::new())

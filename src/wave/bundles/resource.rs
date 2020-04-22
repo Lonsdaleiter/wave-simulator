@@ -1,11 +1,10 @@
 use crate::wave::WaveApp;
 use cull_canyon::{
-    set_layer_for_raw_window_handle, CAMetalLayer, MTLBuffer, MTLCommandQueue, MTLCompileOptions,
+    set_layer_for_raw_window_handle, CAMetalLayer, MTLCommandQueue, MTLCompileOptions,
     MTLDevice, MTLRenderPipelineColorAttachmentDescriptor, MTLRenderPipelineDescriptor,
     MTLRenderPipelineState, MTLVertexAttributeDescriptor, MTLVertexBufferLayoutDescriptor,
     MTLVertexDescriptor,
 };
-use std::os::raw::c_void;
 
 pub struct ResourceBundle {
     pub device: MTLDevice,
