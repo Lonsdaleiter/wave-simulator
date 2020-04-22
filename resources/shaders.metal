@@ -8,7 +8,7 @@ struct TextVertexStruct {
 };
 
 struct TextInstanceStruct {
-    uint2 translation;
+    float2 translation;
     float2 scale;
 };
 
@@ -23,7 +23,12 @@ vertex TextFragmentStruct text_vert(device TextVertexStruct *vertexArray [[ buff
                                     unsigned int vid [[ vertex_id ]])
 {
     TextFragmentStruct out;
-    out.position = float4(vertexArray[vid].position, 0.0, 1.0);
+    out.position = float4(
+        vertexArray[vid].position.x,
+        vertexArray[vid].position.y * ((float)windowSize.x / (float)windowSize.y),
+        0.0,
+        1.0
+    );
     out.textureCoords = vertexArray[vid].textureCoords;
     return out;
 }

@@ -2,8 +2,7 @@ use crate::wave::WaveApp;
 use cull_canyon::{
     set_layer_for_raw_window_handle, CAMetalLayer, MTLCommandQueue, MTLCompileOptions,
     MTLDevice, MTLRenderPipelineColorAttachmentDescriptor, MTLRenderPipelineDescriptor,
-    MTLRenderPipelineState, MTLVertexAttributeDescriptor, MTLVertexBufferLayoutDescriptor,
-    MTLVertexDescriptor,
+    MTLRenderPipelineState, MTLVertexDescriptor,
 };
 
 pub struct ResourceBundle {
