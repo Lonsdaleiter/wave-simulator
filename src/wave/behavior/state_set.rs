@@ -65,6 +65,13 @@ impl Behavior<WaveApp> for StateSetBehavior {
                     0,
                     0,
                 ); // temporary
+
+                let size = state.window_bundle.window.inner_size();
+                render_encoder.set_vertex_bytes(
+                    [size.width, size.height].as_ptr() as *const c_void,
+                    8,
+                    2,
+                );
                 render_encoder.set_fragment_texture(
                     state
                         .terminal_bundle

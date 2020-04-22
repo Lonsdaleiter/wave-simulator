@@ -53,43 +53,7 @@ impl ResourceBundle {
                     let desc = MTLRenderPipelineDescriptor::new();
                     desc.set_vertex_function(vertex);
                     desc.set_fragment_function(fragment);
-                    desc.set_vertex_descriptor({
-                        let desc = MTLVertexDescriptor::new();
-                        let layouts = desc.get_layouts();
-                        layouts.set_object_at_indexed_subscript(
-                            {
-                                let desc = MTLVertexBufferLayoutDescriptor::new();
-                                desc.set_stride(16);
-                                desc.set_step_function(1); // per-vertex
-                                desc
-                            },
-                            0,
-                        );
-
-                        let attribs = desc.get_attributes();
-                        attribs.set_object_at_indexed_subscript(
-                            {
-                                let desc = MTLVertexAttributeDescriptor::new();
-                                desc.set_buffer_index(0);
-                                desc.set_offset(0);
-                                desc.set_format(29); // float2
-                                desc
-                            },
-                            0,
-                        );
-                        attribs.set_object_at_indexed_subscript(
-                            {
-                                let desc = MTLVertexAttributeDescriptor::new();
-                                desc.set_buffer_index(1);
-                                desc.set_offset(8);
-                                desc.set_format(29); // float2
-                                desc
-                            },
-                            0,
-                        );
-
-                        desc
-                    });
+                    desc.set_vertex_descriptor(MTLVertexDescriptor::new());
                     let color_attachments = desc.get_color_attachments();
                     color_attachments.set_object_at_indexed_subscript(
                         {
