@@ -58,13 +58,21 @@ impl Behavior<WaveApp> for StateSetBehavior {
                         .as_ref()
                         .unwrap()
                         .letter_map
-                        .get(&'q')
+                        .get(&'>')
                         .unwrap()
                         .buffer
                         .clone(),
                     0,
                     0,
                 ); // temporary
+                render_encoder.set_vertex_bytes(
+                    [
+                        -0.98f32, -0.95, // translation
+                        0.2, 0.2, // scale
+                    ].as_ptr() as *const c_void,
+                    16,
+                    1,
+                );
 
                 let size = state.window_bundle.window.inner_size();
                 render_encoder.set_vertex_bytes(

@@ -22,10 +22,13 @@ vertex TextFragmentStruct text_vert(device TextVertexStruct *vertexArray [[ buff
                                     constant uint2 &windowSize [[ buffer(2) ]],
                                     unsigned int vid [[ vertex_id ]])
 {
+    float2 position = float2(vertexArray[vid].position.x,
+                             vertexArray[vid].position.y * ((float)windowSize.x / (float)windowSize.y));
+    position *= perInstance.scale;
+
     TextFragmentStruct out;
     out.position = float4(
-        vertexArray[vid].position.x,
-        vertexArray[vid].position.y * ((float)windowSize.x / (float)windowSize.y),
+        position + perInstance.translation,
         0.0,
         1.0
     );
