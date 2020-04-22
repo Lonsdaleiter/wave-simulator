@@ -7,8 +7,9 @@ use cull_canyon::{
 };
 use std::os::raw::c_void;
 
-// 0th element is CARET
-pub struct Letters(pub MTLBuffer);
+// 0th element is SPACE
+// 1st element is CARET
+pub struct Letters(pub (MTLBuffer, u32), pub (MTLBuffer, u32));
 
 pub struct ResourceBundle {
     pub device: MTLDevice,
@@ -131,13 +132,31 @@ impl ResourceBundle {
             let width = width / 2.0;
             [
                 // triangle 1
-                from.0, from.1 + width, 0.0, 1.0, // v1
-                from.0, from.1 - width, 0.0, 1.0, // v2
-                to.0, to.1 - width, 0.0, 1.0, // v3
+                from.0,
+                from.1 + width,
+                0.0,
+                1.0, // v1
+                from.0,
+                from.1 - width,
+                0.0,
+                1.0, // v2
+                to.0,
+                to.1 - width,
+                0.0,
+                1.0, // v3
                 // triangle 2
-                to.0, to.1 - width, 0.0, 1.0, // v3
-                to.0, to.1 + width, 0.0, 1.0, // v4
-                from.0, from.1 + width, 0.0, 1.0 // v1
+                to.0,
+                to.1 - width,
+                0.0,
+                1.0, // v3
+                to.0,
+                to.1 + width,
+                0.0,
+                1.0, // v4
+                from.0,
+                from.1 + width,
+                0.0,
+                1.0, // v1
             ]
         }
 
@@ -158,7 +177,7 @@ impl ResourceBundle {
                 caret_data.len() as u64 * 4,
                 0,
             );
-            Letters(caret)
+            Letters((device.new_buffer_with_length(0, 0), 0), (caret, 12))
         };
 
         ResourceBundle {

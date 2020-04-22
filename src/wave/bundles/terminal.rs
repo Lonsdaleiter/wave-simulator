@@ -3,7 +3,7 @@ static SPACE: Letter = Letter {
     associated_char: Some(' '),
 };
 static CARET: Letter = Letter {
-    index: 0,
+    index: 1,
     associated_char: None,
 };
 
