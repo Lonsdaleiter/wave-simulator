@@ -1,6 +1,6 @@
 use crate::wave::bundles::resource::ResourceBundle;
 use crate::wave::bundles::window::WindowBundle;
-use cull_canyon::{MTLBuffer, MTLTextureDescriptor, MTLTexture};
+use cull_canyon::{MTLBuffer, MTLTexture, MTLTextureDescriptor};
 use std::collections::HashMap;
 use std::os::raw::c_void;
 
@@ -72,22 +72,62 @@ fn read_font_file(
         // size is 192
         let base_data = [
             // triangle 1
-            -1.0f32, -1.0, 0.0, 1.0, // v1
-            0.0, 1.0, 0.0, 0.0, // t1
-            -1.0, 1.0, 0.0, 1.0, // v2
-            0.0, 0.0, 0.0, 0.0, // t2
-            1.0, 1.0, 0.0, 1.0, // v3
-            1.0, 0.0, 0.0, 0.0, // t3
+            -1.0f32,
+            -1.0,
+            0.0,
+            1.0, // v1
+            0.0 + real_x,
+            1.0 * real_height + real_y,
+            0.0,
+            0.0, // t1
+            -1.0,
+            1.0,
+            0.0,
+            1.0, // v2
+            0.0 + real_x,
+            0.0 + real_y,
+            0.0,
+            0.0, // t2
+            1.0,
+            1.0,
+            0.0,
+            1.0, // v3
+            1.0 * real_width + real_x,
+            0.0 + real_y,
+            0.0,
+            0.0, // t3
             // triangle 2
-            1.0, 1.0, 0.0, 1.0, // v3
-            1.0, 0.0, 0.0, 0.0, // t3
-            1.0, -1.0, 0.0, 1.0, // v4
-            1.0, 1.0, 0.0, 0.0, // t4
-            -1.0f32, -1.0, 0.0, 1.0, // v1
-            1.0, 0.0, 0.0, 0.0, // t3
+            1.0,
+            1.0,
+            0.0,
+            1.0, // v3
+            1.0 * real_width + real_x,
+            0.0 + real_y,
+            0.0,
+            0.0, // t3
+            1.0,
+            -1.0,
+            0.0,
+            1.0, // v4
+            1.0 * real_width + real_x,
+            1.0 * real_width + real_x,
+            0.0,
+            0.0, // t4
+            -1.0f32,
+            -1.0,
+            0.0,
+            1.0, // v1
+            0.0 + real_x,
+            1.0 * real_height + real_y,
+            0.0,
+            0.0, // t1
         ];
         let buffer = unsafe {
-            resource_bundle.device.new_buffer_with_length(192, 0)
+            resource_bundle.device.new_buffer_with_bytes(
+                base_data.as_ptr() as *const c_void,
+                base_data.len() as u64 * 4,
+                0,
+            )
         };
 
         letter_map.insert(
@@ -118,7 +158,7 @@ impl TerminalBundle {
                 .as_str(),
             bundle,
             resource_bundle,
-            (info.width, info.height)
+            (info.width, info.height),
         );
 
         let atlas_texture = unsafe {
@@ -140,6 +180,9 @@ impl TerminalBundle {
             );
         };
 
-        TerminalBundle { letter_map, atlas_texture }
+        TerminalBundle {
+            letter_map,
+            atlas_texture,
+        }
     }
 }
