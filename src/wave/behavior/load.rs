@@ -1,14 +1,14 @@
 use crate::behavior::Behavior;
 use crate::wave::behavior::state_set::StateSetBehavior;
 use crate::wave::bundles::resource::ResourceBundle;
-use crate::wave::WaveApp;
 use crate::wave::bundles::terminal::TerminalBundle;
+use crate::wave::WaveApp;
 
 pub struct ResourceLoadBehavior;
 impl Behavior<WaveApp> for ResourceLoadBehavior {
     fn init(&self, state: &mut WaveApp) {
         let resource_bundle = unsafe { ResourceBundle::new(&state) };
-        let terminal_bundle = TerminalBundle::new(&state.window_bundle);
+        let terminal_bundle = TerminalBundle::new(&state.window_bundle, &resource_bundle);
         state.resource_bundle = Some(resource_bundle);
     }
 

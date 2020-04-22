@@ -9,3 +9,4 @@ edition = "2018"
 [dependencies]
 cull-canyon = { git = "https://github.com/Lonsdaleiter/cull-canyon" }
 winit = "0.22.1"
+png = "0.16.3"
