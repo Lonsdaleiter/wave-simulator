@@ -1,6 +1,8 @@
 use crate::wave::bundles::resource::ResourceBundle;
 use crate::wave::bundles::window::WindowBundle;
-use cull_canyon::{MTLBuffer, MTLTexture, MTLTextureDescriptor};
+use cull_canyon::{
+    MTLBuffer, MTLSamplerDescriptor, MTLSamplerState, MTLTexture, MTLTextureDescriptor,
+};
 use std::collections::HashMap;
 use std::os::raw::c_void;
 
@@ -14,6 +16,7 @@ pub struct Letter {
 pub struct TerminalBundle {
     pub letter_map: HashMap<char, Letter>,
     pub atlas_texture: MTLTexture,
+    pub sampler: MTLSamplerState,
 }
 
 fn read_font_file(
@@ -72,19 +75,31 @@ fn read_font_file(
         // size is 192
         let base_data = [
             // triangle 1
-            -1.0f32, -1.0, // v1
-            0.0 + real_x, 1.0 * real_height + real_y, // t1
-            -1.0, 1.0, // v2
-            0.0 + real_x, 0.0 + real_y, // t2
-            1.0, 1.0, // v3
-            1.0 * real_width + real_x, 0.0 + real_y, // t3
+            -1.0f32,
+            -1.0, // v1
+            0.0 + real_x,
+            1.0 * real_height + real_y, // t1
+            -1.0,
+            1.0, // v2
+            0.0 + real_x,
+            0.0 + real_y, // t2
+            1.0,
+            1.0, // v3
+            1.0 * real_width + real_x,
+            0.0 + real_y, // t3
             // triangle 2
-            1.0, 1.0, // v3
-            1.0 * real_width + real_x, 0.0 + real_y, // t3
-            1.0, -1.0, // v4
-            1.0 * real_width + real_x, 1.0 * real_width + real_x, // t4
-            -1.0f32, -1.0, // v1
-            0.0 + real_x, 1.0 * real_height + real_y, // t1
+            1.0,
+            1.0, // v3
+            1.0 * real_width + real_x,
+            0.0 + real_y, // t3
+            1.0,
+            -1.0, // v4
+            1.0 * real_width + real_x,
+            1.0 * real_width + real_x, // t4
+            -1.0f32,
+            -1.0, // v1
+            0.0 + real_x,
+            1.0 * real_height + real_y, // t1
         ];
         let buffer = unsafe {
             resource_bundle.device.new_buffer_with_bytes(
@@ -135,18 +150,23 @@ impl TerminalBundle {
             })
         };
 
-        unsafe {
+        let sampler = unsafe {
             atlas_texture.replace_region(
                 (0, 0, info.width as u64, info.height as u64),
                 0,
                 img.as_mut_ptr() as *mut c_void,
                 4 * info.width as u64, // 4 because rgba8unorm is 4 bytes per pixel
             );
+
+            resource_bundle
+                .device
+                .new_sampler_state_with_descriptor(MTLSamplerDescriptor::new())
         };
 
         TerminalBundle {
             letter_map,
             atlas_texture,
+            sampler,
         }
     }
 }

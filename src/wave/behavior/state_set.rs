@@ -58,14 +58,25 @@ impl Behavior<WaveApp> for StateSetBehavior {
                         .as_ref()
                         .unwrap()
                         .letter_map
-                        .get(&' ')
+                        .get(&'a')
                         .unwrap()
                         .buffer
                         .clone(),
                     0,
                     0,
                 ); // temporary
-                   // render_encoder.set_vertex_buffer(uhh... translation or something);
+                render_encoder.set_fragment_texture(
+                    state
+                        .terminal_bundle
+                        .as_ref()
+                        .unwrap()
+                        .atlas_texture
+                        .clone(),
+                    1,
+                );
+                render_encoder.set_fragment_sampler_state(
+                    state.terminal_bundle.as_ref().unwrap().sampler.clone(), 0
+                );
                 render_encoder.set_fragment_bytes(
                     [0.125f32, 0.76, 0.055].as_ptr() as *const c_void,
                     12,
