@@ -8,22 +8,22 @@ use std::os::raw::c_void;
 
 pub struct StateSetBehavior;
 impl Behavior<WaveApp> for StateSetBehavior {
-    fn init(&self, state: &mut WaveApp) {
-        unsafe {
-            let c = state
-                .resource_bundle
-                .as_ref()
-                .unwrap()
-                .transformation_buffer
-                .get_contents() as *mut [f32; 16];
-            let nc = [
-                1.0f32, 0.0, 0.0, 0.0, // row 1
-                0.0, 1.0, 0.0, 0.0, // row 2
-                0.0, 0.0, 1.0, 0.0, // row 3
-                0.0, 0.0, 0.0, 1.0, // row 4
-            ];
-            std::mem::replace(&mut *c, nc);
-        };
+    fn init(&self, _state: &mut WaveApp) {
+        // unsafe {
+        //     let c = state
+        //         .resource_bundle
+        //         .as_ref()
+        //         .unwrap()
+        //         .transformation_buffer
+        //         .get_contents() as *mut [f32; 16];
+        //     let nc = [
+        //         1.0f32, 0.0, 0.0, 0.0, // row 1
+        //         0.0, 1.0, 0.0, 0.0, // row 2
+        //         0.0, 0.0, 1.0, 0.0, // row 3
+        //         0.0, 0.0, 0.0, 1.0, // row 4
+        //     ];
+        //     std::mem::replace(&mut *c, nc);
+        // };
     }
 
     fn update(&self, state: &mut WaveApp) -> Option<Box<dyn Behavior<WaveApp>>> {
@@ -53,7 +53,7 @@ impl Behavior<WaveApp> for StateSetBehavior {
                 });
                 render_encoder.set_render_pipeline_state(bundle.text_pipeline.clone());
                 render_encoder.set_vertex_buffer(bundle.quad.clone(), 0, 0); // temporary
-                render_encoder.set_vertex_buffer(bundle.transformation_buffer.clone(), 0, 1);
+                // render_encoder.set_vertex_buffer(uhh... translation or something);
                 render_encoder.set_fragment_bytes(
                     [0.125f32, 0.76, 0.055, 1.0].as_ptr() as *const c_void,
                     16,

@@ -7,7 +7,7 @@ struct TextVertexStruct {
 };
 
 struct TextInstanceStruct {
-    float4x4 transformation;
+    float2 translation;
 };
 
 struct TextFragmentStruct {
@@ -18,7 +18,7 @@ vertex TextFragmentStruct text_vert(device TextVertexStruct *vertexArray [[ buff
                                     constant TextInstanceStruct &perInstance [[ buffer(1) ]],
                                     unsigned int vid [[ vertex_id ]])
 {
-    float4 newPosition = perInstance.transformation * vertexArray[vid].position;
+    float4 newPosition = vertexArray[vid].position;
 
     TextFragmentStruct out;
     out.position = newPosition;
