@@ -7,9 +7,8 @@ use cull_canyon::{
 };
 use std::os::raw::c_void;
 
-pub struct Letters {
-    pub caret: MTLBuffer,
-}
+// 0th element is CARET
+pub struct Letters(pub MTLBuffer);
 
 pub struct ResourceBundle {
     pub device: MTLDevice,
@@ -159,9 +158,7 @@ impl ResourceBundle {
                 caret_data.len() as u64 * 4,
                 0,
             );
-            Letters {
-                caret,
-            }
+            Letters(caret)
         };
 
         ResourceBundle {

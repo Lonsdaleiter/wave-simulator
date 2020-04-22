@@ -52,7 +52,7 @@ impl Behavior<WaveApp> for StateSetBehavior {
                     desc
                 });
                 render_encoder.set_render_pipeline_state(bundle.ui_pipeline.clone());
-                render_encoder.set_vertex_buffer(bundle.letters.caret.clone(), 0, 0); // temporary
+                render_encoder.set_vertex_buffer(bundle.letters.0.clone(), 0, 0); // temporary
                 render_encoder.set_vertex_buffer(bundle.transformation_buffer.clone(), 0, 1);
                 render_encoder.set_fragment_bytes(
                     [0.125f32, 0.76, 0.055, 1.0].as_ptr() as *const c_void,
