@@ -7,18 +7,13 @@ use cull_canyon::{
 };
 use std::os::raw::c_void;
 
-// 0th element is SPACE
-// 1st element is CARET
-pub struct Letters(pub (MTLBuffer, u32), pub (MTLBuffer, u32));
-
 pub struct ResourceBundle {
     pub device: MTLDevice,
     pub command_queue: MTLCommandQueue,
     pub surface: CAMetalLayer,
-    pub ui_pipeline: MTLRenderPipelineState,
+    pub text_pipeline: MTLRenderPipelineState,
     pub quad: MTLBuffer,
     pub transformation_buffer: MTLBuffer,
-    pub letters: Letters,
 }
 
 impl ResourceBundle {
@@ -73,9 +68,9 @@ impl ResourceBundle {
             )
             .unwrap();
 
-        let ui_pipeline = {
-            let vertex = library.new_function_with_name("vertex_ui").unwrap();
-            let fragment = library.new_function_with_name("fragment_ui").unwrap();
+        let text_pipeline = {
+            let vertex = library.new_function_with_name("text_vert").unwrap();
+            let fragment = library.new_function_with_name("text_frag").unwrap();
             device
                 .new_render_pipeline_state_with_descriptor({
                     let desc = MTLRenderPipelineDescriptor::new();
@@ -128,66 +123,13 @@ impl ResourceBundle {
                 .unwrap()
         };
 
-        fn generate_line(from: (f32, f32), to: (f32, f32), width: f32) -> [f32; 24] {
-            let width = width / 2.0;
-            [
-                // triangle 1
-                from.0,
-                from.1 + width,
-                0.0,
-                1.0, // v1
-                from.0,
-                from.1 - width,
-                0.0,
-                1.0, // v2
-                to.0,
-                to.1 - width,
-                0.0,
-                1.0, // v3
-                // triangle 2
-                to.0,
-                to.1 - width,
-                0.0,
-                1.0, // v3
-                to.0,
-                to.1 + width,
-                0.0,
-                1.0, // v4
-                from.0,
-                from.1 + width,
-                0.0,
-                1.0, // v1
-            ]
-        }
-
-        // draw these with line strips
-        let letters = {
-            // let caret_data = [
-            //     -1.0f32, 1.0, 0.0, 1.0, // p1
-            //     1.0, 0.0, 0.0, 1.0, // p3
-            //     -1.0, -1.0, 0.0, 1.0, // p3
-            // ];
-            let caret_data: Vec<f32> = {
-                let k = generate_line((-1.0, 1.0), (1.0, 0.0), 0.05);
-                let j = generate_line((-1.0, -1.0), (1.0, 0.0), 0.05);
-                [k, j].concat()
-            };
-            let caret = device.new_buffer_with_bytes(
-                caret_data.as_ptr() as *const c_void,
-                caret_data.len() as u64 * 4,
-                0,
-            );
-            Letters((device.new_buffer_with_length(0, 0), 0), (caret, 12))
-        };
-
         ResourceBundle {
             device,
             command_queue,
             surface,
-            ui_pipeline,
+            text_pipeline,
             quad,
             transformation_buffer,
-            letters,
         }
     }
 }

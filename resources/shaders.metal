@@ -2,32 +2,31 @@
 
 using namespace metal;
 
-struct UiVertexStruct {
+struct TextVertexStruct {
 	float4 position;
 };
 
-struct UiInstanceStruct {
+struct TextInstanceStruct {
     float4x4 transformation;
 };
 
-struct UiFragmentInStruct {
+struct TextFragmentStruct {
     float4 position [[position]];
 };
 
-vertex UiFragmentInStruct vertex_ui(device UiVertexStruct *vertexArray [[ buffer(0) ]],
-                                    constant UiInstanceStruct &perInstance [[ buffer(1) ]],
+vertex TextFragmentStruct text_vert(device TextVertexStruct *vertexArray [[ buffer(0) ]],
+                                    constant TextInstanceStruct &perInstance [[ buffer(1) ]],
                                     unsigned int vid [[ vertex_id ]])
 {
     float4 newPosition = perInstance.transformation * vertexArray[vid].position;
 
-    UiFragmentInStruct out;
+    TextFragmentStruct out;
     out.position = newPosition;
     return out;
 }
 
-// remember to use setFragmentBytes for the first buffer
-fragment float4 fragment_ui(UiFragmentInStruct in [[stage_in]],
-                            constant float4 &color [[ buffer(0) ]])
+fragment float4 text_frag(TextFragmentStruct in [[stage_in]],
+                          constant float4 &color [[ buffer(0) ]])
 {
     return color;
 }
