@@ -61,6 +61,11 @@ fn read_font_file(
         let y_offset = y_offset;
         let x_advance = x_advance as u32;
 
+        let real_x: f32 = x as f32 / texture_size.0 as f32;
+        let real_y: f32 = y as f32 / texture_size.1 as f32;
+        let real_width: f32 = width as f32 / texture_size.0 as f32;
+        let real_height: f32 = height as f32 / texture_size.1 as f32;
+
         // 6 vertices + 6 texture coords
         // 4 floats each
         // 4 bytes per float
