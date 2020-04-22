@@ -18,6 +18,7 @@ fn read_font_file(contents: &str, bundle: &WindowBundle) -> HashMap<char, Letter
     let mut letter_map = HashMap::new();
 
     contents.split("\r\n").for_each(|s: &str|{
+        let mut id = 0;
         let mut x = 0;
         let mut y = 0;
         let mut width = 0;
@@ -27,11 +28,11 @@ fn read_font_file(contents: &str, bundle: &WindowBundle) -> HashMap<char, Letter
         let mut x_advance = 0;
         s.split(" ").for_each(|s: &str| {
             if !s.eq("") && !s.eq("char") {
-                println!("{}", s);
                 let k = s.split("=").collect::<Vec<_>>();
                 let item = k[0];
                 let val = k[1];
                 let value: &mut i32 = match item {
+                    "id" => &mut id,
                     "x" => &mut x,
                     "y" => &mut y,
                     "width" => &mut width,
@@ -44,7 +45,14 @@ fn read_font_file(contents: &str, bundle: &WindowBundle) -> HashMap<char, Letter
                 *value = val.parse().unwrap();
             }
         });
-        println!();
+        println!("id: {}", id);
+        println!("x: {}", x);
+        println!("y: {}", y);
+        println!("width: {}", width);
+        println!("height: {}", height);
+        println!("x offset: {}", x_offset);
+        println!("y offset: {}", y_offset);
+        println!("x advance: {}", x_advance);
     });
 
     letter_map

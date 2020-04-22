@@ -93,4 +93,4 @@ char id=126   x=232     y=439     width=50     height=27     xoffset=2     yoffs
 char id=96   x=282     y=439     width=22     height=21     xoffset=6     yoffset=10    xadvance=46     page=0  chnl=0 
 char id=46   x=304     y=439     width=17     height=18     xoffset=4     yoffset=59    xadvance=28     page=0  chnl=0 
 char id=45   x=321     y=439     width=28     height=14     xoffset=0     yoffset=43    xadvance=33     page=0  chnl=0 
-char id=95   x=349     y=439     width=50     height=13     xoffset=-4     yoffset=75    xadvance=46     page=0  chnl=0 
+char id=95   x=349     y=439     width=50     height=13     xoffset=-4     yoffset=75    xadvance=46     page=0  chnl=0
