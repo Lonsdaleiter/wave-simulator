@@ -26,7 +26,7 @@ vertex TextFragmentStruct text_vert(device TextVertexStruct *vertexArray [[ buff
 }
 
 fragment float4 text_frag(TextFragmentStruct in [[stage_in]],
-                          constant float4 &color [[ buffer(0) ]])
+                          constant float3 &color [[ buffer(0) ]])
 {
-    return color;
+    return float4(color, 1.0);
 }
