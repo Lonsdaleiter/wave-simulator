@@ -52,18 +52,14 @@ impl Behavior<WaveApp> for StateSetBehavior {
                     desc
                 });
                 render_encoder.set_render_pipeline_state(bundle.ui_pipeline.clone());
-                render_encoder.set_vertex_buffer(bundle.quad.clone(), 0, 0);
-                render_encoder.set_vertex_buffer(
-                    bundle.transformation_buffer.clone(),
-                    0,
-                    1,
-                );
+                render_encoder.set_vertex_buffer(bundle.letters.caret.clone(), 0, 0); // temporary
+                render_encoder.set_vertex_buffer(bundle.transformation_buffer.clone(), 0, 1);
                 render_encoder.set_fragment_bytes(
-                    [1.0f32, 0.0, 1.0, 1.0].as_ptr() as *const c_void,
+                    [0.125f32, 0.76, 0.055, 1.0].as_ptr() as *const c_void,
                     16,
                     0,
                 );
-                render_encoder.draw_primitives(3, 0, 6, 1, 0);
+                render_encoder.draw_primitives(3, 0, 12, 1, 0);
                 render_encoder.end_encoding();
 
                 command_buffer.present_drawable(drawable);
