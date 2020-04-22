@@ -12,7 +12,6 @@ pub struct ResourceBundle {
     pub command_queue: MTLCommandQueue,
     pub surface: CAMetalLayer,
     pub text_pipeline: MTLRenderPipelineState,
-    pub quad: MTLBuffer,
 }
 
 impl ResourceBundle {
@@ -30,22 +29,6 @@ impl ResourceBundle {
         let device = devices.into_iter().find_map(|d| Some(d)).unwrap();
 
         let command_queue = device.new_command_queue();
-
-        let q_data = [
-            // triangle 1
-            -1.0f32, -1.0, 0.0, 1.0, // v1
-            -1.0, 1.0, 0.0, 1.0, // v2
-            1.0, 1.0, 0.0, 1.0, // v3
-            // triangle 2
-            1.0, 1.0, 0.0, 1.0, // v3
-            1.0, -1.0, 0.0, 1.0, // v4
-            -1.0f32, -1.0, 0.0, 1.0, // v1
-        ];
-        let quad = device.new_buffer_with_bytes(
-            q_data.as_ptr() as *const c_void,
-            4 * q_data.len() as u64,
-            0,
-        );
 
         let surface = CAMetalLayer::new();
         surface.set_device(device.clone());
@@ -90,7 +73,17 @@ impl ResourceBundle {
                                 let desc = MTLVertexAttributeDescriptor::new();
                                 desc.set_buffer_index(0);
                                 desc.set_offset(0);
-                                desc.set_format(31); // float4
+                                desc.set_format(29); // float2
+                                desc
+                            },
+                            0,
+                        );
+                        attribs.set_object_at_indexed_subscript(
+                            {
+                                let desc = MTLVertexAttributeDescriptor::new();
+                                desc.set_buffer_index(1);
+                                desc.set_offset(8);
+                                desc.set_format(29); // float2
                                 desc
                             },
                             0,
@@ -123,7 +116,6 @@ impl ResourceBundle {
             command_queue,
             surface,
             text_pipeline,
-            quad,
         }
     }
 }

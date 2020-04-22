@@ -10,6 +10,7 @@ impl Behavior<WaveApp> for ResourceLoadBehavior {
         let resource_bundle = unsafe { ResourceBundle::new(&state) };
         let terminal_bundle = TerminalBundle::new(&state.window_bundle, &resource_bundle);
         state.resource_bundle = Some(resource_bundle);
+        state.terminal_bundle = Some(terminal_bundle);
     }
 
     fn update(&self, _state: &mut WaveApp) -> Option<Box<dyn Behavior<WaveApp>>> {

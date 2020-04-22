@@ -1,6 +1,7 @@
 use crate::app::Application;
 use crate::behavior::Behavior;
 use crate::wave::bundles::resource::ResourceBundle;
+use crate::wave::bundles::terminal::TerminalBundle;
 use crate::wave::bundles::window::WindowBundle;
 use std::time::{Duration, Instant};
 use winit::dpi::PhysicalSize;
@@ -17,6 +18,7 @@ const FPS: f32 = 60.0;
 pub struct WaveApp {
     pub window_bundle: WindowBundle,
     pub resource_bundle: Option<ResourceBundle>,
+    pub terminal_bundle: Option<TerminalBundle>,
 }
 
 impl Application for WaveApp {
@@ -31,6 +33,7 @@ impl Application for WaveApp {
         WaveApp {
             window_bundle: WindowBundle { window },
             resource_bundle: None,
+            terminal_bundle: None,
         }
     }
 

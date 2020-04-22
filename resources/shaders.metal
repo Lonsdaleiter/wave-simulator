@@ -3,7 +3,8 @@
 using namespace metal;
 
 struct TextVertexStruct {
-	float4 position;
+	float2 position;
+	float2 textureCoords;
 };
 
 struct TextInstanceStruct {
@@ -12,16 +13,16 @@ struct TextInstanceStruct {
 
 struct TextFragmentStruct {
     float4 position [[position]];
+    float2 textureCoords;
 };
 
 vertex TextFragmentStruct text_vert(device TextVertexStruct *vertexArray [[ buffer(0) ]],
                                     constant TextInstanceStruct &perInstance [[ buffer(1) ]],
                                     unsigned int vid [[ vertex_id ]])
 {
-    float4 newPosition = vertexArray[vid].position;
-
     TextFragmentStruct out;
-    out.position = newPosition;
+    out.position = float4(vertexArray[vid].position, 0.0, 1.0);
+    out.textureCoords = vertexArray[vid].textureCoords;
     return out;
 }
 

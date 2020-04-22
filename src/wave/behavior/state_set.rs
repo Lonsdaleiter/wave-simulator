@@ -52,8 +52,20 @@ impl Behavior<WaveApp> for StateSetBehavior {
                     desc
                 });
                 render_encoder.set_render_pipeline_state(bundle.text_pipeline.clone());
-                render_encoder.set_vertex_buffer(bundle.quad.clone(), 0, 0); // temporary
-                                                                             // render_encoder.set_vertex_buffer(uhh... translation or something);
+                render_encoder.set_vertex_buffer(
+                    state
+                        .terminal_bundle
+                        .as_ref()
+                        .unwrap()
+                        .letter_map
+                        .get(&' ')
+                        .unwrap()
+                        .buffer
+                        .clone(),
+                    0,
+                    0,
+                ); // temporary
+                   // render_encoder.set_vertex_buffer(uhh... translation or something);
                 render_encoder.set_fragment_bytes(
                     [0.125f32, 0.76, 0.055].as_ptr() as *const c_void,
                     12,

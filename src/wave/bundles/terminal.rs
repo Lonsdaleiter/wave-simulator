@@ -72,55 +72,19 @@ fn read_font_file(
         // size is 192
         let base_data = [
             // triangle 1
-            -1.0f32,
-            -1.0,
-            0.0,
-            1.0, // v1
-            0.0 + real_x,
-            1.0 * real_height + real_y,
-            0.0,
-            0.0, // t1
-            -1.0,
-            1.0,
-            0.0,
-            1.0, // v2
-            0.0 + real_x,
-            0.0 + real_y,
-            0.0,
-            0.0, // t2
-            1.0,
-            1.0,
-            0.0,
-            1.0, // v3
-            1.0 * real_width + real_x,
-            0.0 + real_y,
-            0.0,
-            0.0, // t3
+            -1.0f32, -1.0, // v1
+            0.0 + real_x, 1.0 * real_height + real_y, // t1
+            -1.0, 1.0, // v2
+            0.0 + real_x, 0.0 + real_y, // t2
+            1.0, 1.0, // v3
+            1.0 * real_width + real_x, 0.0 + real_y, // t3
             // triangle 2
-            1.0,
-            1.0,
-            0.0,
-            1.0, // v3
-            1.0 * real_width + real_x,
-            0.0 + real_y,
-            0.0,
-            0.0, // t3
-            1.0,
-            -1.0,
-            0.0,
-            1.0, // v4
-            1.0 * real_width + real_x,
-            1.0 * real_width + real_x,
-            0.0,
-            0.0, // t4
-            -1.0f32,
-            -1.0,
-            0.0,
-            1.0, // v1
-            0.0 + real_x,
-            1.0 * real_height + real_y,
-            0.0,
-            0.0, // t1
+            1.0, 1.0, // v3
+            1.0 * real_width + real_x, 0.0 + real_y, // t3
+            1.0, -1.0, // v4
+            1.0 * real_width + real_x, 1.0 * real_width + real_x, // t4
+            -1.0f32, -1.0, // v1
+            0.0 + real_x, 1.0 * real_height + real_y, // t1
         ];
         let buffer = unsafe {
             resource_bundle.device.new_buffer_with_bytes(
