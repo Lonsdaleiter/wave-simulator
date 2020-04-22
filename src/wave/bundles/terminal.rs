@@ -1,23 +1,26 @@
 use crate::wave::bundles::resource::ResourceBundle;
 use crate::wave::bundles::window::WindowBundle;
-use cull_canyon::{MTLBuffer, MTLTextureDescriptor};
+use cull_canyon::{MTLBuffer, MTLTextureDescriptor, MTLTexture};
 use std::collections::HashMap;
 use std::os::raw::c_void;
 
 pub struct Letter {
     pub buffer: MTLBuffer,
-    pub texture_coords: (f32, f32),
+    pub x_offset: i32,
+    pub y_offset: i32,
     pub x_advance: u32,
 }
 
 pub struct TerminalBundle {
     pub letter_map: HashMap<char, Letter>,
+    pub atlas_texture: MTLTexture,
 }
 
 fn read_font_file(
     contents: &str,
     bundle: &WindowBundle,
     resource_bundle: &ResourceBundle,
+    texture_size: (u32, u32),
 ) -> HashMap<char, Letter> {
     let mut letter_map = HashMap::new();
 
@@ -58,14 +61,24 @@ fn read_font_file(
         let y_offset = y_offset;
         let x_advance = x_advance as u32;
 
-        // letter_map.insert(
-        //     id,
-        //     Letter {
-        //         buffer: placeholder,
-        //         texture_coords: (0.0, 0.0),
-        //         x_advance,
-        //     },
-        // );
+        // 6 vertices + 6 texture coords
+        // 4 floats each
+        // 4 bytes per float
+        // size is 192
+        let buffer = unsafe {
+            resource_bundle.device.new_buffer_with_length(192, 0)
+        };
+
+        letter_map.insert(
+            id,
+            Letter {
+                // buffer contains both positions and texture coords
+                buffer,
+                x_offset,
+                y_offset,
+                x_advance,
+            },
+        );
     });
 
     letter_map
@@ -73,18 +86,19 @@ fn read_font_file(
 
 impl TerminalBundle {
     pub fn new(bundle: &WindowBundle, resource_bundle: &ResourceBundle) -> TerminalBundle {
+        let decoder = png::Decoder::new(std::fs::File::open("resources/tahoma.png").unwrap());
+        let (info, mut reader) = decoder.read_info().unwrap();
+        let mut img = vec![0; info.buffer_size()];
+        reader.next_frame(&mut img).unwrap();
+
         let letter_map = read_font_file(
             std::fs::read_to_string("resources/tahoma.fnt")
                 .unwrap()
                 .as_str(),
             bundle,
             resource_bundle,
+            (info.width, info.height)
         );
-
-        let decoder = png::Decoder::new(std::fs::File::open("resources/tahoma.png").unwrap());
-        let (info, mut reader) = decoder.read_info().unwrap();
-        let mut img = vec![0; info.buffer_size()];
-        reader.next_frame(&mut img).unwrap();
 
         let atlas_texture = unsafe {
             resource_bundle.device.new_texture_with_descriptor({
@@ -105,6 +119,6 @@ impl TerminalBundle {
             );
         };
 
-        TerminalBundle { letter_map }
+        TerminalBundle { letter_map, atlas_texture }
     }
 }
