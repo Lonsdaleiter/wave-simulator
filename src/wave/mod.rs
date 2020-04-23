@@ -1,10 +1,11 @@
 use crate::app::Application;
 use crate::behavior::Behavior;
+use crate::wave::bundles::basemetal::BaseMetalBundle;
+use crate::wave::bundles::window::WindowBundle;
+use crate::wave::constants::FPS;
 use std::time::{Duration, Instant};
 use winit::event::{Event, StartCause, WindowEvent};
 use winit::event_loop::{ControlFlow, EventLoop};
-use crate::wave::bundles::window::WindowBundle;
-use crate::wave::bundles::basemetal::BaseMetalBundle;
 
 pub mod behavior;
 pub mod bundles;
@@ -30,7 +31,7 @@ impl Application for WaveApp {
             Box::new(behavior::loader::BaseLoaderBehavior);
         current_behavior.init(&mut self);
 
-        let duration = Duration::from_millis((1000.0 / constants::FPS) as u64);
+        let duration = Duration::from_millis((1000.0 / FPS) as u64);
         let mut now = Instant::now();
         event_loop.run(move |event, _, control_flow| {
             *control_flow = ControlFlow::WaitUntil(now + duration);

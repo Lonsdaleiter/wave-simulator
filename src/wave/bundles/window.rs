@@ -1,7 +1,7 @@
+use winit::dpi::PhysicalSize;
 use winit::event_loop::EventLoop;
 use winit::platform::macos::WindowBuilderExtMacOS;
 use winit::window::{Window, WindowBuilder};
-use winit::dpi::PhysicalSize;
 
 pub struct WindowBundle {
     pub window: Window,
