@@ -1,5 +1,4 @@
 use crate::wave::bundles::resource::ResourceBundle;
-use crate::wave::bundles::window::WindowBundle;
 use cull_canyon::{
     MTLBuffer, MTLSamplerDescriptor, MTLSamplerState, MTLTexture, MTLTextureDescriptor,
 };
@@ -11,8 +10,6 @@ pub struct Letter {
     pub x_offset: i32,
     pub y_offset: i32,
     pub x_advance: u32,
-    pub width: f32,
-    pub height: f32,
 }
 
 pub struct TextBundle {
@@ -24,7 +21,6 @@ pub struct TextBundle {
 
 fn read_font_file(
     contents: &str,
-    bundle: &WindowBundle,
     resource_bundle: &ResourceBundle,
     texture_size: (u32, u32),
 ) -> HashMap<char, Letter> {
@@ -120,8 +116,6 @@ fn read_font_file(
                 x_offset,
                 y_offset,
                 x_advance,
-                width: real_width,
-                height: real_height,
             },
         );
     });
@@ -130,7 +124,7 @@ fn read_font_file(
 }
 
 impl TextBundle {
-    pub fn new(bundle: &WindowBundle, resource_bundle: &ResourceBundle) -> TextBundle {
+    pub fn new(resource_bundle: &ResourceBundle) -> TextBundle {
         let decoder = png::Decoder::new(std::fs::File::open("resources/tahoma.png").unwrap());
         let (info, mut reader) = decoder.read_info().unwrap();
         let mut img = vec![0; info.buffer_size()];
@@ -140,7 +134,6 @@ impl TextBundle {
             std::fs::read_to_string("resources/tahoma.fnt")
                 .unwrap()
                 .as_str(),
-            bundle,
             resource_bundle,
             (info.width, info.height),
         );
@@ -177,11 +170,16 @@ impl TextBundle {
                 .new_sampler_state_with_descriptor(MTLSamplerDescriptor::new())
         };
 
+        let current_text: Vec<char> = "> a test here; guess what? too lazy, it's gone."
+            .chars()
+            .collect();
+        // println!("{:?}", current_text.iter().map(|a|*a as u8).collect::<Vec<u8>>());
+
         TextBundle {
             letter_map,
             atlas_texture,
             sampler,
-            current_text: "> a test here; guess what? too lazy, it's gone.".chars().collect(),
+            current_text,
         }
     }
 }

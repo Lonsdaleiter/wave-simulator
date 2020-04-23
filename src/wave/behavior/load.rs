@@ -8,7 +8,7 @@ pub struct ResourceLoadBehavior;
 impl Behavior<WaveApp> for ResourceLoadBehavior {
     fn init(&self, state: &mut WaveApp) {
         let resource_bundle = unsafe { ResourceBundle::new(&state) };
-        let terminal_bundle = TextBundle::new(&state.window_bundle, &resource_bundle);
+        let terminal_bundle = TextBundle::new(&resource_bundle);
         state.resource_bundle = Some(resource_bundle);
         state.terminal_bundle = Some(terminal_bundle);
     }

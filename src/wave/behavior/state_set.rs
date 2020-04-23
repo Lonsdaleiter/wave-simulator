@@ -98,7 +98,7 @@ impl Behavior<WaveApp> for StateSetBehavior {
                         render_encoder.set_vertex_bytes(
                             [
                                 -0.98f32 + cursor + letter.x_offset as f32 / size,
-                                -1.0 + letter.height / 2.0 - letter.y_offset as f32 / size,
+                                -0.9 - letter.y_offset as f32 / size,
                                 0.2,
                                 0.2,
                             ]
