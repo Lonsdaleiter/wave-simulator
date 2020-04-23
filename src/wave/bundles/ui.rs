@@ -58,7 +58,7 @@ impl UiBundle {
         let quad = bundle.device.new_buffer_with_bytes(
             data.as_ptr() as *const c_void,
             data.len() as u64 * 4,
-            0,
+            0, // shared storage
         );
 
         UiBundle { pipeline, quad }
