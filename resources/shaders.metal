@@ -22,8 +22,8 @@ vertex UiFragment ui_vert(device UiVertex *vertexArray [[ buffer(0) ]],
 }
 
 fragment float4 ui_frag(UiFragment in [[stage_in]],
-                          texture2d<float> texture [[ texture(0) ]],
-                          sampler sam [[ sampler(0) ]])
+                        texture2d<float> texture [[ texture(0) ]],
+                        sampler sam [[ sampler(0) ]])
 {
     return float4(0.0, 1.0, 1.0, 1.0);
 }
