@@ -5,8 +5,9 @@ use crate::wave::WaveApp;
 pub struct BaseLoaderBehavior;
 impl Behavior<WaveApp> for BaseLoaderBehavior {
     fn init(&self, state: &mut WaveApp) {
-        let base_metal_bundle =
-            unsafe { BaseMetalBundle::new(&state.window_bundle.as_ref().unwrap()) };
+        let base_metal_bundle = unsafe {
+            BaseMetalBundle::new(&state.window_bundle.as_ref().unwrap())
+        };
 
         state.base_metal_bundle = Some(base_metal_bundle);
     }

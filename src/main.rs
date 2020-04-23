@@ -2,6 +2,7 @@ use crate::app::Application;
 use crate::wave::WaveApp;
 use winit::event_loop::EventLoop;
 
+mod actor;
 mod app;
 mod behavior;
 mod wave;
