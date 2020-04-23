@@ -14,6 +14,8 @@ pub mod constants;
 pub struct WaveApp {
     pub window_bundle: Option<WindowBundle>,
     pub base_metal_bundle: Option<BaseMetalBundle>,
+    pub tabs: Option<Vec<Box<dyn Behavior<WaveApp>>>>,
+    pub tab: u32,
 }
 
 impl Application for WaveApp {
@@ -21,6 +23,8 @@ impl Application for WaveApp {
         WaveApp {
             window_bundle: None,
             base_metal_bundle: None,
+            tabs: None,
+            tab: 0, // default tab
         }
     }
 

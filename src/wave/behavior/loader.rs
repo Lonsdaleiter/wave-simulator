@@ -1,6 +1,7 @@
 use crate::behavior::Behavior;
 use crate::wave::bundles::basemetal::BaseMetalBundle;
 use crate::wave::WaveApp;
+use crate::wave::behavior::main::MainBehavior;
 
 pub struct BaseLoaderBehavior;
 impl Behavior<WaveApp> for BaseLoaderBehavior {
@@ -13,7 +14,7 @@ impl Behavior<WaveApp> for BaseLoaderBehavior {
     }
 
     fn update(&self, _state: &mut WaveApp) -> Option<Box<dyn Behavior<WaveApp>>> {
-        None
+        Some(Box::new(MainBehavior))
     }
 
     fn draw(&self, _state: &mut WaveApp) {

@@ -25,7 +25,7 @@ impl BaseMetalBundle {
         let queue = device.new_command_queue();
 
         let surface = CAMetalLayer::new();
-        surface.set_pixel_format(70); // rgba8unorm = 70; bgra8unorm = 80
+        surface.set_pixel_format(80); // rgba8unorm = 70; bgra8unorm = 80
         surface.set_display_sync_enabled(VSYNC);
         surface.set_device(device.clone());
         surface.set_contents_scale(2.0);

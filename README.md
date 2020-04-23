@@ -13,6 +13,7 @@ REMEMBER WHEN DEVELOPING:
 
 - do some water physics (something with shaders)
 - do some sound physics
-- ALL IS 2D
+- most physics are 2d (for simplicity)
+- 3d versions of water physics (stretch goal)
 - give waves their own pipeline and shaders
 (stencil for determining if can progress?)
