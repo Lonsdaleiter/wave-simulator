@@ -1,11 +1,13 @@
 use crate::wave::bundles::basemetal::BaseMetalBundle;
 use cull_canyon::{
-    MTLRenderPipelineColorAttachmentDescriptor, MTLRenderPipelineDescriptor,
+    MTLBuffer, MTLRenderPipelineColorAttachmentDescriptor, MTLRenderPipelineDescriptor,
     MTLRenderPipelineState, MTLVertexDescriptor,
 };
+use std::os::raw::c_void;
 
 pub struct UiBundle {
     pub pipeline: MTLRenderPipelineState,
+    pub quad: MTLBuffer,
 }
 
 impl UiBundle {
@@ -36,6 +38,29 @@ impl UiBundle {
                 desc
             })
             .unwrap();
-        UiBundle { pipeline }
+
+        let data = [
+            // triangle 1
+            -1.0f32, -1.0, // v1
+            0.0, 1.0, // t1
+            -1.0, 1.0, // v2
+            0.0, 0.0, // t2
+            1.0, 1.0, // v3
+            1.0, 0.0, // t3
+            // triangle 2
+            1.0, 1.0, // v3
+            1.0, 0.0, // t3
+            1.0, -1.0, // v4
+            1.0, 1.0, // t4
+            -1.0f32, -1.0, // v1
+            0.0, 1.0, // t1
+        ];
+        let quad = bundle.device.new_buffer_with_bytes(
+            data.as_ptr() as *const c_void,
+            data.len() as u64 * 4,
+            0,
+        );
+
+        UiBundle { pipeline, quad }
     }
 }

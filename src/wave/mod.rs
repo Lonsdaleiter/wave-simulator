@@ -1,13 +1,13 @@
 use crate::app::Application;
 use crate::behavior::Behavior;
 use crate::wave::bundles::basemetal::BaseMetalBundle;
+use crate::wave::bundles::ui::UiBundle;
 use crate::wave::bundles::window::WindowBundle;
 use crate::wave::constants::FPS;
 use crate::wave::tab::Tab;
 use std::time::{Duration, Instant};
 use winit::event::{Event, StartCause, WindowEvent};
 use winit::event_loop::{ControlFlow, EventLoop};
-use crate::wave::bundles::ui::UiBundle;
 
 pub mod behavior;
 pub mod bundles;
