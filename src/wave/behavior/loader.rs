@@ -1,10 +1,13 @@
 use crate::behavior::Behavior;
 use crate::wave::WaveApp;
+use crate::wave::bundles::basemetal::BaseMetalBundle;
 
 pub struct BaseLoaderBehavior;
 impl Behavior<WaveApp> for BaseLoaderBehavior {
-    fn init(&self, _state: &mut WaveApp) {
-        //
+    fn init(&self, state: &mut WaveApp) {
+        let base_metal_bundle = unsafe { BaseMetalBundle::new() };
+
+        state.base_metal_bundle = Some(base_metal_bundle);
     }
 
     fn update(&self, _state: &mut WaveApp) -> Option<Box<dyn Behavior<WaveApp>>> {
@@ -15,7 +18,7 @@ impl Behavior<WaveApp> for BaseLoaderBehavior {
         //
     }
 
-    fn on_resize(&self, _state: &mut WaveApp, size: (u32, u32)) {
+    fn on_resize(&self, _state: &mut WaveApp, _size: (u32, u32)) {
         //
     }
 

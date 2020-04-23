@@ -4,6 +4,7 @@ use std::time::{Duration, Instant};
 use winit::event::{Event, StartCause, WindowEvent};
 use winit::event_loop::{ControlFlow, EventLoop};
 use crate::wave::bundles::window::WindowBundle;
+use crate::wave::bundles::basemetal::BaseMetalBundle;
 
 pub mod behavior;
 pub mod bundles;
@@ -11,12 +12,14 @@ pub mod constants;
 
 pub struct WaveApp {
     pub window_bundle: Option<WindowBundle>,
+    pub base_metal_bundle: Option<BaseMetalBundle>,
 }
 
 impl Application for WaveApp {
     fn new() -> Self {
         WaveApp {
-            window_bundle: None
+            window_bundle: None,
+            base_metal_bundle: None,
         }
     }
 
@@ -24,7 +27,7 @@ impl Application for WaveApp {
         self.window_bundle = Some(WindowBundle::new(&event_loop));
 
         let mut current_behavior: Box<dyn Behavior<Self>> =
-            Box::new(behavior::loader::base::BaseLoaderBehavior);
+            Box::new(behavior::loader::BaseLoaderBehavior);
         current_behavior.init(&mut self);
 
         let duration = Duration::from_millis((1000.0 / constants::FPS) as u64);
