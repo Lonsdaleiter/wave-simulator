@@ -3,20 +3,29 @@ use crate::behavior::Behavior;
 use std::time::{Duration, Instant};
 use winit::event::{Event, StartCause, WindowEvent};
 use winit::event_loop::{ControlFlow, EventLoop};
+use crate::wave::bundles::window::WindowBundle;
 
 pub mod behavior;
 pub mod bundles;
 pub mod constants;
 
-pub struct WaveApp;
+pub struct WaveApp {
+    pub window_bundle: Option<WindowBundle>,
+}
+
 impl Application for WaveApp {
     fn new() -> Self {
-        WaveApp
+        WaveApp {
+            window_bundle: None
+        }
     }
 
     fn execute(mut self, event_loop: EventLoop<()>) {
+        self.window_bundle = Some(WindowBundle::new(&event_loop));
+
         let mut current_behavior: Box<dyn Behavior<Self>> =
-            Box::new(behavior::loader::window::WindowBehavior);
+            Box::new(behavior::loader::base::BaseLoaderBehavior);
+        current_behavior.init(&mut self);
 
         let duration = Duration::from_millis((1000.0 / constants::FPS) as u64);
         let mut now = Instant::now();
@@ -34,13 +43,17 @@ impl Application for WaveApp {
                             Some(t) => {
                                 current_behavior.on_death(&mut self);
                                 current_behavior = t;
+                                current_behavior.init(&mut self);
                             }
                         }
                         now = Instant::now();
                     }
                     _ => {}
                 },
-                Event::WindowEvent { window_id: _, event } => match event {
+                Event::WindowEvent {
+                    window_id: _,
+                    event,
+                } => match event {
                     WindowEvent::CloseRequested => {
                         *control_flow = ControlFlow::Exit;
                     }

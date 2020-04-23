@@ -1,8 +1,8 @@
 use crate::behavior::Behavior;
 use crate::wave::WaveApp;
 
-pub struct WindowBehavior;
-impl Behavior<WaveApp> for WindowBehavior {
+pub struct BaseLoaderBehavior;
+impl Behavior<WaveApp> for BaseLoaderBehavior {
     fn init(&self, _state: &mut WaveApp) {
         //
     }
@@ -15,7 +15,7 @@ impl Behavior<WaveApp> for WindowBehavior {
         //
     }
 
-    fn on_resize(&self, _state: &mut WaveApp, _size: (u32, u32)) {
+    fn on_resize(&self, _state: &mut WaveApp, size: (u32, u32)) {
         //
     }
 
