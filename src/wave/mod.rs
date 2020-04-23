@@ -3,6 +3,7 @@ use crate::behavior::Behavior;
 use crate::wave::bundles::basemetal::BaseMetalBundle;
 use crate::wave::bundles::window::WindowBundle;
 use crate::wave::constants::FPS;
+use crate::wave::tab::Tab;
 use std::time::{Duration, Instant};
 use winit::event::{Event, StartCause, WindowEvent};
 use winit::event_loop::{ControlFlow, EventLoop};
@@ -10,11 +11,12 @@ use winit::event_loop::{ControlFlow, EventLoop};
 pub mod behavior;
 pub mod bundles;
 pub mod constants;
+pub mod tab;
 
 pub struct WaveApp {
     pub window_bundle: Option<WindowBundle>,
     pub base_metal_bundle: Option<BaseMetalBundle>,
-    pub tabs: Option<Vec<Box<dyn Behavior<WaveApp>>>>,
+    pub tabs: Vec<Tab>,
     pub tab: u32,
 }
 
@@ -23,7 +25,7 @@ impl Application for WaveApp {
         WaveApp {
             window_bundle: None,
             base_metal_bundle: None,
-            tabs: None,
+            tabs: Vec::new(),
             tab: 0, // default tab
         }
     }

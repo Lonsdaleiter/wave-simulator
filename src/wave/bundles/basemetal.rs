@@ -1,6 +1,9 @@
 use crate::wave::bundles::window::WindowBundle;
 use crate::wave::constants::VSYNC;
-use cull_canyon::{set_layer_for_raw_window_handle, CAMetalLayer, MTLCompileOptions, MTLDevice, MTLLibrary, MTLCommandQueue};
+use cull_canyon::{
+    set_layer_for_raw_window_handle, CAMetalLayer, MTLCommandQueue, MTLCompileOptions, MTLDevice,
+    MTLLibrary,
+};
 
 pub struct BaseMetalBundle {
     pub device: MTLDevice,
@@ -40,6 +43,10 @@ impl BaseMetalBundle {
             )
             .unwrap();
 
-        BaseMetalBundle { device, queue, library }
+        BaseMetalBundle {
+            device,
+            queue,
+            library,
+        }
     }
 }

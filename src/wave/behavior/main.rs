@@ -8,10 +8,12 @@ impl Behavior<WaveApp> for MainBehavior {
     }
 
     fn update(&self, state: &mut WaveApp) -> Option<Box<dyn Behavior<WaveApp>>> {
-        let k = &state.tabs.as_ref().unwrap()[state.tab as usize];
-        // for getting around issues with multiple borrows
-        let nk: Box<dyn Behavior<WaveApp>> = unsafe { std::mem::transmute_copy(k) };
-        nk.update(state);
+        state
+            .window_bundle
+            .as_ref()
+            .unwrap()
+            .window
+            .request_redraw();
 
         None
     }
