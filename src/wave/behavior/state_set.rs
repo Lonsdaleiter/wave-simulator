@@ -52,28 +52,6 @@ impl Behavior<WaveApp> for StateSetBehavior {
                     desc
                 });
                 render_encoder.set_render_pipeline_state(bundle.text_pipeline.clone());
-                render_encoder.set_vertex_buffer(
-                    state
-                        .terminal_bundle
-                        .as_ref()
-                        .unwrap()
-                        .letter_map
-                        .get(&'>')
-                        .unwrap()
-                        .buffer
-                        .clone(),
-                    0,
-                    0,
-                ); // temporary
-                render_encoder.set_vertex_bytes(
-                    [
-                        -0.98f32, -0.95, // translation
-                        0.2, 0.2, // scale
-                    ].as_ptr() as *const c_void,
-                    16,
-                    1,
-                );
-
                 let size = state.window_bundle.window.inner_size();
                 render_encoder.set_vertex_bytes(
                     [size.width, size.height].as_ptr() as *const c_void,
@@ -98,7 +76,41 @@ impl Behavior<WaveApp> for StateSetBehavior {
                     12,
                     0,
                 );
-                render_encoder.draw_primitives(3, 0, 12, 1, 0);
+
+                let mut cursor = 0.0;
+                let size = state.window_bundle.window.inner_size().width as f32;
+                state
+                    .terminal_bundle
+                    .as_ref()
+                    .unwrap()
+                    .current_text
+                    .iter()
+                    .enumerate()
+                    .for_each(|text| {
+                        let letter = state
+                            .terminal_bundle
+                            .as_ref()
+                            .unwrap()
+                            .letter_map
+                            .get(text.1)
+                            .unwrap();
+                        render_encoder.set_vertex_buffer(letter.buffer.clone(), 0, 0);
+                        render_encoder.set_vertex_bytes(
+                            [
+                                -0.98f32 + cursor + letter.x_offset as f32 / size,
+                                -1.0 + letter.height / 2.0 - letter.y_offset as f32 / size,
+                                0.2,
+                                0.2,
+                            ]
+                            .as_ptr() as *const c_void,
+                            16,
+                            1,
+                        );
+                        cursor += letter.x_advance as f32 / size;
+
+                        render_encoder.draw_primitives(3, 0, 12, 1, 0);
+                    });
+
                 render_encoder.end_encoding();
 
                 command_buffer.present_drawable(drawable);

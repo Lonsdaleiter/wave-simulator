@@ -1,7 +1,7 @@
 use crate::wave::WaveApp;
 use cull_canyon::{
-    set_layer_for_raw_window_handle, CAMetalLayer, MTLCommandQueue, MTLCompileOptions,
-    MTLDevice, MTLRenderPipelineColorAttachmentDescriptor, MTLRenderPipelineDescriptor,
+    set_layer_for_raw_window_handle, CAMetalLayer, MTLCommandQueue, MTLCompileOptions, MTLDevice,
+    MTLRenderPipelineColorAttachmentDescriptor, MTLRenderPipelineDescriptor,
     MTLRenderPipelineState, MTLVertexDescriptor,
 };
 

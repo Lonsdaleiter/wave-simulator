@@ -11,12 +11,15 @@ pub struct Letter {
     pub x_offset: i32,
     pub y_offset: i32,
     pub x_advance: u32,
+    pub width: f32,
+    pub height: f32,
 }
 
-pub struct TerminalBundle {
+pub struct TextBundle {
     pub letter_map: HashMap<char, Letter>,
     pub atlas_texture: MTLTexture,
     pub sampler: MTLSamplerState,
+    pub current_text: Vec<char>,
 }
 
 fn read_font_file(
@@ -75,19 +78,31 @@ fn read_font_file(
         // size is 192
         let base_data = [
             // triangle 1
-            -1.0f32 * real_width, -1.0 * real_height, // v1
-            0.0 + real_x, 1.0 * real_height + real_y, // t1
-            -1.0 * real_width, 1.0 * real_height, // v2
-            0.0 + real_x, 0.0 + real_y, // t2
-            1.0 * real_width, 1.0 * real_height, // v3
-            1.0 * real_width + real_x, 0.0 + real_y, // t3
+            -1.0f32 * real_width,
+            -1.0 * real_height, // v1
+            0.0 + real_x,
+            1.0 * real_height + real_y, // t1
+            -1.0 * real_width,
+            1.0 * real_height, // v2
+            0.0 + real_x,
+            0.0 + real_y, // t2
+            1.0 * real_width,
+            1.0 * real_height, // v3
+            1.0 * real_width + real_x,
+            0.0 + real_y, // t3
             // triangle 2
-            1.0 * real_width, 1.0 * real_height, // v3
-            1.0 * real_width + real_x, 0.0 + real_y, // t3
-            1.0 * real_width, -1.0 * real_height, // v4
-            1.0 * real_width + real_x, 1.0 * real_height + real_y, // t4
-            -1.0f32 * real_width, -1.0 * real_height, // v1
-            0.0 + real_x, 1.0 * real_height + real_y, // t1
+            1.0 * real_width,
+            1.0 * real_height, // v3
+            1.0 * real_width + real_x,
+            0.0 + real_y, // t3
+            1.0 * real_width,
+            -1.0 * real_height, // v4
+            1.0 * real_width + real_x,
+            1.0 * real_height + real_y, // t4
+            -1.0f32 * real_width,
+            -1.0 * real_height, // v1
+            0.0 + real_x,
+            1.0 * real_height + real_y, // t1
         ];
         let buffer = unsafe {
             resource_bundle.device.new_buffer_with_bytes(
@@ -105,6 +120,8 @@ fn read_font_file(
                 x_offset,
                 y_offset,
                 x_advance,
+                width: real_width,
+                height: real_height,
             },
         );
     });
@@ -112,8 +129,8 @@ fn read_font_file(
     letter_map
 }
 
-impl TerminalBundle {
-    pub fn new(bundle: &WindowBundle, resource_bundle: &ResourceBundle) -> TerminalBundle {
+impl TextBundle {
+    pub fn new(bundle: &WindowBundle, resource_bundle: &ResourceBundle) -> TextBundle {
         let decoder = png::Decoder::new(std::fs::File::open("resources/tahoma.png").unwrap());
         let (info, mut reader) = decoder.read_info().unwrap();
         let mut img = vec![0; info.buffer_size()];
@@ -160,10 +177,11 @@ impl TerminalBundle {
                 .new_sampler_state_with_descriptor(MTLSamplerDescriptor::new())
         };
 
-        TerminalBundle {
+        TextBundle {
             letter_map,
             atlas_texture,
             sampler,
+            current_text: "> a test here; guess what? too lazy, it's gone.".chars().collect(),
         }
     }
 }
