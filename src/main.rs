@@ -8,6 +8,6 @@ mod wave;
 
 fn main() {
     let event_loop = EventLoop::new();
-    let wave_app = WaveApp::new(&event_loop);
+    let wave_app = WaveApp::new();
     wave_app.execute(event_loop);
 }
