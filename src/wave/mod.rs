@@ -7,6 +7,7 @@ use crate::wave::tab::Tab;
 use std::time::{Duration, Instant};
 use winit::event::{Event, StartCause, WindowEvent};
 use winit::event_loop::{ControlFlow, EventLoop};
+use crate::wave::bundles::ui::UiBundle;
 
 pub mod behavior;
 pub mod bundles;
@@ -16,6 +17,7 @@ pub mod tab;
 pub struct WaveApp {
     pub window_bundle: Option<WindowBundle>,
     pub base_metal_bundle: Option<BaseMetalBundle>,
+    pub ui_bundle: Option<UiBundle>,
     pub tabs: Vec<Tab>,
     pub tab: u32,
 }
@@ -25,6 +27,7 @@ impl Application for WaveApp {
         WaveApp {
             window_bundle: None,
             base_metal_bundle: None,
+            ui_bundle: None,
             tabs: Vec::new(),
             tab: 0, // default tab
         }

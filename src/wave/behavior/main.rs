@@ -1,10 +1,11 @@
 use crate::behavior::Behavior;
 use crate::wave::WaveApp;
+use crate::wave::bundles::ui::UiBundle;
 
 pub struct MainBehavior;
 impl Behavior<WaveApp> for MainBehavior {
-    fn init(&self, _state: &mut WaveApp) {
-        //
+    fn init(&self, state: &mut WaveApp) {
+        state.ui_bundle = Some(unsafe { UiBundle::new(state.base_metal_bundle.as_ref().unwrap()) })
     }
 
     fn update(&self, state: &mut WaveApp) -> Option<Box<dyn Behavior<WaveApp>>> {
