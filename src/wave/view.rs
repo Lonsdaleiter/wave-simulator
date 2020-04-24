@@ -19,14 +19,24 @@ impl Camera {
         let sin_pitch = self.pitch.sin();
         let cos_yaw = self.yaw.cos();
         let sin_yaw = self.yaw.sin();
-        let cos_roll = self.roll.cos();
-        let sin_roll = self.roll.sin();
+        let eye = [self.x, self.y, self.z];
         [
-            cos_yaw, sin_yaw * sin_pitch, sin_yaw * cos_pitch, 0.0, // r1
-            0.0, cos_pitch, -sin_pitch, 0.0, // r2
-            -sin_yaw, cos_yaw * sin_pitch, cos_pitch * cos_yaw, 0.0, // r3
-            0.0, 0.0, 0.0, 1.0,
-            // -dot(), -dot(), -dot(), 1.0, // r4 TODO finish up the dots
+            cos_yaw,
+            sin_yaw * sin_pitch,
+            sin_yaw * cos_pitch,
+            0.0, // r1
+            0.0,
+            cos_pitch,
+            -sin_pitch,
+            0.0, // r2
+            -sin_yaw,
+            cos_yaw * sin_pitch,
+            cos_pitch * cos_yaw,
+            0.0, // r3
+            -dot([cos_yaw, 0.0, -sin_yaw], eye),
+            -dot([sin_yaw * sin_pitch, cos_pitch, cos_yaw * sin_pitch], eye),
+            -dot([sin_yaw * cos_pitch, -sin_pitch, cos_pitch * cos_yaw], eye),
+            1.0, // r4
         ]
     }
 }

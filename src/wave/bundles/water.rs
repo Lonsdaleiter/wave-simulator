@@ -1,5 +1,8 @@
 use crate::wave::bundles::basemetal::BaseMetalBundle;
-use cull_canyon::{MTLBuffer, MTLRenderPipelineColorAttachmentDescriptor, MTLRenderPipelineDescriptor, MTLRenderPipelineState, MTLVertexDescriptor};
+use cull_canyon::{
+    MTLBuffer, MTLRenderPipelineColorAttachmentDescriptor, MTLRenderPipelineDescriptor,
+    MTLRenderPipelineState, MTLVertexDescriptor,
+};
 use std::os::raw::c_void;
 
 pub struct WaterBundle {
