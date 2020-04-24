@@ -11,9 +11,21 @@ pub fn new_projection_matrix(aspect_ratio: f32) -> [f32; 16] {
     let x_scale = y_scale / aspect_ratio;
     let frustum_len = FAR_PLANE - NEAR_PLANE;
     [
-        x_scale, 0.0, 0.0, 0.0, // r1
-        0.0, y_scale, 0.0, 0.0, // r2
-        0.0, 0.0, -((FAR_PLANE + NEAR_PLANE) / frustum_len), -1.0, // r3
-        0.0, 0.0, -((2.0 * FAR_PLANE * NEAR_PLANE) / frustum_len), 0.0, // r4
+        x_scale,
+        0.0,
+        0.0,
+        0.0, // r1
+        0.0,
+        y_scale,
+        0.0,
+        0.0, // r2
+        0.0,
+        0.0,
+        -((FAR_PLANE + NEAR_PLANE) / frustum_len),
+        -1.0, // r3
+        0.0,
+        0.0,
+        -((2.0 * FAR_PLANE * NEAR_PLANE) / frustum_len),
+        0.0, // r4
     ]
 }

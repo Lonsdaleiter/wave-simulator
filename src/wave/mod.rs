@@ -1,9 +1,10 @@
 use crate::app::Application;
 use crate::behavior::Behavior;
 use crate::wave::bundles::basemetal::BaseMetalBundle;
+use crate::wave::bundles::matrix::MatrixBundle;
 use crate::wave::bundles::ui::UiBundle;
 use crate::wave::bundles::window::WindowBundle;
-use crate::wave::constants::{new_projection_matrix, FPS};
+use crate::wave::constants::FPS;
 use crate::wave::water::Water;
 use std::time::{Duration, Instant};
 use winit::event::{Event, StartCause, WindowEvent};
@@ -18,7 +19,7 @@ pub mod widget;
 pub struct WaveApp {
     pub window_bundle: Option<WindowBundle>,
     pub base_metal_bundle: Option<BaseMetalBundle>,
-    pub projection: Option<[f32; 16]>,
+    pub matrix_bundle: Option<MatrixBundle>,
     pub ui_bundle: Option<UiBundle>,
     pub water: Option<Water>,
 }
@@ -28,7 +29,7 @@ impl Application for WaveApp {
         WaveApp {
             window_bundle: None,
             base_metal_bundle: None,
-            projection: None,
+            matrix_bundle: None,
             ui_bundle: None,
             water: None,
         }
@@ -36,11 +37,6 @@ impl Application for WaveApp {
 
     fn execute(mut self, event_loop: EventLoop<()>) {
         self.window_bundle = Some(WindowBundle::new(&event_loop));
-
-        let size = self.window_bundle.as_ref().unwrap().window.inner_size();
-        self.projection = Some(new_projection_matrix(
-            size.width as f32 / size.height as f32,
-        ));
 
         let mut current_behavior: Box<dyn Behavior<Self>> =
             Box::new(behavior::loader::BaseLoaderBehavior);
@@ -77,9 +73,6 @@ impl Application for WaveApp {
                         *control_flow = ControlFlow::Exit;
                     }
                     WindowEvent::Resized(size) => {
-                        self.projection = Some(new_projection_matrix(
-                            size.width as f32 / size.height as f32,
-                        ));
                         current_behavior.on_resize(&mut self, (size.width, size.height));
                     }
                     _ => {}

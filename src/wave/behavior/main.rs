@@ -2,7 +2,10 @@ use crate::behavior::Behavior;
 use crate::wave::bundles::ui::UiBundle;
 use crate::wave::water::generate_water;
 use crate::wave::WaveApp;
-use cull_canyon::{MTLRenderPassDescriptor, MTLRenderPassColorAttachmentDescriptor, MTLRenderPassAttachmentDescriptor, MTLCommandEncoder};
+use cull_canyon::{
+    MTLCommandEncoder, MTLRenderPassAttachmentDescriptor, MTLRenderPassColorAttachmentDescriptor,
+    MTLRenderPassDescriptor,
+};
 
 pub struct MainBehavior;
 impl Behavior<WaveApp> for MainBehavior {
@@ -24,7 +27,7 @@ impl Behavior<WaveApp> for MainBehavior {
 
     fn draw(&self, state: &mut WaveApp) {
         let bundle = state.base_metal_bundle.as_ref().unwrap();
-        let ui = state.ui_bundle.as_ref().unwrap();
+        // let ui = state.ui_bundle.as_ref().unwrap();
 
         unsafe {
             if let Some(drawable) = bundle.surface.next_drawable() {
@@ -32,11 +35,12 @@ impl Behavior<WaveApp> for MainBehavior {
 
                 let encoder = command_buffer.new_render_command_encoder_with_descriptor({
                     let desc = MTLRenderPassDescriptor::new();
-                    desc.get_color_attachments().set_object_at_indexed_subscript(0, {
-                        let desc = MTLRenderPassColorAttachmentDescriptor::new();
-                        desc.set_texture(drawable.get_texture());
-                        desc
-                    });
+                    desc.get_color_attachments()
+                        .set_object_at_indexed_subscript(0, {
+                            let desc = MTLRenderPassColorAttachmentDescriptor::new();
+                            desc.set_texture(drawable.get_texture());
+                            desc
+                        });
                     desc
                 });
                 // the below works when we ignore the ui transformation in the shader
