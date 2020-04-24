@@ -16,10 +16,6 @@ impl Behavior<WaveApp> for MainBehavior {
             .window
             .request_redraw();
 
-        state.tabs.iter().for_each(|tab|{
-            //
-        });
-
         None
     }
 
