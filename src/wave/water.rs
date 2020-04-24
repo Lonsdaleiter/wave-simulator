@@ -2,7 +2,12 @@ use crate::wave::bundles::basemetal::BaseMetalBundle;
 use cull_canyon::MTLBuffer;
 use std::os::raw::c_void;
 
-pub unsafe fn generate_water(bundle: &BaseMetalBundle) -> (MTLBuffer, MTLBuffer) {
+pub struct Water {
+    pub water_buffer: MTLBuffer,
+    pub water_indices: MTLBuffer,
+}
+
+pub unsafe fn generate_water(bundle: &BaseMetalBundle) -> Water {
     // row by row generation
     const VERTEX_COUNT: u32 = 100;
     let vertices: [f32; (VERTEX_COUNT * VERTEX_COUNT) as usize] = *((0..VERTEX_COUNT)
@@ -17,8 +22,6 @@ pub unsafe fn generate_water(bundle: &BaseMetalBundle) -> (MTLBuffer, MTLBuffer)
         .collect::<Vec<[f32; 3]>>()
         .as_ptr()
         as *const [f32; (VERTEX_COUNT * VERTEX_COUNT) as usize]);
-
-    println!("{:?}", vertices.to_vec());
 
     const INDICES_COUNT: usize = (6 * (VERTEX_COUNT - 1) * (VERTEX_COUNT - 1)) as usize;
     let mut indices: [u32; INDICES_COUNT] = [0; INDICES_COUNT];
@@ -44,16 +47,16 @@ pub unsafe fn generate_water(bundle: &BaseMetalBundle) -> (MTLBuffer, MTLBuffer)
         });
     });
 
-    (
-        bundle.device.new_buffer_with_bytes(
+    Water {
+        water_buffer: bundle.device.new_buffer_with_bytes(
             vertices.as_ptr() as *const c_void,
             vertices.len() as u64 * 4,
             0,
         ),
-        bundle.device.new_buffer_with_bytes(
+        water_indices: bundle.device.new_buffer_with_bytes(
             indices.as_ptr() as *const c_void,
             indices.len() as u64 * 4,
             0,
         ),
-    )
+    }
 }
