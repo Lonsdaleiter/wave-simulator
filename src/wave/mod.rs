@@ -7,6 +7,7 @@ use crate::wave::constants::FPS;
 use std::time::{Duration, Instant};
 use winit::event::{Event, StartCause, WindowEvent};
 use winit::event_loop::{ControlFlow, EventLoop};
+use crate::wave::water::Water;
 
 pub mod behavior;
 pub mod bundles;
@@ -18,6 +19,7 @@ pub struct WaveApp {
     pub window_bundle: Option<WindowBundle>,
     pub base_metal_bundle: Option<BaseMetalBundle>,
     pub ui_bundle: Option<UiBundle>,
+    pub water: Option<Water>,
 }
 
 impl Application for WaveApp {
@@ -26,6 +28,7 @@ impl Application for WaveApp {
             window_bundle: None,
             base_metal_bundle: None,
             ui_bundle: None,
+            water: None,
         }
     }
 

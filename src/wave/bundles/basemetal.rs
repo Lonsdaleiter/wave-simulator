@@ -8,6 +8,7 @@ use cull_canyon::{
 pub struct BaseMetalBundle {
     pub device: MTLDevice,
     pub queue: MTLCommandQueue,
+    pub surface: CAMetalLayer,
     pub library: MTLLibrary,
 }
 
@@ -32,7 +33,7 @@ impl BaseMetalBundle {
         surface.set_display_sync_enabled(VSYNC);
         surface.set_device(device.clone());
         surface.set_contents_scale(2.0);
-        set_layer_for_raw_window_handle(surface, &window_bundle.window);
+        set_layer_for_raw_window_handle(surface.clone(), &window_bundle.window);
 
         let library = device
             .new_library_with_source(
@@ -46,6 +47,7 @@ impl BaseMetalBundle {
         BaseMetalBundle {
             device,
             queue,
+            surface,
             library,
         }
     }
