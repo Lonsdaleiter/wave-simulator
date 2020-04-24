@@ -33,3 +33,25 @@ fragment float4 ui_frag(UiFragment in [[stage_in]],
 {
     return float4(0.0, 1.0, 1.0, 1.0);
 }
+
+struct WaterVertex {
+    float3 position;
+};
+
+struct WaterTransformation {
+    float4x4 projection;
+    float4x4 view;
+};
+
+struct WaterFragment {
+    float4 position [[ position ]];
+};
+
+vertex WaterFragment water_vert(device WaterVertex *vertexArray [[ buffer(0) ]],
+                                constant WaterTransformation &transform [[ buffer(1) ]],
+                                unsigned int vid [[ vertex_id ]])
+{
+    WaterFragment out;
+    out.position = transform.projection * transform.view * float4(vertexArray[vid].position, 1.0);
+    return out;
+};
