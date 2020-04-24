@@ -1,11 +1,13 @@
 use crate::behavior::Behavior;
 use crate::wave::bundles::ui::UiBundle;
 use crate::wave::WaveApp;
+use crate::wave::water::generate_water;
 
 pub struct MainBehavior;
 impl Behavior<WaveApp> for MainBehavior {
     fn init(&self, state: &mut WaveApp) {
-        state.ui_bundle = Some(unsafe { UiBundle::new(state.base_metal_bundle.as_ref().unwrap()) })
+        state.ui_bundle = Some(unsafe { UiBundle::new(state.base_metal_bundle.as_ref().unwrap()) });
+        let _water = unsafe { generate_water(&state.base_metal_bundle.as_ref().unwrap()) };
     }
 
     fn update(&self, state: &mut WaveApp) -> Option<Box<dyn Behavior<WaveApp>>> {
