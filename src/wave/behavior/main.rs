@@ -24,6 +24,8 @@ impl Behavior<WaveApp> for MainBehavior {
     fn draw(&self, state: &mut WaveApp) {
         let bundle = state.base_metal_bundle.as_ref().unwrap();
 
+        println!("{:?}", state.projection.as_ref().unwrap());
+
         unsafe {
             if let Some(drawable) = bundle.surface.next_drawable() {
                 let command_buffer = bundle.queue.new_command_buffer();
