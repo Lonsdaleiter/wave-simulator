@@ -1,7 +1,7 @@
 use crate::behavior::Behavior;
 use crate::wave::bundles::ui::UiBundle;
-use crate::wave::WaveApp;
 use crate::wave::water::generate_water;
+use crate::wave::WaveApp;
 
 pub struct MainBehavior;
 impl Behavior<WaveApp> for MainBehavior {

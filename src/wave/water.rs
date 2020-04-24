@@ -5,14 +5,18 @@ use std::os::raw::c_void;
 pub unsafe fn generate_water(bundle: &BaseMetalBundle) -> (MTLBuffer, MTLBuffer) {
     // row by row generation
     const VERTEX_COUNT: u32 = 100;
-    let vertices: [f32; (VERTEX_COUNT * VERTEX_COUNT) as usize] = *((*((0..VERTEX_COUNT)
+    let vertices: [f32; (VERTEX_COUNT * VERTEX_COUNT) as usize] = *((0..VERTEX_COUNT)
         .map(|z: u32| {
             (0..VERTEX_COUNT)
                 .map(|x: u32| [x as f32, 0.0, z as f32])
                 .collect::<Vec<[f32; 3]>>()
         })
         .collect::<Vec<Vec<[f32; 3]>>>()
-        .as_ptr())).as_ptr() as *const [f32; (VERTEX_COUNT * VERTEX_COUNT) as usize]);
+        .into_iter()
+        .flatten()
+        .collect::<Vec<[f32; 3]>>()
+        .as_ptr()
+        as *const [f32; (VERTEX_COUNT * VERTEX_COUNT) as usize]);
 
     println!("{:?}", vertices.to_vec());
 
