@@ -13,6 +13,7 @@ use winit::event_loop::{ControlFlow, EventLoop};
 pub mod behavior;
 pub mod bundles;
 pub mod constants;
+pub mod view;
 pub mod water;
 pub mod widget;
 

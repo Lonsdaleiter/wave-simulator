@@ -2,6 +2,7 @@ use crate::wave::bundles::basemetal::BaseMetalBundle;
 use crate::wave::constants::new_projection_matrix;
 use cull_canyon::MTLBuffer;
 use std::os::raw::c_void;
+use crate::wave::view::Camera;
 
 pub struct MatrixBundle {
     pub projection: MTLBuffer,
@@ -30,7 +31,12 @@ impl MatrixBundle {
             ),
         }
     }
-    pub unsafe fn edit(&self, bundle: &BaseMetalBundle, aspect_ratio: f32) {
-        // TODO fill
+    pub unsafe fn edit_projection(&self, aspect_ratio: f32) {
+        let projection = new_projection_matrix(aspect_ratio);
+        let contents = self.projection.get_contents() as *mut [f32; 16];
+        std::mem::replace(&mut *contents, projection);
+    }
+    pub unsafe fn edit_view(&self, camera: Camera) {
+        //
     }
 }

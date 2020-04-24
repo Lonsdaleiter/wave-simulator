@@ -23,13 +23,9 @@ impl Behavior<WaveApp> for BaseLoaderBehavior {
         Some(Box::new(MainBehavior))
     }
 
-    fn draw(&self, _state: &mut WaveApp) {
-        unreachable!()
-    }
+    fn draw(&self, _state: &mut WaveApp) {}
 
-    fn on_resize(&self, _state: &mut WaveApp, _size: (u32, u32)) {
-        unreachable!()
-    }
+    fn on_resize(&self, _state: &mut WaveApp, _size: (u32, u32)) {}
 
     fn on_death(&self, _state: &mut WaveApp) {}
 }
