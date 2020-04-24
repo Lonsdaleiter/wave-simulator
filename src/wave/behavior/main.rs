@@ -1,6 +1,6 @@
 use crate::behavior::Behavior;
 use crate::wave::bundles::ui::UiBundle;
-use crate::wave::water::generate_water;
+use crate::wave::bundles::water::WaterBundle;
 use crate::wave::WaveApp;
 use cull_canyon::{
     MTLCommandEncoder, MTLRenderPassAttachmentDescriptor, MTLRenderPassColorAttachmentDescriptor,
@@ -11,7 +11,9 @@ pub struct MainBehavior;
 impl Behavior<WaveApp> for MainBehavior {
     fn init(&self, state: &mut WaveApp) {
         state.ui_bundle = Some(unsafe { UiBundle::new(state.base_metal_bundle.as_ref().unwrap()) });
-        state.water = Some(unsafe { generate_water(&state.base_metal_bundle.as_ref().unwrap()) });
+        state.water = Some(unsafe {
+            WaterBundle::generate_water(&state.base_metal_bundle.as_ref().unwrap())
+        });
     }
 
     fn update(&self, state: &mut WaveApp) -> Option<Box<dyn Behavior<WaveApp>>> {

@@ -55,3 +55,8 @@ vertex WaterFragment water_vert(device WaterVertex *vertexArray [[ buffer(0) ]],
     out.position = transform.projection * transform.view * float4(vertexArray[vid].position, 1.0);
     return out;
 };
+
+fragment float4 water_frag(WaterFragment in [[ stage_in ]])
+{
+    return float4(0.0, 1.0, 1.0, 1.0);
+};

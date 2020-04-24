@@ -3,9 +3,9 @@ use crate::behavior::Behavior;
 use crate::wave::bundles::basemetal::BaseMetalBundle;
 use crate::wave::bundles::matrix::MatrixBundle;
 use crate::wave::bundles::ui::UiBundle;
+use crate::wave::bundles::water::WaterBundle;
 use crate::wave::bundles::window::WindowBundle;
 use crate::wave::constants::FPS;
-use crate::wave::water::Water;
 use std::time::{Duration, Instant};
 use winit::event::{Event, StartCause, WindowEvent};
 use winit::event_loop::{ControlFlow, EventLoop};
@@ -14,7 +14,6 @@ pub mod behavior;
 pub mod bundles;
 pub mod constants;
 pub mod view;
-pub mod water;
 pub mod widget;
 
 pub struct WaveApp {
@@ -22,7 +21,7 @@ pub struct WaveApp {
     pub base_metal_bundle: Option<BaseMetalBundle>,
     pub matrix_bundle: Option<MatrixBundle>,
     pub ui_bundle: Option<UiBundle>,
-    pub water: Option<Water>,
+    pub water: Option<WaterBundle>,
 }
 
 impl Application for WaveApp {
