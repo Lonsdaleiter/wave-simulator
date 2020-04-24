@@ -1,5 +1,3 @@
-// TODO implement this properly
-
 pub struct Camera {
     pub x: f32,
     pub y: f32,
