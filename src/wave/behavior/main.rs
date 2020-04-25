@@ -26,7 +26,8 @@ impl Behavior<WaveApp> for MainBehavior {
 
         let window_size = state.window_bundle.as_ref().unwrap().window.inner_size();
         let yaw = -(window_size.width as f64 - state.mouse_pos.0 / 2.0);
-        let pitch = (window_size.height as f64 / 2.0) - state.mouse_pos.1;
+        let pitch =
+            (window_size.height as f64 / 2.0) - (window_size.height as f64 - state.mouse_pos.1);
 
         let pitch = if pitch >= 90.0 { 90.0 } else { pitch };
         let pitch = if pitch <= -90.0 { -90.0 } else { pitch };

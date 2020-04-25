@@ -13,12 +13,7 @@ pub fn new_projection_matrix(aspect_ratio: f32) -> [f32; 16] {
     // let x_scale = y_scale / aspect_ratio;
     // let frustum_len = FAR_PLANE - NEAR_PLANE;
     unsafe {
-        let persp = cgmath::perspective(
-            Deg(FOV),
-            aspect_ratio,
-            NEAR_PLANE,
-            FAR_PLANE,
-        );
+        let persp = cgmath::perspective(Deg(FOV), aspect_ratio, NEAR_PLANE, FAR_PLANE);
         std::mem::transmute(persp)
     }
     // [
