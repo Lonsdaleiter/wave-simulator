@@ -51,9 +51,11 @@ vertex FlatFragment flat_vert(device FlatVertex *vertexArray [[ buffer(0) ]],
                               unsigned int vid [[ vertex_id ]])
 {
     float2 pos = vertexArray[vid].position;
+    float4 _h = heightMap.read(uint2(pos.x, pos.y));
+    float height = (_h.x + _h.y + _h.z) / 3.0;
 
     FlatFragment out;
-    out.position = projection * view * float4(pos.x, -1.0, pos.y, 1.0);
+    out.position = projection * view * float4(pos.x, -1.0 + height, pos.y, 1.0);
     return out;
 };
 
