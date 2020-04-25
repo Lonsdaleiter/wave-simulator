@@ -16,7 +16,7 @@ impl WaterBundle {
     pub unsafe fn generate_water(bundle: &BaseMetalBundle) -> WaterBundle {
         // row by row generation
         const VERTEX_COUNT: u32 = 100;
-        let vertices: [f32; (VERTEX_COUNT * VERTEX_COUNT) as usize] = *((0..VERTEX_COUNT)
+        let vertices: [f32; (3 * VERTEX_COUNT * VERTEX_COUNT) as usize] = *((0..VERTEX_COUNT)
             .map(|z: u32| {
                 (0..VERTEX_COUNT)
                     .map(|x: u32| [x as f32, 0.0, z as f32])
@@ -27,9 +27,10 @@ impl WaterBundle {
             .flatten()
             .collect::<Vec<[f32; 3]>>()
             .as_ptr()
-            as *const [f32; (VERTEX_COUNT * VERTEX_COUNT) as usize]);
+            as *const [f32; (3 * VERTEX_COUNT * VERTEX_COUNT) as usize]);
 
         const INDICES_COUNT: usize = (6 * (VERTEX_COUNT - 1) * (VERTEX_COUNT - 1)) as usize;
+        println!("{}", INDICES_COUNT);
         let mut indices: [u32; INDICES_COUNT] = [0; INDICES_COUNT];
         let mut pointer = 0;
         (0..VERTEX_COUNT - 1).for_each(|z| {
