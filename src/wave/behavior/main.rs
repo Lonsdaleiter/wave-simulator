@@ -6,6 +6,8 @@ use cull_canyon::{
     MTLCommandEncoder, MTLRenderPassAttachmentDescriptor, MTLRenderPassColorAttachmentDescriptor,
     MTLRenderPassDescriptor,
 };
+use winit::event::VirtualKeyCode;
+use crate::wave::constants::CAMERA_SPEED;
 
 pub struct MainBehavior;
 impl Behavior<WaveApp> for MainBehavior {
@@ -25,15 +27,42 @@ impl Behavior<WaveApp> for MainBehavior {
             .request_redraw();
 
         let window_size = state.window_bundle.as_ref().unwrap().window.inner_size();
-        let yaw = -(window_size.width as f64 - state.mouse_pos.0 / 2.0);
         let pitch =
             (window_size.height as f64 / 2.0) - (window_size.height as f64 - state.mouse_pos.1);
+        let yaw = -(window_size.width as f64 - state.mouse_pos.0 / 2.0);
 
         let pitch = if pitch >= 90.0 { 90.0 } else { pitch };
         let pitch = if pitch <= -90.0 { -90.0 } else { pitch };
 
-        state.matrix_bundle.as_mut().unwrap().camera.pitch = pitch.to_radians() as f32;
-        state.matrix_bundle.as_mut().unwrap().camera.yaw = yaw.to_radians() as f32;
+        let pitch = pitch.to_radians() as f32;
+        let yaw = yaw.to_radians() as f32;
+
+        let cam = &mut state.matrix_bundle.as_mut().unwrap().camera;
+        cam.pitch = pitch;
+        cam.yaw = yaw;
+
+        if state.keyboard.is_key_down(VirtualKeyCode::W) {
+            cam.z -= yaw.cos() * CAMERA_SPEED;
+            cam.x += yaw.sin() * CAMERA_SPEED;
+        };
+        if state.keyboard.is_key_down(VirtualKeyCode::S) {
+            cam.z += yaw.cos() * CAMERA_SPEED;
+            cam.x -= yaw.sin() * CAMERA_SPEED;
+        };
+        if state.keyboard.is_key_down(VirtualKeyCode::D) {
+            cam.z += yaw.sin() * CAMERA_SPEED;
+            cam.x += yaw.cos() * CAMERA_SPEED;
+        };
+        if state.keyboard.is_key_down(VirtualKeyCode::A) {
+            cam.z -= yaw.sin() * CAMERA_SPEED;
+            cam.x -= yaw.cos() * CAMERA_SPEED;
+        };
+        if state.keyboard.is_key_down(VirtualKeyCode::Space) {
+            cam.y += CAMERA_SPEED;
+        };
+        if state.keyboard.is_key_down(VirtualKeyCode::LShift) {
+            cam.y -= CAMERA_SPEED;
+        };
 
         unsafe { state.matrix_bundle.as_ref().unwrap().edit_view() };
 

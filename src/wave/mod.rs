@@ -16,7 +16,7 @@ pub mod behavior;
 pub mod bundles;
 pub mod constants;
 pub mod keyboard;
-pub mod view;
+pub mod camera;
 pub mod widget;
 
 pub struct WaveApp {
