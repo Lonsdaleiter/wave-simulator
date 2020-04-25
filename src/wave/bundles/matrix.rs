@@ -1,6 +1,6 @@
 use crate::wave::bundles::basemetal::BaseMetalBundle;
-use crate::wave::constants::new_projection_matrix;
 use crate::wave::camera::Camera;
+use crate::wave::constants::new_projection_matrix;
 use cull_canyon::MTLBuffer;
 use std::os::raw::c_void;
 

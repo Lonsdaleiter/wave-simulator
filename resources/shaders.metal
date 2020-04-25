@@ -34,30 +34,30 @@ fragment float4 ui_frag(UiFragment in [[stage_in]],
     return float4(0.0, 1.0, 1.0, 1.0);
 }
 
-// TODO generalize the water stuff to be terrain + water and put the height behavior in kernels
+// TODO put the height map behaviors in kernels
 
-struct WaterVertex {
+struct FlatVertex {
     float2 position;
 };
 
-struct WaterFragment {
+struct FlatFragment {
     float4 position [[ position ]];
 };
 
-vertex WaterFragment water_vert(device WaterVertex *vertexArray [[ buffer(0) ]],
-                                constant float4x4 &projection [[ buffer(1) ]],
-                                constant float4x4 &view [[ buffer(2) ]],
-                                texture2d<float, access::read> heightMap [[ texture(0) ]],
-                                unsigned int vid [[ vertex_id ]])
+vertex FlatFragment flat_vert(device FlatVertex *vertexArray [[ buffer(0) ]],
+                              constant float4x4 &projection [[ buffer(1) ]],
+                              constant float4x4 &view [[ buffer(2) ]],
+                              texture2d<float, access::read> heightMap [[ texture(0) ]],
+                              unsigned int vid [[ vertex_id ]])
 {
     float2 pos = vertexArray[vid].position;
 
-    WaterFragment out;
+    FlatFragment out;
     out.position = projection * view * float4(pos.x, -1.0, pos.y, 1.0);
     return out;
 };
 
-fragment float4 water_frag(WaterFragment in [[ stage_in ]])
+fragment float4 water_frag(FlatFragment in [[ stage_in ]])
 {
-    return float4(0.0, 0.0, 1.0, 1.0);
+    return float4(0.0, 0.5, 1.0, 1.0);
 };

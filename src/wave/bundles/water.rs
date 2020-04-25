@@ -1,8 +1,5 @@
 use crate::wave::bundles::basemetal::BaseMetalBundle;
-use cull_canyon::{
-    MTLBuffer, MTLRenderPipelineColorAttachmentDescriptor, MTLRenderPipelineDescriptor,
-    MTLRenderPipelineState, MTLVertexDescriptor,
-};
+use cull_canyon::{MTLBuffer, MTLRenderPipelineColorAttachmentDescriptor, MTLRenderPipelineDescriptor, MTLRenderPipelineState, MTLVertexDescriptor, MTLFunction};
 use std::os::raw::c_void;
 
 pub struct WaterBundle {
@@ -13,7 +10,7 @@ pub struct WaterBundle {
 }
 
 impl WaterBundle {
-    pub unsafe fn generate_water(bundle: &BaseMetalBundle) -> WaterBundle {
+    pub unsafe fn generate_water(bundle: &BaseMetalBundle, flat_vert: MTLFunction) -> WaterBundle {
         // row by row generation
         const VERTEX_COUNT: u32 = 100;
         const DIMENSIONS: usize = 2;
@@ -69,9 +66,7 @@ impl WaterBundle {
                         },
                         0,
                     );
-                desc.set_vertex_function(
-                    bundle.library.new_function_with_name("water_vert").unwrap(),
-                );
+                desc.set_vertex_function(flat_vert);
                 desc.set_fragment_function(
                     bundle.library.new_function_with_name("water_frag").unwrap(),
                 );
