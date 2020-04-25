@@ -35,7 +35,7 @@ fragment float4 ui_frag(UiFragment in [[stage_in]],
 }
 
 struct WaterVertex {
-    float3 position;
+    packed_float3 position;
 };
 
 struct WaterFragment {
@@ -49,6 +49,7 @@ vertex WaterFragment water_vert(device WaterVertex *vertexArray [[ buffer(0) ]],
 {
     float3 position = vertexArray[vid].position;
     position.z = -position.z;
+    position.y -= 1;
 
     WaterFragment out;
     out.position = projection * view * float4(position, 1.0);
@@ -57,5 +58,5 @@ vertex WaterFragment water_vert(device WaterVertex *vertexArray [[ buffer(0) ]],
 
 fragment float4 water_frag(WaterFragment in [[ stage_in ]])
 {
-    return float4(0.0, in.position.z / 3.0, 1.0, 1.0);
+    return float4(0.0, 0.0, 1.0, 1.0);
 };

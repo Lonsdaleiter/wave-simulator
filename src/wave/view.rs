@@ -43,24 +43,22 @@ impl Camera {
             x: 1.0,
             y: 0.0,
             z: 0.0,
-        }, Rad(self.pitch.to_radians()));
+        }, Rad(self.pitch));
         let mut mat = mat * Matrix4::from_axis_angle(Vector3 {
             x: 0.0,
             y: 1.0,
             z: 0.0,
-        }, Rad(self.yaw.to_radians()));
-
-        println!("{:?}", mat);
-        // let mut mat = mat * Matrix4::from_axis_angle(Vector3 {
-        //     x: 0.0,
-        //     y: 0.0,
-        //     z: 1.0,
-        // }, Rad(self.roll.to_radians()));
-        // let mut mat = mat * Matrix4::from_translation(Vector3 {
-        //     x: -self.x,
-        //     y: -self.y,
-        //     z: -self.z,
-        // });
+        }, Rad(self.yaw));
+        let mut mat = mat * Matrix4::from_axis_angle(Vector3 {
+            x: 0.0,
+            y: 0.0,
+            z: 1.0,
+        }, Rad(self.roll));
+        let mut mat = mat * Matrix4::from_translation(Vector3 {
+            x: -self.x,
+            y: -self.y,
+            z: -self.z,
+        });
 
         unsafe { std::mem::transmute(mat) }
     }

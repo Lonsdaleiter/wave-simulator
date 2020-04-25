@@ -33,6 +33,7 @@ impl BaseMetalBundle {
         surface.set_display_sync_enabled(VSYNC);
         surface.set_device(device.clone());
         surface.set_contents_scale(2.0);
+        surface.set_presents_with_transaction(false);
         set_layer_for_raw_window_handle(surface.clone(), &window_bundle.window);
 
         let library = device

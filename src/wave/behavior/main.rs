@@ -34,7 +34,6 @@ impl Behavior<WaveApp> for MainBehavior {
         state.matrix_bundle.as_mut().unwrap().camera.pitch = pitch.to_radians() as f32;
         state.matrix_bundle.as_mut().unwrap().camera.yaw = yaw.to_radians() as f32;
 
-        // state.matrix_bundle.as_mut().unwrap().camera.pitch = pitch.to_radians() as f32;
         unsafe { state.matrix_bundle.as_ref().unwrap().edit_view() };
 
         None
@@ -44,7 +43,6 @@ impl Behavior<WaveApp> for MainBehavior {
         let bundle = state.base_metal_bundle.as_ref().unwrap();
         let water = state.water.as_ref().unwrap();
         let matrices = state.matrix_bundle.as_ref().unwrap();
-        let ui = state.ui_bundle.as_ref().unwrap();
 
         unsafe {
             if let Some(drawable) = bundle.surface.next_drawable() {
@@ -57,26 +55,27 @@ impl Behavior<WaveApp> for MainBehavior {
                             let desc = MTLRenderPassColorAttachmentDescriptor::new();
                             desc.set_texture(drawable.get_texture());
                             desc.set_clear_color(0.0, 0.0, 0.0, 1.0);
+                            desc.set_load_action(2);
+                            desc.set_store_action(1);
                             desc
                         });
                     desc
                 });
                 encoder.set_render_pipeline_state(water.water_pipeline.clone());
-                encoder.set_vertex_buffer(ui.quad.clone(), 0, 0);
+                encoder.set_vertex_buffer(water.water_buffer.clone(), 0, 0);
                 encoder.set_vertex_buffer(matrices.projection.clone(), 0, 1);
                 encoder.set_vertex_buffer(matrices.view.clone(), 0, 2);
 
-                // encoder.draw_indexed_primitives(
-                //     3,
-                //     water.indices_count as u64 / 20,
-                //     1,
-                //     water.water_indices.clone(),
-                //     0,
-                //     1,
-                //     0,
-                //     0,
-                // );
-                encoder.draw_primitives(3, 0, 6, 1, 0);
+                encoder.draw_indexed_primitives(
+                    3,
+                    water.indices_count as u64 / 20,
+                    1,
+                    water.water_indices.clone(),
+                    0,
+                    1,
+                    0,
+                    0,
+                );
                 encoder.end_encoding();
 
                 command_buffer.present_drawable(drawable);
