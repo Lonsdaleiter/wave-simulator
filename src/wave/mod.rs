@@ -6,6 +6,8 @@ use crate::wave::bundles::ui::UiBundle;
 use crate::wave::bundles::water::WaterBundle;
 use crate::wave::bundles::window::WindowBundle;
 use crate::wave::constants::FPS;
+use crate::wave::keyboard::Keyboard;
+use std::intrinsics::transmute;
 use std::time::{Duration, Instant};
 use winit::event::{Event, StartCause, WindowEvent};
 use winit::event_loop::{ControlFlow, EventLoop};
@@ -13,10 +15,12 @@ use winit::event_loop::{ControlFlow, EventLoop};
 pub mod behavior;
 pub mod bundles;
 pub mod constants;
+pub mod keyboard;
 pub mod view;
 pub mod widget;
 
 pub struct WaveApp {
+    pub keyboard: Keyboard,
     pub window_bundle: Option<WindowBundle>,
     pub base_metal_bundle: Option<BaseMetalBundle>,
     pub matrix_bundle: Option<MatrixBundle>,
@@ -28,6 +32,7 @@ pub struct WaveApp {
 impl Application for WaveApp {
     fn new() -> Self {
         WaveApp {
+            keyboard: Keyboard { keys: [false; 300] },
             window_bundle: None,
             base_metal_bundle: None,
             matrix_bundle: None,
@@ -79,10 +84,13 @@ impl Application for WaveApp {
                     }
                     WindowEvent::KeyboardInput {
                         device_id: _,
-                        input: _,
+                        input,
                         is_synthetic: _,
                     } => {
-                        // TODO add calls here
+                        self.keyboard
+                            .set_key(input.virtual_keycode.unwrap(), !unsafe {
+                                transmute(input.state)
+                            });
                     }
                     WindowEvent::MouseInput {
                         device_id: _,

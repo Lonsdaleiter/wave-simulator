@@ -69,7 +69,7 @@ impl Behavior<WaveApp> for MainBehavior {
 
                 encoder.draw_indexed_primitives(
                     3,
-                    water.indices_count as u64 / 20,
+                    water.indices_count as u64,
                     1,
                     water.water_indices.clone(),
                     0,
