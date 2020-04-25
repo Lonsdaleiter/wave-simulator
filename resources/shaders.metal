@@ -34,8 +34,6 @@ fragment float4 ui_frag(UiFragment in [[stage_in]],
     return float4(0.0, 1.0, 1.0, 1.0);
 }
 
-// TODO put the height map behaviors in kernels
-
 struct FlatVertex {
     float2 position;
 };
@@ -51,8 +49,7 @@ vertex FlatFragment flat_vert(device FlatVertex *vertexArray [[ buffer(0) ]],
                               unsigned int vid [[ vertex_id ]])
 {
     float2 pos = vertexArray[vid].position;
-    float4 _h = heightMap.read(uint2(pos.x, pos.y));
-    float height = (_h.x + _h.y + _h.z) / 3.0;
+    float height = heightMap.read(uint2(pos.x, pos.y)).a;
 
     FlatFragment out;
     out.position = projection * view * float4(pos.x, -1.0 + height, pos.y, 1.0);
@@ -62,4 +59,14 @@ vertex FlatFragment flat_vert(device FlatVertex *vertexArray [[ buffer(0) ]],
 fragment float4 water_frag(FlatFragment in [[ stage_in ]])
 {
     return float4(0.0, 0.5, 1.0, 1.0);
+};
+
+// determine the height by the alpha;
+// use other colours to determine direction of propagation:
+// (red == 1.0) => left, (green == 1.0) => right, (blue == 0.5) => up, (blue == 1.0) => down
+// note that newHeightMap is heightMap
+kernel void process_water(texture2d<float, access::read> heightMap [[ texture(0) ]],
+                          texture2d<float, access::write> newHeightMap [[ texture(1) ]])
+{
+    // TODO fill
 };
