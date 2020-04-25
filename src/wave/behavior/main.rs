@@ -24,12 +24,27 @@ impl Behavior<WaveApp> for MainBehavior {
             .window
             .request_redraw();
 
+        let window_size = state.window_bundle.as_ref().unwrap().window.inner_size();
+        let yaw = -(window_size.width as f64 - state.mouse_pos.0 / 2.0);
+        let pitch = (window_size.height as f64 / 2.0) - state.mouse_pos.1;
+
+        let pitch = if pitch >= 90.0 { 90.0 } else { pitch };
+        let pitch = if pitch <= -90.0 { -90.0 } else { pitch };
+
+        state.matrix_bundle.as_mut().unwrap().camera.pitch = pitch.to_radians() as f32;
+        state.matrix_bundle.as_mut().unwrap().camera.yaw = yaw.to_radians() as f32;
+
+        // state.matrix_bundle.as_mut().unwrap().camera.pitch = pitch.to_radians() as f32;
+        unsafe { state.matrix_bundle.as_ref().unwrap().edit_view() };
+
         None
     }
 
     fn draw(&self, state: &mut WaveApp) {
         let bundle = state.base_metal_bundle.as_ref().unwrap();
-        // let ui = state.ui_bundle.as_ref().unwrap();
+        let water = state.water.as_ref().unwrap();
+        let matrices = state.matrix_bundle.as_ref().unwrap();
+        let ui = state.ui_bundle.as_ref().unwrap();
 
         unsafe {
             if let Some(drawable) = bundle.surface.next_drawable() {
@@ -41,14 +56,27 @@ impl Behavior<WaveApp> for MainBehavior {
                         .set_object_at_indexed_subscript(0, {
                             let desc = MTLRenderPassColorAttachmentDescriptor::new();
                             desc.set_texture(drawable.get_texture());
+                            desc.set_clear_color(0.0, 0.0, 0.0, 1.0);
                             desc
                         });
                     desc
                 });
-                // the below works when we ignore the ui transformation in the shader
-                // encoder.set_vertex_buffer(ui.quad.clone(), 0, 0);
-                // encoder.set_render_pipeline_state(ui.pipeline.clone());
-                // encoder.draw_primitives(3, 0, 6, 1, 0);
+                encoder.set_render_pipeline_state(water.water_pipeline.clone());
+                encoder.set_vertex_buffer(ui.quad.clone(), 0, 0);
+                encoder.set_vertex_buffer(matrices.projection.clone(), 0, 1);
+                encoder.set_vertex_buffer(matrices.view.clone(), 0, 2);
+
+                // encoder.draw_indexed_primitives(
+                //     3,
+                //     water.indices_count as u64 / 20,
+                //     1,
+                //     water.water_indices.clone(),
+                //     0,
+                //     1,
+                //     0,
+                //     0,
+                // );
+                encoder.draw_primitives(3, 0, 6, 1, 0);
                 encoder.end_encoding();
 
                 command_buffer.present_drawable(drawable);
@@ -57,8 +85,14 @@ impl Behavior<WaveApp> for MainBehavior {
         };
     }
 
-    fn on_resize(&self, _state: &mut WaveApp, _size: (u32, u32)) {
-        //
+    fn on_resize(&self, state: &mut WaveApp, size: (u32, u32)) {
+        unsafe {
+            state
+                .matrix_bundle
+                .as_ref()
+                .unwrap()
+                .edit_projection(size.0 as f32 / size.1 as f32)
+        };
     }
 
     fn on_death(&self, _state: &mut WaveApp) {

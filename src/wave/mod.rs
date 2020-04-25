@@ -22,6 +22,7 @@ pub struct WaveApp {
     pub matrix_bundle: Option<MatrixBundle>,
     pub ui_bundle: Option<UiBundle>,
     pub water: Option<WaterBundle>,
+    pub mouse_pos: (f64, f64),
 }
 
 impl Application for WaveApp {
@@ -32,6 +33,7 @@ impl Application for WaveApp {
             matrix_bundle: None,
             ui_bundle: None,
             water: None,
+            mouse_pos: (0.0, 0.0),
         }
     }
 
@@ -74,6 +76,28 @@ impl Application for WaveApp {
                     }
                     WindowEvent::Resized(size) => {
                         current_behavior.on_resize(&mut self, (size.width, size.height));
+                    }
+                    WindowEvent::KeyboardInput {
+                        device_id: _,
+                        input: _,
+                        is_synthetic: _,
+                    } => {
+                        // TODO add calls here
+                    }
+                    WindowEvent::MouseInput {
+                        device_id: _,
+                        state: _,
+                        button: _,
+                        modifiers: _,
+                    } => {
+                        // TODO add calls here
+                    }
+                    WindowEvent::CursorMoved {
+                        device_id: _,
+                        position,
+                        modifiers: _,
+                    } => {
+                        self.mouse_pos = (position.x, position.y);
                     }
                     _ => {}
                 },

@@ -38,25 +38,24 @@ struct WaterVertex {
     float3 position;
 };
 
-struct WaterTransformation {
-    float4x4 projection;
-    float4x4 view;
-};
-
 struct WaterFragment {
     float4 position [[ position ]];
 };
 
 vertex WaterFragment water_vert(device WaterVertex *vertexArray [[ buffer(0) ]],
-                                constant WaterTransformation &transform [[ buffer(1) ]],
+                                constant float4x4 &projection [[ buffer(1) ]],
+                                constant float4x4 &view [[ buffer(2) ]],
                                 unsigned int vid [[ vertex_id ]])
 {
+    float3 position = vertexArray[vid].position;
+    position.z = -position.z;
+
     WaterFragment out;
-    out.position = transform.projection * transform.view * float4(vertexArray[vid].position, 1.0);
+    out.position = projection * view * float4(position, 1.0);
     return out;
 };
 
 fragment float4 water_frag(WaterFragment in [[ stage_in ]])
 {
-    return float4(0.0, 1.0, 1.0, 1.0);
+    return float4(0.0, in.position.z / 3.0, 1.0, 1.0);
 };

@@ -9,6 +9,7 @@ pub struct WaterBundle {
     pub water_pipeline: MTLRenderPipelineState,
     pub water_buffer: MTLBuffer,
     pub water_indices: MTLBuffer,
+    pub indices_count: usize,
 }
 
 impl WaterBundle {
@@ -89,6 +90,7 @@ impl WaterBundle {
                 indices.len() as u64 * 4,
                 0,
             ),
+            indices_count: INDICES_COUNT,
         }
     }
 }
