@@ -34,8 +34,10 @@ fragment float4 ui_frag(UiFragment in [[stage_in]],
     return float4(0.0, 1.0, 1.0, 1.0);
 }
 
+// TODO generalize the water stuff to be terrain + water and put the height behavior in kernels
+
 struct WaterVertex {
-    packed_float3 position;
+    float2 position;
 };
 
 struct WaterFragment {
@@ -45,14 +47,13 @@ struct WaterFragment {
 vertex WaterFragment water_vert(device WaterVertex *vertexArray [[ buffer(0) ]],
                                 constant float4x4 &projection [[ buffer(1) ]],
                                 constant float4x4 &view [[ buffer(2) ]],
+                                texture2d<float, access::read> heightMap [[ texture(0) ]],
                                 unsigned int vid [[ vertex_id ]])
 {
-    float3 position = vertexArray[vid].position;
-    position.z = -position.z;
-    position.y -= 1;
+    float2 pos = vertexArray[vid].position;
 
     WaterFragment out;
-    out.position = projection * view * float4(position, 1.0);
+    out.position = projection * view * float4(pos.x, -1.0, pos.y, 1.0);
     return out;
 };
 

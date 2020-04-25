@@ -16,21 +16,23 @@ impl WaterBundle {
     pub unsafe fn generate_water(bundle: &BaseMetalBundle) -> WaterBundle {
         // row by row generation
         const VERTEX_COUNT: u32 = 100;
-        let vertices: [f32; (3 * VERTEX_COUNT * VERTEX_COUNT) as usize] = *((0..VERTEX_COUNT)
+        const DIMENSIONS: usize = 2;
+        const HL: f32 = VERTEX_COUNT as f32 / 2.0;
+
+        let vertices: [f32; (2 * VERTEX_COUNT * VERTEX_COUNT) as usize] = *((0..VERTEX_COUNT)
             .map(|z: u32| {
                 (0..VERTEX_COUNT)
-                    .map(|x: u32| [x as f32, 0.0, z as f32])
-                    .collect::<Vec<[f32; 3]>>()
+                    .map(|x: u32| [x as f32 - HL, z as f32 - HL])
+                    .collect::<Vec<[f32; DIMENSIONS]>>()
             })
-            .collect::<Vec<Vec<[f32; 3]>>>()
+            .collect::<Vec<Vec<[f32; DIMENSIONS]>>>()
             .into_iter()
             .flatten()
-            .collect::<Vec<[f32; 3]>>()
+            .collect::<Vec<[f32; DIMENSIONS]>>()
             .as_ptr()
-            as *const [f32; (3 * VERTEX_COUNT * VERTEX_COUNT) as usize]);
+            as *const [f32; (2 * VERTEX_COUNT * VERTEX_COUNT) as usize]);
 
         const INDICES_COUNT: usize = (6 * (VERTEX_COUNT - 1) * (VERTEX_COUNT - 1)) as usize;
-        println!("{}", INDICES_COUNT);
         let mut indices: [u32; INDICES_COUNT] = [0; INDICES_COUNT];
         let mut pointer = 0;
         (0..VERTEX_COUNT - 1).for_each(|z| {
