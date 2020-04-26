@@ -62,7 +62,7 @@ vertex FlatFragment flat_vert(device FlatVertex *vertexArray [[ buffer(0) ]],
 
 fragment float4 water_frag(FlatFragment in [[ stage_in ]])
 {
-    return float4(0.0, 0.0, 1.0, 1.0);
+    return float4(0.0, 0.5, 1.0, 1.0);
 };
 
 // determine the height by the red
