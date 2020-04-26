@@ -45,14 +45,14 @@ struct FlatFragment {
 vertex FlatFragment flat_vert(device FlatVertex *vertexArray [[ buffer(0) ]],
                               constant float4x4 &projection [[ buffer(1) ]],
                               constant float4x4 &view [[ buffer(2) ]],
-                              texture2d<float, access::read> heightMap [[ texture(0) ]],
+                              texture2d<ushort, access::read> heightMap [[ texture(0) ]],
                               unsigned int vid [[ vertex_id ]])
 {
     float2 pos = vertexArray[vid].position;
-    float height = heightMap.read(uint2(pos.x, pos.y)).a;
+    float height = heightMap.read(uint2(pos.x, pos.y)).r;
 
     FlatFragment out;
-    out.position = projection * view * float4(pos.x, -1.0 + height, pos.y, 1.0);
+    out.position = projection * view * float4(pos.x, -1.0 + (float(height) / 255.0), pos.y, 1.0);
     return out;
 };
 
@@ -61,12 +61,33 @@ fragment float4 water_frag(FlatFragment in [[ stage_in ]])
     return float4(0.0, 0.5, 1.0, 1.0);
 };
 
-// determine the height by the alpha;
-// use other colours to determine direction of propagation:
-// (red == 1.0) => left, (green == 1.0) => right, (blue == 0.5) => up, (blue == 1.0) => down
+// determine the height by the red
+// the propagation is determined in green
 // note that newHeightMap is heightMap
-kernel void process_water(texture2d<float, access::read> heightMap [[ texture(0) ]],
-                          texture2d<float, access::write> newHeightMap [[ texture(1) ]])
+kernel void process_water(texture2d<ushort, access::read> heightMap [[ texture(0) ]],
+                          texture2d<ushort, access::write> newHeightMap [[ texture(1) ]],
+                          uint2 gid [[ thread_position_in_grid ]])
 {
-    // TODO fill
+    ushort4 height = heightMap.read(gid);
+    ushort4 above = heightMap.read(uint2(gid.x, gid.y + 1));
+    ushort4 below = heightMap.read(uint2(gid.x, gid.y - 1));
+    ushort4 left = heightMap.read(uint2(gid.x - 1, gid.y));
+    ushort4 right = heightMap.read(uint2(gid.x + 1, gid.y));
+
+    ushort4 newColour = ushort4(height.r, 0.0, 0.0, 0.0);
+
+    if ((above.g & 1) == 1) {
+        newColour.g = newColour.g | 1;
+    }
+    if ((below.g & 2) == 1) {
+        newColour.g = newColour.g | 2;
+    }
+    if ((left.g & 4) == 1) {
+        newColour.g = newColour.g | 4;
+    }
+    if ((right.g & 8) == 1) {
+        newColour.g = newColour.g | 8;
+    }
+
+    newHeightMap.write(newColour, gid);
 };
