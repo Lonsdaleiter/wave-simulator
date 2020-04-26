@@ -1,20 +1,21 @@
 use crate::wave::bundles::basemetal::BaseMetalBundle;
-use cull_canyon::{MTLBuffer, MTLRenderPipelineColorAttachmentDescriptor, MTLRenderPipelineDescriptor, MTLRenderPipelineState, MTLVertexDescriptor, MTLFunction};
+use cull_canyon::{MTLBuffer, MTLRenderPipelineColorAttachmentDescriptor, MTLRenderPipelineDescriptor, MTLRenderPipelineState, MTLVertexDescriptor, MTLFunction, MTLTexture, MTLTextureDescriptor};
 use std::os::raw::c_void;
+use crate::wave::constants::VERTEX_COUNT;
 
 pub struct WaterBundle {
     pub water_pipeline: MTLRenderPipelineState,
     pub water_buffer: MTLBuffer,
     pub water_indices: MTLBuffer,
     pub indices_count: usize,
+    pub texture: MTLTexture,
 }
 
 impl WaterBundle {
     pub unsafe fn generate_water(bundle: &BaseMetalBundle, flat_vert: MTLFunction) -> WaterBundle {
         // row by row generation
-        const VERTEX_COUNT: u32 = 100;
-        const DIMENSIONS: usize = 2;
         const HL: f32 = VERTEX_COUNT as f32 / 2.0;
+        const DIMENSIONS: usize = 2;
 
         let vertices: [f32; (2 * VERTEX_COUNT * VERTEX_COUNT) as usize] = *((0..VERTEX_COUNT)
             .map(|z: u32| {
@@ -76,6 +77,16 @@ impl WaterBundle {
             })
             .unwrap();
 
+        let texture = bundle.device.new_texture_with_descriptor({
+            let desc = MTLTextureDescriptor::new();
+            desc.set_width(VERTEX_COUNT as u64);
+            desc.set_height(VERTEX_COUNT as u64);
+            desc.set_texture_type(2); // 2d
+            desc.set_storage_mode(2); // private; 0 = shared
+            desc.set_usage(0x0001 | 0x002); // shader read + write
+            desc
+        });
+
         WaterBundle {
             water_pipeline,
             water_buffer: bundle.device.new_buffer_with_bytes(
@@ -89,6 +100,7 @@ impl WaterBundle {
                 0,
             ),
             indices_count: INDICES_COUNT,
+            texture,
         }
     }
 }

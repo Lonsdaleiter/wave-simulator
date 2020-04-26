@@ -62,7 +62,8 @@ fragment float4 water_frag(FlatFragment in [[ stage_in ]])
 };
 
 // determine the height by the red
-// the propagation is determined in green
+// determine the propagation by the green
+// blue and alpha are reserved for future use
 // note that newHeightMap is heightMap
 kernel void process_water(texture2d<ushort, access::read> heightMap [[ texture(0) ]],
                           texture2d<ushort, access::write> newHeightMap [[ texture(1) ]],
