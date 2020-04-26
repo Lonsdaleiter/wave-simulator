@@ -96,12 +96,20 @@ impl WaterBundle {
             let desc = MTLTextureDescriptor::new();
             desc.set_width(VERTEX_COUNT as u64);
             desc.set_height(VERTEX_COUNT as u64);
-            desc.set_pixel_format(30); // rg8unorm
+            desc.set_pixel_format(63); // rg16uint
             desc.set_texture_type(2); // 2d
-            desc.set_storage_mode(2); // private; 0 = shared
             desc.set_usage(0x0001 | 0x002); // shader read + write
             desc
         });
+        texture.replace_region(
+            (0, 0, 1 as u64, 1 as u64),
+            0,
+            [
+                1000u16, 0, // first pixel
+            ]
+            .as_ptr() as *mut c_void,
+            VERTEX_COUNT as u64 * 4,
+        );
 
         WaterBundle {
             render_pipeline,
