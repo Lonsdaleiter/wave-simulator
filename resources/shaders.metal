@@ -40,7 +40,6 @@ struct FlatVertex {
 
 struct FlatFragment {
     float4 position [[ position ]];
-    float2 pos;
     float height;
 };
 
@@ -57,12 +56,13 @@ vertex FlatFragment flat_vert(device FlatVertex *vertexArray [[ buffer(0) ]],
 
     FlatFragment out;
     out.position = projection * view * float4(pos.x, -1.0 + float(height) / 1000.0, pos.y, 1.0);
+    out.height = float(height);
     return out;
 };
 
 fragment float4 water_frag(FlatFragment in [[ stage_in ]])
 {
-    return float4(0.0, 0.5, 1.0, 1.0);
+    return float4(in.height, 0.5, 1.0, 1.0);
 };
 
 // determine the height by the red
