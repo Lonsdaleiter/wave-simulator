@@ -52,7 +52,7 @@ vertex FlatFragment flat_vert(device FlatVertex *vertexArray [[ buffer(0) ]],
     float height = heightMap.read(uint2(pos.x, pos.y)).r;
 
     FlatFragment out;
-    out.position = projection * view * float4(pos.x, -1.0 + (float(height) / 255.0), pos.y, 1.0);
+    out.position = projection * view * float4(pos.x, -1.0 + float(height) / 1000.0, pos.y, 1.0);
     return out;
 };
 
