@@ -7,7 +7,7 @@ pub struct BaseMetalBundle {
     pub queue: MTLCommandQueue,
     pub surface: CAMetalLayer,
     pub library: MTLLibrary,
-    pub depth_stencil: MTLDepthStencilState,
+    pub basic_depth: MTLDepthStencilState,
 }
 
 impl BaseMetalBundle {
@@ -55,7 +55,7 @@ impl BaseMetalBundle {
             queue,
             surface,
             library,
-            depth_stencil,
+            basic_depth: depth_stencil,
         }
     }
 }

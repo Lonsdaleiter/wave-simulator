@@ -105,7 +105,7 @@ impl Behavior<WaveApp> for MainBehavior {
                 encoder.set_vertex_buffer(water.water_buffer.clone(), 0, 0);
                 encoder.set_vertex_buffer(matrices.projection.clone(), 0, 1);
                 encoder.set_vertex_buffer(matrices.view.clone(), 0, 2);
-                encoder.set_depth_stencil_state(bundle.depth_stencil.clone());
+                encoder.set_depth_stencil_state(bundle.basic_depth.clone());
                 encoder.set_vertex_texture(water.texture.clone(), 0);
 
                 encoder.draw_indexed_primitives(
