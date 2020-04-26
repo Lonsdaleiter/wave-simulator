@@ -1,15 +1,13 @@
 use crate::wave::bundles::window::WindowBundle;
 use crate::wave::constants::VSYNC;
-use cull_canyon::{
-    set_layer_for_raw_window_handle, CAMetalLayer, MTLCommandQueue, MTLCompileOptions, MTLDevice,
-    MTLLibrary,
-};
+use cull_canyon::{set_layer_for_raw_window_handle, CAMetalLayer, MTLCommandQueue, MTLCompileOptions, MTLDevice, MTLLibrary, MTLDepthStencilState, MTLDepthStencilDescriptor};
 
 pub struct BaseMetalBundle {
     pub device: MTLDevice,
     pub queue: MTLCommandQueue,
     pub surface: CAMetalLayer,
     pub library: MTLLibrary,
+    pub depth_stencil: MTLDepthStencilState,
 }
 
 impl BaseMetalBundle {
@@ -45,11 +43,19 @@ impl BaseMetalBundle {
             )
             .unwrap();
 
+        let depth_stencil = device.new_depth_stencil_state({
+            let desc = MTLDepthStencilDescriptor::new();
+            desc.set_depth_write_enabled(true);
+            desc.set_depth_compare_function(1); // less
+            desc
+        });
+
         BaseMetalBundle {
             device,
             queue,
             surface,
             library,
+            depth_stencil,
         }
     }
 }
