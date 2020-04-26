@@ -45,6 +45,8 @@ struct FlatFragment {
 vertex FlatFragment flat_vert(device FlatVertex *vertexArray [[ buffer(0) ]],
                               constant float4x4 &projection [[ buffer(1) ]],
                               constant float4x4 &view [[ buffer(2) ]],
+                              // TODO add a constant representing amplitude
+                              // TODO also add lighting and reflection / refraction for water
                               texture2d<ushort, access::read> heightMap [[ texture(0) ]],
                               unsigned int vid [[ vertex_id ]])
 {
@@ -78,15 +80,19 @@ kernel void process_water(texture2d<ushort, access::read> heightMap [[ texture(0
     ushort4 newColour = ushort4(height.r, 0.0, 0.0, 0.0);
 
     if ((above.g & 1) == 1) {
+        newColour.r = 1000.0; // temporary; TODO add a gradient effect + customizable amplitude
         newColour.g = newColour.g | 1;
     }
     if ((below.g & 2) == 1) {
+        newColour.r = 1000.0;
         newColour.g = newColour.g | 2;
     }
     if ((left.g & 4) == 1) {
+        newColour.r = 1000.0;
         newColour.g = newColour.g | 4;
     }
     if ((right.g & 8) == 1) {
+        newColour.r = 1000.0;
         newColour.g = newColour.g | 8;
     }
 

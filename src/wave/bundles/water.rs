@@ -1,10 +1,15 @@
 use crate::wave::bundles::basemetal::BaseMetalBundle;
-use cull_canyon::{MTLBuffer, MTLRenderPipelineColorAttachmentDescriptor, MTLRenderPipelineDescriptor, MTLRenderPipelineState, MTLVertexDescriptor, MTLFunction, MTLTexture, MTLTextureDescriptor};
-use std::os::raw::c_void;
 use crate::wave::constants::VERTEX_COUNT;
+use cull_canyon::{
+    MTLBuffer, MTLComputePipelineState, MTLFunction, MTLRenderPipelineColorAttachmentDescriptor,
+    MTLRenderPipelineDescriptor, MTLRenderPipelineState, MTLTexture, MTLTextureDescriptor,
+    MTLVertexDescriptor,
+};
+use std::os::raw::c_void;
 
 pub struct WaterBundle {
-    pub water_pipeline: MTLRenderPipelineState,
+    pub render_pipeline: MTLRenderPipelineState,
+    pub compute_pipeline: MTLComputePipelineState,
     pub water_buffer: MTLBuffer,
     pub water_indices: MTLBuffer,
     pub indices_count: usize,
@@ -54,7 +59,7 @@ impl WaterBundle {
             });
         });
 
-        let water_pipeline = bundle
+        let render_pipeline = bundle
             .device
             .new_render_pipeline_state_with_descriptor({
                 let desc = MTLRenderPipelineDescriptor::new();
@@ -77,6 +82,16 @@ impl WaterBundle {
             })
             .unwrap();
 
+        let compute_pipeline = bundle
+            .device
+            .new_compute_pipeline_state_with_function(
+                bundle
+                    .library
+                    .new_function_with_name("process_water")
+                    .unwrap(),
+            )
+            .unwrap();
+
         let texture = bundle.device.new_texture_with_descriptor({
             let desc = MTLTextureDescriptor::new();
             desc.set_width(VERTEX_COUNT as u64);
@@ -88,7 +103,8 @@ impl WaterBundle {
         });
 
         WaterBundle {
-            water_pipeline,
+            render_pipeline,
+            compute_pipeline,
             water_buffer: bundle.device.new_buffer_with_bytes(
                 vertices.as_ptr() as *const c_void,
                 vertices.len() as u64 * 4,

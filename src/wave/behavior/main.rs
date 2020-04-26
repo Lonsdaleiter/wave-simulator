@@ -101,7 +101,7 @@ impl Behavior<WaveApp> for MainBehavior {
                         });
                     desc
                 });
-                encoder.set_render_pipeline_state(water.water_pipeline.clone());
+                encoder.set_render_pipeline_state(water.render_pipeline.clone());
                 encoder.set_vertex_buffer(water.water_buffer.clone(), 0, 0);
                 encoder.set_vertex_buffer(matrices.projection.clone(), 0, 1);
                 encoder.set_vertex_buffer(matrices.view.clone(), 0, 2);
