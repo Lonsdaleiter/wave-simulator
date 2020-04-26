@@ -96,6 +96,7 @@ impl WaterBundle {
             let desc = MTLTextureDescriptor::new();
             desc.set_width(VERTEX_COUNT as u64);
             desc.set_height(VERTEX_COUNT as u64);
+            desc.set_pixel_format(30); // rg8unorm
             desc.set_texture_type(2); // 2d
             desc.set_storage_mode(2); // private; 0 = shared
             desc.set_usage(0x0001 | 0x002); // shader read + write
