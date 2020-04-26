@@ -105,7 +105,7 @@ impl WaterBundle {
             (0, 0, 1 as u64, 1 as u64),
             0,
             [
-                1000u16, 0, // first pixel
+                1000u16, 0b1111, // first pixel
             ]
             .as_ptr() as *mut c_void,
             VERTEX_COUNT as u64 * 4,
