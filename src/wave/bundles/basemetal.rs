@@ -1,9 +1,6 @@
 use crate::wave::bundles::window::WindowBundle;
 use crate::wave::constants::VSYNC;
-use cull_canyon::{
-    set_layer_for_raw_window_handle, CAMetalLayer, MTLCommandQueue, MTLCompileOptions,
-    MTLDepthStencilDescriptor, MTLDepthStencilState, MTLDevice, MTLLibrary,
-};
+use cull_canyon::{set_layer_for_raw_window_handle, CAMetalLayer, MTLCommandQueue, MTLCompileOptions, MTLDepthStencilDescriptor, MTLDepthStencilState, MTLDevice, MTLLibrary, MTLTextureDescriptor, MTLTexture};
 
 pub struct BaseMetalBundle {
     pub device: MTLDevice,
@@ -11,6 +8,7 @@ pub struct BaseMetalBundle {
     pub surface: CAMetalLayer,
     pub library: MTLLibrary,
     pub basic_depth: MTLDepthStencilState,
+    pub depth_texture: MTLTexture,
 }
 
 impl BaseMetalBundle {
@@ -52,6 +50,14 @@ impl BaseMetalBundle {
             desc.set_depth_compare_function(1); // less
             desc
         });
+        let depth_texture = device.new_texture_with_descriptor({
+            let desc = MTLTextureDescriptor::new();
+            desc.set_width(window_bundle.window.inner_size().width as u64 * 2);
+            desc.set_height(window_bundle.window.inner_size().height as u64 * 2);
+            desc.set_pixel_format(252);
+            desc.set_storage_mode(2);
+            desc
+        });
 
         BaseMetalBundle {
             device,
@@ -59,6 +65,7 @@ impl BaseMetalBundle {
             surface,
             library,
             basic_depth: depth_stencil,
+            depth_texture,
         }
     }
 }

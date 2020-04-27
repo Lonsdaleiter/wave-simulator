@@ -90,6 +90,12 @@ impl Behavior<WaveApp> for MainBehavior {
 
                 let encoder = command_buffer.new_render_command_encoder_with_descriptor({
                     let desc = MTLRenderPassDescriptor::new();
+                    {
+                        let desc = desc.get_depth_attachment();
+                        desc.set_texture(bundle.depth_texture.clone());
+                        desc.set_load_action(2);
+                        desc.set_store_action(1);
+                    };
                     desc.get_color_attachments()
                         .set_object_at_indexed_subscript(0, {
                             let desc = MTLRenderPassColorAttachmentDescriptor::new();
