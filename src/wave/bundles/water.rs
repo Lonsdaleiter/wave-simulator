@@ -1,7 +1,7 @@
 use crate::wave::bundles::basemetal::BaseMetalBundle;
 use crate::wave::constants::VERTEX_COUNT;
 use cull_canyon::{
-    MTLBuffer, MTLComputePipelineState, MTLFunction, MTLRenderPipelineColorAttachmentDescriptor,
+    MTLBuffer, MTLComputePipelineState, MTLRenderPipelineColorAttachmentDescriptor,
     MTLRenderPipelineDescriptor, MTLRenderPipelineState, MTLTexture, MTLTextureDescriptor,
     MTLVertexDescriptor,
 };
@@ -27,6 +27,15 @@ pub struct Wave {
     // amplitude of the wave; may be negative
     // amplitude is calculated in the vertex shader
     pub amplitude_factor: f32,
+}
+
+impl Wave {
+    pub fn empty() -> Wave {
+        Wave {
+            directions: 0,
+            amplitude_factor: 0.0,
+        }
+    }
 }
 
 impl WaterBundle {

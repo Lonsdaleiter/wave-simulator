@@ -1,6 +1,10 @@
 use crate::wave::bundles::window::WindowBundle;
 use crate::wave::constants::VSYNC;
-use cull_canyon::{set_layer_for_raw_window_handle, CAMetalLayer, MTLCommandQueue, MTLCompileOptions, MTLDepthStencilDescriptor, MTLDepthStencilState, MTLDevice, MTLLibrary, MTLTextureDescriptor, MTLTexture};
+use cull_canyon::{
+    set_layer_for_raw_window_handle, CAMetalLayer, MTLCommandQueue, MTLCompileOptions,
+    MTLDepthStencilDescriptor, MTLDepthStencilState, MTLDevice, MTLLibrary, MTLTexture,
+    MTLTextureDescriptor,
+};
 
 pub struct BaseMetalBundle {
     pub device: MTLDevice,
