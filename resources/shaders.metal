@@ -48,11 +48,11 @@ struct Wave {
 };
 
 vertex WaterFragment water_vert(device WaterVertex *vertexArray [[ buffer(0) ]],
-                              constant float4x4 &projection [[ buffer(1) ]],
-                              constant float4x4 &view [[ buffer(2) ]],
-                              constant Wave *waves [[ buffer(3) ]],
-                              texture2d<ushort, access::read> heightMap [[ texture(0) ]],
-                              unsigned int vid [[ vertex_id ]])
+                                constant float4x4 &projection [[ buffer(1) ]],
+                                constant float4x4 &view [[ buffer(2) ]],
+                                constant Wave *waves [[ buffer(3) ]],
+                                texture2d<ushort, access::read> heightMap [[ texture(0) ]],
+                                unsigned int vid [[ vertex_id ]])
 {
     float2 pos = vertexArray[vid].position;
 
