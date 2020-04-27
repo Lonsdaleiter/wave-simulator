@@ -1,7 +1,7 @@
 use crate::behavior::Behavior;
 use crate::wave::bundles::ui::UiBundle;
 use crate::wave::bundles::water::WaterBundle;
-use crate::wave::constants::{CAMERA_SPEED, VERTEX_COUNT};
+use crate::wave::constants::{CAMERA_SPEED, VERTEX_COUNT, FILL_MODE};
 use crate::wave::WaveApp;
 use cull_canyon::{
     MTLCommandEncoder, MTLRenderPassAttachmentDescriptor, MTLRenderPassColorAttachmentDescriptor,
@@ -111,6 +111,7 @@ impl Behavior<WaveApp> for MainBehavior {
                 encoder.set_vertex_buffer(water.water_buffer.clone(), 0, 0);
                 encoder.set_vertex_buffer(matrices.projection.clone(), 0, 1);
                 encoder.set_vertex_buffer(matrices.view.clone(), 0, 2);
+                encoder.set_triangle_fill_mode(FILL_MODE);
                 encoder.set_depth_stencil_state(bundle.basic_depth.clone());
                 encoder.set_vertex_texture(water.texture.clone(), 0);
 

@@ -9,6 +9,7 @@ pub const FAR_PLANE: f32 = 1000.0;
 pub const NEAR_PLANE: f32 = 0.1;
 pub const CAMERA_SPEED: f32 = 0.1;
 pub const VERTEX_COUNT: u32 = 100;
+pub const FILL_MODE: u64 = 0; // 0 = triangles, 1 = lines
 
 pub fn new_projection_matrix(aspect_ratio: f32) -> [f32; 16] {
     let persp = cgmath::perspective(Deg(FOV), aspect_ratio, NEAR_PLANE, FAR_PLANE);
