@@ -31,9 +31,13 @@ pub struct Wave {
 
 impl Wave {
     pub fn empty() -> Wave {
-        Wave {
-            directions: 0,
-            amplitude_factor: 0.0,
+        // Wave {
+        //     directions: 0,
+        //     amplitude_factor: 0.0,
+        // }
+        Wave { // TODO use the prior declaration after testing
+            directions: 15,
+            amplitude_factor: 1.0
         }
     }
 }
@@ -120,7 +124,7 @@ impl WaterBundle {
             let desc = MTLTextureDescriptor::new();
             desc.set_width(VERTEX_COUNT as u64);
             desc.set_height(VERTEX_COUNT as u64);
-            desc.set_pixel_format(113); // 113 = rgba16uint
+            desc.set_pixel_format(63); // 113 = rgba16uint; 63 = rg16uint
             desc.set_texture_type(2); // 2d
             desc.set_usage(0x0001 | 0x002); // shader read + write
             desc
@@ -129,7 +133,7 @@ impl WaterBundle {
             (1, 1, 1, 1),
             0,
             [
-                1000u16, 0b1111, 0, 0, // first pixel
+                0u16, 0,
             ]
             .as_ptr() as *mut c_void,
             VERTEX_COUNT as u64 * 4,

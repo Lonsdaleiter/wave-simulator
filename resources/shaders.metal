@@ -40,7 +40,6 @@ struct WaterVertex {
 
 struct WaterFragment {
     float4 position [[ position ]];
-    float height;
 };
 
 struct Wave {
@@ -56,12 +55,12 @@ vertex WaterFragment water_vert(device WaterVertex *vertexArray [[ buffer(0) ]],
                               unsigned int vid [[ vertex_id ]])
 {
     float2 pos = vertexArray[vid].position;
-    // TODO do stuff involving the current waves for amplitude; don't get height from pixel
-    float height = heightMap.read(uint2((pos.x + 50.0) / 2.0, (pos.y + 50.0) / 2.0)).r;
+
+    ushort4 encodedIndex = heightMap.read(uint2(pos));
+    // TODO use the encodedIndex to find the correct amplitudes and then sum them
 
     WaterFragment out;
-    out.position = projection * view * float4(pos.x, -1.0 + float(height) / 1000.0, pos.y, 1.0);
-    out.height = float(height);
+    out.position = projection * view * float4(pos.x, -1.0, pos.y, 1.0);
     return out;
 };
 
@@ -70,7 +69,6 @@ fragment float4 water_frag(WaterFragment in [[ stage_in ]])
     return float4(in.height, 0.5, 1.0, 1.0);
 };
 
-// TODO redo this compute kernel to encode in the texture data pointing to a constant array of wave structs containing the data
 // max 8 waves at once (on a given pixel); 2 per channel
 kernel void process_water(constant Wave *waves [[ buffer(0) ]],
                           texture2d<ushort, access::read> heightMap [[ texture(0) ]],
@@ -83,25 +81,7 @@ kernel void process_water(constant Wave *waves [[ buffer(0) ]],
     ushort4 left = heightMap.read(uint2(gid.x - 1, gid.y));
     ushort4 right = heightMap.read(uint2(gid.x + 1, gid.y));
 
-    ushort4 newColour = ushort4(height.r, 0, 0, 0);
+    // TODO do actual stuff here
 
-    if ((above.g & 1) == 1) {
-        newColour.r = 1000.0;
-        // waves segregated
-        newColour.g = newColour.g | above.g;
-    }
-    if ((below.g & 2) == 2) {
-        newColour.r = 1000.0;
-        newColour.g = newColour.g | below.g;
-    }
-    if ((left.g & 4) == 4) {
-        newColour.r = 1000.0;
-        newColour.g = newColour.g | left.g;
-    }
-    if ((right.g & 8) == 8) {
-        newColour.r = 1000.0;
-        newColour.g = newColour.g | right.g;
-    }
-
-    newHeightMap.write(newColour, gid);
+    // newHeightMap.write(float4, gid);
 };
