@@ -26,6 +26,7 @@ pub struct WaveApp {
     pub matrix_bundle: Option<MatrixBundle>,
     pub ui_bundle: Option<UiBundle>,
     pub water: Option<WaterBundle>,
+    pub time: u64,
     pub mouse_pos: (f64, f64),
 }
 
@@ -38,6 +39,7 @@ impl Application for WaveApp {
             matrix_bundle: None,
             ui_bundle: None,
             water: None,
+            time: 0,
             mouse_pos: (0.0, 0.0),
         }
     }
@@ -69,6 +71,7 @@ impl Application for WaveApp {
                             }
                         }
                         now = Instant::now();
+                        self.time += 1;
                     }
                     _ => {}
                 },

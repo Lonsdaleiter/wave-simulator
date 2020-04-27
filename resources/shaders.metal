@@ -83,19 +83,19 @@ kernel void process_water(texture2d<ushort, access::read> heightMap [[ texture(0
 
     if ((above.g & 1) == 1) {
         newColour.r = 1000.0; // temporary; TODO add a gradient effect + customizable amplitude
-        newColour.g = newColour.g | 1;
+        newColour.g = newColour.g | above.g;
     }
     if ((below.g & 2) == 2) {
         newColour.r = 1000.0;
-        newColour.g = newColour.g | 2;
+        newColour.g = newColour.g | below.g;
     }
     if ((left.g & 4) == 4) {
         newColour.r = 1000.0;
-        newColour.g = newColour.g | 4;
+        newColour.g = newColour.g | left.g;
     }
     if ((right.g & 8) == 8) {
         newColour.r = 1000.0;
-        newColour.g = newColour.g | 8;
+        newColour.g = newColour.g | right.g;
     }
 
     newHeightMap.write(newColour, gid);

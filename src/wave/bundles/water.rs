@@ -102,7 +102,7 @@ impl WaterBundle {
             desc
         });
         texture.replace_region(
-            (1, 1, 2 as u64, 2 as u64),
+            (1, 1, 1, 1),
             0,
             [
                 1000u16, 0b1111, // first pixel

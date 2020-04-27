@@ -125,15 +125,18 @@ impl Behavior<WaveApp> for MainBehavior {
                     0,
                 );
                 encoder.end_encoding();
-                let encoder = command_buffer.new_compute_command_encoder();
-                encoder.set_compute_pipeline_state(water.compute_pipeline.clone());
-                encoder.set_texture(water.texture.clone(), 0);
-                encoder.set_texture(water.texture.clone(), 1);
-                encoder.dispatch_threadgroups(
-                    (VERTEX_COUNT as u64 / 10, VERTEX_COUNT as u64 / 10, 1),
-                    (10, 10, 1),
-                );
-                encoder.end_encoding();
+
+                if state.time != 0 && state.time % 60 == 0 {
+                    let encoder = command_buffer.new_compute_command_encoder();
+                    encoder.set_compute_pipeline_state(water.compute_pipeline.clone());
+                    encoder.set_texture(water.texture.clone(), 0);
+                    encoder.set_texture(water.texture.clone(), 1);
+                    encoder.dispatch_threadgroups(
+                        (VERTEX_COUNT as u64 / 10, VERTEX_COUNT as u64 / 10, 1),
+                        (10, 10, 1),
+                    );
+                    encoder.end_encoding();
+                };
 
                 command_buffer.present_drawable(drawable);
                 command_buffer.commit();
