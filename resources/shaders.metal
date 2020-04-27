@@ -56,32 +56,41 @@ vertex WaterFragment water_vert(device WaterVertex *vertexArray [[ buffer(0) ]],
 {
     float2 pos = vertexArray[vid].position;
 
-    ushort4 encodedIndex = heightMap.read(uint2(pos));
-    // TODO use the encodedIndex to find the correct amplitudes and then sum them
+    ushort4 encodedInfo = heightMap.read(uint2(pos));
 
     WaterFragment out;
-    out.position = projection * view * float4(pos.x, -1.0, pos.y, 1.0);
+    out.position = projection * view * float4(pos.x, -1.0 + encodedInfo.a, pos.y, 1.0);
     return out;
 };
 
 fragment float4 water_frag(WaterFragment in [[ stage_in ]])
 {
-    return float4(in.height, 0.5, 1.0, 1.0);
+    return float4(0.0, 0.5, 1.0, 1.0);
 };
 
-// max 8 waves at once (on a given pixel); 2 per channel
+// max 6 waves at once (on a given pixel); 2 for R, G, and B channels
+// alpha is reserved for how far along it is
 kernel void process_water(constant Wave *waves [[ buffer(0) ]],
                           texture2d<ushort, access::read> heightMap [[ texture(0) ]],
                           texture2d<ushort, access::write> newHeightMap [[ texture(1) ]],
                           uint2 gid [[ thread_position_in_grid ]])
 {
-    ushort4 height = heightMap.read(gid);
-    ushort4 above = heightMap.read(uint2(gid.x, gid.y + 1));
-    ushort4 below = heightMap.read(uint2(gid.x, gid.y - 1));
-    ushort4 left = heightMap.read(uint2(gid.x - 1, gid.y));
-    ushort4 right = heightMap.read(uint2(gid.x + 1, gid.y));
+    ushort4 currentTile = heightMap.read(gid);
+    // ushort4 above = heightMap.read(uint2(gid.x, gid.y + 1));
+    // ushort4 below = heightMap.read(uint2(gid.x, gid.y - 1));
+    // ushort4 left = heightMap.read(uint2(gid.x - 1, gid.y));
+    // ushort4 right = heightMap.read(uint2(gid.x + 1, gid.y));
 
     // TODO do actual stuff here
 
-    // newHeightMap.write(float4, gid);
+    ushort tick;
+    if (currentTile.a > 100) {
+        // tick goes from 0 to 100; normalize to between 0 and PI, then plug into sin
+        // and multiply by amplitude for the height of the vertex
+        tick = currentTile.a;
+    } else {
+        tick = currentTile.a + 1;
+    }
+
+    newHeightMap.write(ushort4(0, 0, 0, tick), gid);
 };
