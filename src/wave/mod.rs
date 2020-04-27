@@ -3,7 +3,7 @@ use crate::behavior::Behavior;
 use crate::wave::bundles::basemetal::BaseMetalBundle;
 use crate::wave::bundles::matrix::MatrixBundle;
 use crate::wave::bundles::ui::UiBundle;
-use crate::wave::bundles::water::WaterBundle;
+use crate::wave::bundles::water::{WaterBundle, Wave};
 use crate::wave::bundles::window::WindowBundle;
 use crate::wave::constants::FPS;
 use crate::wave::keyboard::Keyboard;
@@ -26,6 +26,7 @@ pub struct WaveApp {
     pub matrix_bundle: Option<MatrixBundle>,
     pub ui_bundle: Option<UiBundle>,
     pub water: Option<WaterBundle>,
+    pub waves: [Option<Wave>; 8],
     pub time: u64,
     pub mouse_pos: (f64, f64),
 }
@@ -39,6 +40,7 @@ impl Application for WaveApp {
             matrix_bundle: None,
             ui_bundle: None,
             water: None,
+            waves: [None; 8],
             time: 0,
             mouse_pos: (0.0, 0.0),
         }

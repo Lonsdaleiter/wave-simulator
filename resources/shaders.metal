@@ -71,7 +71,7 @@ fragment float4 water_frag(WaterFragment in [[ stage_in ]])
 };
 
 // TODO redo this compute kernel to encode in the texture data pointing to a constant array of wave structs containing the data
-// max of 255 types of waves total, max 6 waves at once (on a given pixel)
+// max 8 waves at once (on a given pixel); 2 per channel
 kernel void process_water(constant Wave *waves [[ buffer(0) ]],
                           texture2d<ushort, access::read> heightMap [[ texture(0) ]],
                           texture2d<ushort, access::write> newHeightMap [[ texture(1) ]],

@@ -17,6 +17,7 @@ pub struct WaterBundle {
 }
 
 #[repr(C)]
+#[derive(Clone, Copy)]
 pub struct Wave {
     // x | 1 == up
     // x | 2 == down
