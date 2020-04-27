@@ -34,42 +34,46 @@ fragment float4 ui_frag(UiFragment in [[stage_in]],
     return float4(0.0, 1.0, 1.0, 1.0);
 }
 
-struct FlatVertex {
+struct WaterVertex {
     float2 position;
 };
 
-struct FlatFragment {
+struct WaterFragment {
     float4 position [[ position ]];
     float height;
 };
 
-vertex FlatFragment flat_vert(device FlatVertex *vertexArray [[ buffer(0) ]],
+struct Wave {
+    char directions;
+    float amplitude;
+};
+
+vertex WaterFragment water_vert(device WaterVertex *vertexArray [[ buffer(0) ]],
                               constant float4x4 &projection [[ buffer(1) ]],
                               constant float4x4 &view [[ buffer(2) ]],
-                              // TODO add a constant representing amplitude
-                              // TODO also add lighting and reflection / refraction for water
+                              constant Wave *waves [[ buffer(3) ]],
                               texture2d<ushort, access::read> heightMap [[ texture(0) ]],
                               unsigned int vid [[ vertex_id ]])
 {
     float2 pos = vertexArray[vid].position;
+    // TODO do stuff involving the current waves for amplitude; don't get height from pixel
     float height = heightMap.read(uint2((pos.x + 50.0) / 2.0, (pos.y + 50.0) / 2.0)).r;
 
-    FlatFragment out;
+    WaterFragment out;
     out.position = projection * view * float4(pos.x, -1.0 + float(height) / 1000.0, pos.y, 1.0);
     out.height = float(height);
     return out;
 };
 
-fragment float4 water_frag(FlatFragment in [[ stage_in ]])
+fragment float4 water_frag(WaterFragment in [[ stage_in ]])
 {
     return float4(in.height, 0.5, 1.0, 1.0);
 };
 
-// determine the height by the red
-// determine the propagation by the green
-// blue and alpha are reserved for future use
-// note that newHeightMap is heightMap
-kernel void process_water(texture2d<ushort, access::read> heightMap [[ texture(0) ]],
+// TODO redo this compute kernel to encode in the texture data pointing to a constant array of wave structs containing the data
+// max of 255 types of waves total, max 6 waves at once (on a given pixel)
+kernel void process_water(constant Wave *waves [[ buffer(0) ]],
+                          texture2d<ushort, access::read> heightMap [[ texture(0) ]],
                           texture2d<ushort, access::write> newHeightMap [[ texture(1) ]],
                           uint2 gid [[ thread_position_in_grid ]])
 {
@@ -82,8 +86,7 @@ kernel void process_water(texture2d<ushort, access::read> heightMap [[ texture(0
     ushort4 newColour = ushort4(height.r, 0, 0, 0);
 
     if ((above.g & 1) == 1) {
-        newColour.r = 1000.0; // temporary; TODO add a gradient effect + customizable amplitude
-        // TODO also add support for making these wave amplitudes compound but keeping the
+        newColour.r = 1000.0;
         // waves segregated
         newColour.g = newColour.g | above.g;
     }

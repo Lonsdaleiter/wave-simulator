@@ -16,8 +16,20 @@ pub struct WaterBundle {
     pub texture: MTLTexture,
 }
 
+#[repr(C)]
+pub struct Wave {
+    // x | 1 == up
+    // x | 2 == down
+    // x | 4 == left
+    // x | 8 == right
+    pub directions: u8,
+    // amplitude of the wave; may be negative
+    // amplitude is calculated in the vertex shader
+    pub amplitude_factor: f32,
+}
+
 impl WaterBundle {
-    pub unsafe fn generate_water(bundle: &BaseMetalBundle, flat_vert: MTLFunction) -> WaterBundle {
+    pub unsafe fn generate_water(bundle: &BaseMetalBundle) -> WaterBundle {
         // row by row generation
         const HL: f32 = VERTEX_COUNT as f32 / 2.0;
         const DIMENSIONS: usize = 2;
@@ -72,7 +84,9 @@ impl WaterBundle {
                         },
                         0,
                     );
-                desc.set_vertex_function(flat_vert);
+                desc.set_vertex_function(
+                    bundle.library.new_function_with_name("water_vert").unwrap(),
+                );
                 desc.set_fragment_function(
                     bundle.library.new_function_with_name("water_frag").unwrap(),
                 );
@@ -96,7 +110,7 @@ impl WaterBundle {
             let desc = MTLTextureDescriptor::new();
             desc.set_width(VERTEX_COUNT as u64);
             desc.set_height(VERTEX_COUNT as u64);
-            desc.set_pixel_format(63); // rg16uint
+            desc.set_pixel_format(113); // 113 = rgba16uint
             desc.set_texture_type(2); // 2d
             desc.set_usage(0x0001 | 0x002); // shader read + write
             desc
@@ -105,7 +119,7 @@ impl WaterBundle {
             (1, 1, 1, 1),
             0,
             [
-                1000u16, 0b1111, // first pixel
+                1000u16, 0b1111, 0, 0, // first pixel
             ]
             .as_ptr() as *mut c_void,
             VERTEX_COUNT as u64 * 4,

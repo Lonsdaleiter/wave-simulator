@@ -13,18 +13,8 @@ pub struct MainBehavior;
 impl Behavior<WaveApp> for MainBehavior {
     fn init(&self, state: &mut WaveApp) {
         state.ui_bundle = Some(unsafe { UiBundle::new(state.base_metal_bundle.as_ref().unwrap()) });
-
-        let flat = unsafe {
-            state
-                .base_metal_bundle
-                .as_ref()
-                .unwrap()
-                .library
-                .new_function_with_name("flat_vert")
-        }
-        .unwrap();
         state.water = Some(unsafe {
-            WaterBundle::generate_water(&state.base_metal_bundle.as_ref().unwrap(), flat.clone())
+            WaterBundle::generate_water(&state.base_metal_bundle.as_ref().unwrap())
         });
     }
 
