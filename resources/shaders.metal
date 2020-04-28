@@ -79,10 +79,11 @@ vertex WaterFragment water_vert(device WaterVertex *vertexArray [[ buffer(0) ]],
     if (waveBoolChart.a == 1) {
         a = waves[3].amplitude * sin(float(tickPos.a) * (M_PI_F / float(waves[3].wavelength)));
     }
-    // float amplitude = r + g + b + a;
+    
+    float amplitude = r + g + b + a;
 
     WaterFragment out;
-    out.position = projection * view * float4(pos.x, -1.0 + r, pos.y, 1.0);
+    out.position = projection * view * float4(pos.x, -1.0 + amplitude, pos.y, 1.0);
     return out;
 };
 
