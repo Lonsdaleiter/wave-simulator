@@ -143,7 +143,7 @@ impl WaterBundle {
         texture.replace_region(
             (1, 1, 1, 1),
             0,
-            [256u16, 0, 0, 0].as_ptr() as *mut c_void,
+            [1u16 << 8, 0, 0, 0].as_ptr() as *mut c_void, // use the zeroth, red wave on this tile
             VERTEX_COUNT as u64 * 8,
         );
 

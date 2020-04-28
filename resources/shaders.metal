@@ -60,17 +60,10 @@ vertex WaterFragment water_vert(device WaterVertex *vertexArray [[ buffer(0) ]],
     int2 texturedPos = int2(pos);
     texturedPos += 50;
     texturedPos.y = 100 - texturedPos.y;
-    ushort4 encodedInfo = heightMap.read(uint2(texturedPos));
-
-    ushort r = ((encodedInfo.r >> 8) & 255);
-    // ushort g = ((encodedInfo.g >> 8) & 255);
-    // ushort b = ((encodedInfo.b >> 8) & 255);
-    // ushort a = ((encodedInfo.a >> 8) & 255);
-
-    // TODO do actual stuff here
+    // ushort4 encodedInfo = heightMap.read(uint2(texturedPos));
 
     WaterFragment out;
-    out.position = projection * view * float4(pos.x, -1.0 + r, pos.y, 1.0);
+    out.position = projection * view * float4(pos.x, -1.0, pos.y, 1.0);
     return out;
 };
 
@@ -80,6 +73,7 @@ fragment float4 water_frag(WaterFragment in [[ stage_in ]])
 };
 
 // max 4 waves at once (on a given pixel); 1 for R, G, B, and A channels,
+// it is UNDEFINED BEHAVIOR to have a channel have a value other than 0 or 1 in the first byte
 // in each channel is also stored the wave's tick - how long has it been here
 // [index] [tick]
 // propagation bitwise storage: up | 1, down | 2, left | 4, right | 8
@@ -88,89 +82,11 @@ kernel void process_water(constant Wave *waves [[ buffer(0) ]],
                           texture2d<ushort, access::write> newHeightMap [[ texture(1) ]],
                           uint2 gid [[ thread_position_in_grid ]])
 {
-    ushort4 currentTile = heightMap.read(gid);
-    ushort4 above = heightMap.read(uint2(gid.x, gid.y + 1));
-    ushort4 below = heightMap.read(uint2(gid.x, gid.y - 1));
-    ushort4 left = heightMap.read(uint2(gid.x - 1, gid.y));
-    ushort4 right = heightMap.read(uint2(gid.x + 1, gid.y));
+    // ushort4 currentTile = heightMap.read(gid);
+    // ushort4 above = heightMap.read(uint2(gid.x, gid.y + 1));
+    // ushort4 below = heightMap.read(uint2(gid.x, gid.y - 1));
+    // ushort4 left = heightMap.read(uint2(gid.x - 1, gid.y));
+    // ushort4 right = heightMap.read(uint2(gid.x + 1, gid.y));
 
-    // TODO add propagation in different directions also
-
-    // upwards propagation
-
-    ushort r = ((below.r >> 8) & 255);
-    ushort g = ((below.g >> 8) & 255);
-    ushort b = ((below.b >> 8) & 255);
-    ushort a = ((below.a >> 8) & 255);
-
-    ushort4 newTile = ushort4(currentTile);
-
-    if ((r & 1) == 1) {
-        newTile.r |= 256;
-    }
-    if ((g & 1) == 1) {
-        newTile.g |= 256;
-    }
-    if ((b & 1) == 1) {
-        newTile.b |= 256;
-    }
-    if ((a & 1) == 1) {
-        newTile.a |= 256;
-    }
-
-    r = ((above.r >> 8) & 255);
-    g = ((above.g >> 8) & 255);
-    b = ((above.b >> 8) & 255);
-    a = ((above.a >> 8) & 255);
-
-    if ((r & 2) == 2) {
-        newTile.r |= 512;
-    }
-    if ((g & 2) == 2) {
-        newTile.g |= 512;
-    }
-    if ((b & 2) == 2) {
-        newTile.b |= 512;
-    }
-    if ((a & 2) == 2) {
-        newTile.a |= 512;
-    }
-
-    r = ((left.r >> 8) & 255);
-    g = ((left.g >> 8) & 255);
-    b = ((left.b >> 8) & 255);
-    a = ((left.a >> 8) & 255);
-
-    if ((r & 4) == 4) {
-        newTile.r |= 1024;
-    }
-    if ((g & 4) == 4) {
-        newTile.g |= 1024;
-    }
-    if ((b & 4) == 4) {
-        newTile.b |= 1024;
-    }
-    if ((a & 4) == 4) {
-        newTile.a |= 1024;
-    }
-
-    r = ((right.r >> 8) & 255);
-    g = ((right.g >> 8) & 255);
-    b = ((right.b >> 8) & 255);
-    a = ((right.a >> 8) & 255);
-
-    if ((r & 8) == 8) {
-        newTile.r |= 2048;
-    }
-    if ((g & 8) == 8) {
-        newTile.g |= 2048;
-    }
-    if ((b & 8) == 8) {
-        newTile.b |= 2048;
-    }
-    if ((a & 8) == 8) {
-        newTile.a |= 2048;
-    }
-
-    newHeightMap.write(newTile, gid);
+    newHeightMap.write(ushort4(0, 0, 0, 0), gid);
 };
