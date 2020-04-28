@@ -60,10 +60,28 @@ vertex WaterFragment water_vert(device WaterVertex *vertexArray [[ buffer(0) ]],
     int2 texturedPos = int2(pos);
     texturedPos += 50;
     texturedPos.y = 100 - texturedPos.y;
-    // ushort4 encodedInfo = heightMap.read(uint2(texturedPos));
+    ushort4 encodedInfo = heightMap.read(uint2(texturedPos));
+    ushort4 waveBoolChart = (encodedInfo >> 8) & 255;
+    ushort r = 0;
+    ushort g = 0;
+    ushort b = 0;
+    ushort a = 0;
+    if (waveBoolChart.r == 1) {
+        r = waves[0].amplitude;
+    }
+    if (waveBoolChart.g == 1) {
+        g = waves[1].amplitude;
+    }
+    if (waveBoolChart.b == 1) {
+        b = waves[2].amplitude;
+    }
+    if (waveBoolChart.a == 1) {
+        a = waves[3].amplitude;
+    }
+    ushort amplitude = r + g + b + a;
 
     WaterFragment out;
-    out.position = projection * view * float4(pos.x, -1.0, pos.y, 1.0);
+    out.position = projection * view * float4(pos.x, -1.0 + amplitude, pos.y, 1.0);
     return out;
 };
 
@@ -88,5 +106,5 @@ kernel void process_water(constant Wave *waves [[ buffer(0) ]],
     // ushort4 left = heightMap.read(uint2(gid.x - 1, gid.y));
     // ushort4 right = heightMap.read(uint2(gid.x + 1, gid.y));
 
-    newHeightMap.write(ushort4(0, 0, 0, 0), gid);
+    // newHeightMap.write(ushort4(0, 0, 0, 0), gid);
 };
