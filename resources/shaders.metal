@@ -19,7 +19,7 @@ struct UiFragment {
 
 vertex UiFragment ui_vert(device UiVertex *vertexArray [[ buffer(0) ]],
                           constant UiTransformation &transformation [[ buffer(1) ]],
-                          unsigned int vid [[ vertex_id ]])
+                          uint vid [[ vertex_id ]])
 {
     UiFragment frag;
     frag.position = float4(vertexArray[vid].position * transformation.size + transformation.centre, 0.0, 1.0);
@@ -53,7 +53,7 @@ vertex WaterFragment water_vert(device WaterVertex *vertexArray [[ buffer(0) ]],
                                 constant float4x4 &view [[ buffer(2) ]],
                                 constant Wave *waves [[ buffer(3) ]],
                                 texture2d<ushort, access::read> heightMap [[ texture(0) ]],
-                                unsigned int vid [[ vertex_id ]])
+                                uint vid [[ vertex_id ]])
 {
     float2 pos = vertexArray[vid].position;
 
