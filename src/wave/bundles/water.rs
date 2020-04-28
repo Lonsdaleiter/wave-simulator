@@ -143,7 +143,7 @@ impl WaterBundle {
         texture.replace_region(
             (1, 1, 1, 1),
             0,
-            [0b100000000u16, 0, 0, 0].as_ptr() as *mut c_void,
+            [512u16, 0, 0, 0].as_ptr() as *mut c_void,
             VERTEX_COUNT as u64 * 8,
         );
 

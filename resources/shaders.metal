@@ -90,10 +90,10 @@ kernel void process_water(constant Wave *waves [[ buffer(0) ]],
 
     // upwards propagation
 
-    ushort r = ((below.r >> 8) & 0xff);
-    ushort g = ((below.g >> 8) & 0xff);
-    ushort b = ((below.b >> 8) & 0xff);
-    ushort a = ((below.a >> 8) & 0xff);
+    ushort r = ((below.r >> 8) & 255);
+    ushort g = ((below.g >> 8) & 255);
+    ushort b = ((below.b >> 8) & 255);
+    ushort a = ((below.a >> 8) & 255);
 
     ushort4 newTile = ushort4(currentTile);
 
@@ -109,8 +109,6 @@ kernel void process_water(constant Wave *waves [[ buffer(0) ]],
     if ((a & 1) == 1) {
         newTile.a |= 512;
     }
-
-    // TODO do actual stuff here
 
     newHeightMap.write(newTile, gid);
 };
