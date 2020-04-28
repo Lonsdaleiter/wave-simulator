@@ -61,13 +61,14 @@ vertex WaterFragment water_vert(device WaterVertex *vertexArray [[ buffer(0) ]],
     texturedPos += 50;
     texturedPos.y = 100 - texturedPos.y;
     ushort4 encodedInfo = heightMap.read(uint2(texturedPos));
+    ushort4 tickPos = encodedInfo & 255;
     ushort4 waveBoolChart = (encodedInfo >> 8) & 255;
-    ushort r = 0;
-    ushort g = 0;
-    ushort b = 0;
-    ushort a = 0;
+    float r = 0;
+    float g = 0;
+    float b = 0;
+    float a = 0;
     if (waveBoolChart.r == 1) {
-        r = waves[0].amplitude;
+        r = waves[0].amplitude * sin(float(tickPos.r) * (M_PI_F / float(waves[0].wavelength)));
     }
     if (waveBoolChart.g == 1) {
         g = waves[1].amplitude;
@@ -78,10 +79,10 @@ vertex WaterFragment water_vert(device WaterVertex *vertexArray [[ buffer(0) ]],
     if (waveBoolChart.a == 1) {
         a = waves[3].amplitude;
     }
-    ushort amplitude = r + g + b + a;
+    // float amplitude = r + g + b + a;
 
     WaterFragment out;
-    out.position = projection * view * float4(pos.x, -1.0 + amplitude, pos.y, 1.0);
+    out.position = projection * view * float4(pos.x, -1.0 + r, pos.y, 1.0);
     return out;
 };
 
