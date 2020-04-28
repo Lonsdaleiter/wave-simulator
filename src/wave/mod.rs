@@ -97,6 +97,7 @@ impl Application for WaveApp {
                                 transmute(input.state)
                             });
                     }
+                    #[allow(deprecated)]
                     WindowEvent::MouseInput {
                         device_id: _,
                         state: _,
@@ -105,6 +106,7 @@ impl Application for WaveApp {
                     } => {
                         // TODO add calls here
                     }
+                    #[allow(deprecated)]
                     WindowEvent::CursorMoved {
                         device_id: _,
                         position,
