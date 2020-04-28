@@ -98,16 +98,16 @@ kernel void process_water(constant Wave *waves [[ buffer(0) ]],
     ushort4 newTile = ushort4(currentTile);
 
     if ((r & 1) == 1) {
-        newTile.r |= 512;
+        newTile.r |= 256;
     }
     if ((g & 1) == 1) {
-        newTile.g |= 512;
+        newTile.g |= 256;
     }
     if ((b & 1) == 1) {
-        newTile.b |= 512;
+        newTile.b |= 256;
     }
     if ((a & 1) == 1) {
-        newTile.a |= 512;
+        newTile.a |= 256;
     }
 
     newHeightMap.write(newTile, gid);
