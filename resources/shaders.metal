@@ -71,13 +71,13 @@ vertex WaterFragment water_vert(device WaterVertex *vertexArray [[ buffer(0) ]],
         r = waves[0].amplitude * sin(float(tickPos.r) * (M_PI_F / float(waves[0].wavelength)));
     }
     if (waveBoolChart.g == 1) {
-        g = waves[1].amplitude;
+        g = waves[1].amplitude * sin(float(tickPos.g) * (M_PI_F / float(waves[1].wavelength)));
     }
     if (waveBoolChart.b == 1) {
-        b = waves[2].amplitude;
+        b = waves[2].amplitude * sin(float(tickPos.b) * (M_PI_F / float(waves[2].wavelength)));
     }
     if (waveBoolChart.a == 1) {
-        a = waves[3].amplitude;
+        a = waves[3].amplitude * sin(float(tickPos.a) * (M_PI_F / float(waves[3].wavelength)));
     }
     // float amplitude = r + g + b + a;
 
@@ -103,6 +103,8 @@ kernel void process_water(constant Wave *waves [[ buffer(0) ]],
 {
     ushort4 currentTile = heightMap.read(gid);
     currentTile += 1; // incrementing the ticks
+
+    // TODO add an increment cap
 
     // ushort4 above = heightMap.read(uint2(gid.x, gid.y + 1));
     // ushort4 below = heightMap.read(uint2(gid.x, gid.y - 1));

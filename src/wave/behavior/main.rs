@@ -1,7 +1,7 @@
 use crate::behavior::Behavior;
 use crate::wave::bundles::ui::UiBundle;
 use crate::wave::bundles::water::{WaterBundle, Wave};
-use crate::wave::constants::{CAMERA_SPEED, FILL_MODE, VERTEX_COUNT};
+use crate::wave::constants::{CAMERA_SPEED, FILL_MODE, VERTEX_COUNT, FREQ_OF_UPDATES};
 use crate::wave::WaveApp;
 use cull_canyon::{
     MTLCommandEncoder, MTLRenderPassAttachmentDescriptor, MTLRenderPassColorAttachmentDescriptor,
@@ -123,7 +123,7 @@ impl Behavior<WaveApp> for MainBehavior {
                 );
                 encoder.end_encoding();
 
-                if state.time != 0 && state.time % 60 == 0 {
+                if state.time != 0 && state.time % FREQ_OF_UPDATES == 0 {
                     let encoder = command_buffer.new_compute_command_encoder();
                     encoder.set_compute_pipeline_state(water.compute_pipeline.clone());
                     encoder.set_bytes(
