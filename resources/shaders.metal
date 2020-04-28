@@ -79,7 +79,7 @@ vertex WaterFragment water_vert(device WaterVertex *vertexArray [[ buffer(0) ]],
     if (waveBoolChart.a == 1) {
         a = waves[3].amplitude * sin(float(tickPos.a) * (M_PI_F / float(waves[3].wavelength)));
     }
-    
+
     float amplitude = r + g + b + a;
 
     WaterFragment out;
@@ -95,7 +95,8 @@ fragment float4 water_frag(WaterFragment in [[ stage_in ]])
 // max 4 waves at once (on a given pixel); 1 for R, G, B, and A channels,
 // it is UNDEFINED BEHAVIOR to have a channel have a value other than 0 or 1 in the first byte
 // in each channel is also stored the wave's tick - how long has it been here
-// [index] [tick]
+// [index] [tick]; ticks should NEVER overflow into indices (wavelength < 256) and there should
+// be checks to stop ticks and toggle the boolean whenever ticks hit wavelength cap
 // propagation bitwise storage: up | 1, down | 2, left | 4, right | 8
 kernel void process_water(constant Wave *waves [[ buffer(0) ]],
                           texture2d<ushort, access::read> heightMap [[ texture(0) ]],
