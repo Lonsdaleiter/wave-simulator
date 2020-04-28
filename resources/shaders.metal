@@ -62,7 +62,7 @@ vertex WaterFragment water_vert(device WaterVertex *vertexArray [[ buffer(0) ]],
     // TODO do actual stuff here
 
     WaterFragment out;
-    out.position = projection * view * float4(pos.x, -1.0 + encodedInfo.a, pos.y, 1.0);
+    out.position = projection * view * float4(pos.x, -1.0 + encodedInfo.r, pos.y, 1.0);
     return out;
 };
 
@@ -73,23 +73,42 @@ fragment float4 water_frag(WaterFragment in [[ stage_in ]])
 
 // max 4 waves at once (on a given pixel); 1 for R, G, B, and A channels,
 // in each channel is also stored the wave's tick - how long has it been here
+// [index] [tick]
 kernel void process_water(constant Wave *waves [[ buffer(0) ]],
                           texture2d<ushort, access::read> heightMap [[ texture(0) ]],
                           texture2d<ushort, access::write> newHeightMap [[ texture(1) ]],
                           uint2 gid [[ thread_position_in_grid ]])
 {
     ushort4 currentTile = heightMap.read(gid);
-    // ushort4 above = heightMap.read(uint2(gid.x, gid.y + 1));
+    ushort4 above = heightMap.read(uint2(gid.x, gid.y + 1));
     // ushort4 below = heightMap.read(uint2(gid.x, gid.y - 1));
     // ushort4 left = heightMap.read(uint2(gid.x - 1, gid.y));
     // ushort4 right = heightMap.read(uint2(gid.x + 1, gid.y));
 
-    ushort tick = currentTile.a;
-    if (currentTile.a != 5) {
-        tick += 1;
+    // downwards propagation
+    // TODO add propagation in different directions also
+
+    ushort r = ((above.r >> 8) & 0xff);
+    ushort g = ((above.r >> 8) & 0xff);
+    ushort b = ((above.r >> 8) & 0xff);
+    ushort a = ((above.r >> 8) & 0xff);
+
+    ushort4 newTile = ushort4(currentTile);
+
+    if ((r & 1) == 1) {
+        newTile.r |= 512;
+    }
+    if ((g & 2) == 2) {
+        newTile.g |= 1024;
+    }
+    if ((b & 4) == 4) {
+        newTile.b |= 2048;
+    }
+    if ((a & 8) == 8) {
+        newTile.a |= 4096;
     }
 
     // TODO do actual stuff here
 
-    newHeightMap.write(ushort4(0, 0, 0, tick), gid);
+    newHeightMap.write(newTile, gid);
 };
