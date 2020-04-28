@@ -57,7 +57,10 @@ vertex WaterFragment water_vert(device WaterVertex *vertexArray [[ buffer(0) ]],
 {
     float2 pos = vertexArray[vid].position;
 
-    ushort4 encodedInfo = heightMap.read(uint2(pos));
+    int2 texturedPos = int2(pos);
+    texturedPos += 50;
+    texturedPos.y = 100 - texturedPos.y;
+    ushort4 encodedInfo = heightMap.read(uint2(texturedPos));
 
     // TODO do actual stuff here
 
