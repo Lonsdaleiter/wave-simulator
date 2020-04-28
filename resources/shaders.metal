@@ -44,6 +44,7 @@ struct WaterFragment {
 
 struct Wave {
     char directions;
+    char wavelength;
     float amplitude;
 };
 
@@ -58,8 +59,10 @@ vertex WaterFragment water_vert(device WaterVertex *vertexArray [[ buffer(0) ]],
 
     ushort4 encodedInfo = heightMap.read(uint2(pos));
 
+    // TODO do actual stuff here
+
     WaterFragment out;
-    out.position = projection * view * float4(pos.x, -1.0 + encodedInfo.a, pos.y, 1.0);
+    out.position = projection * view * float4(pos.x, -1.0, pos.y, 1.0);
     return out;
 };
 
@@ -68,8 +71,8 @@ fragment float4 water_frag(WaterFragment in [[ stage_in ]])
     return float4(0.0, 0.5, 1.0, 1.0);
 };
 
-// max 6 waves at once (on a given pixel); 2 for R, G, and B channels
-// alpha is reserved for how far along it is
+// max 4 waves at once (on a given pixel); 1 for R, G, B, and A channels,
+// in each channel is also stored the wave's tick - how long has it been here
 kernel void process_water(constant Wave *waves [[ buffer(0) ]],
                           texture2d<ushort, access::read> heightMap [[ texture(0) ]],
                           texture2d<ushort, access::write> newHeightMap [[ texture(1) ]],
@@ -83,14 +86,5 @@ kernel void process_water(constant Wave *waves [[ buffer(0) ]],
 
     // TODO do actual stuff here
 
-    ushort tick;
-    if (currentTile.a > 100) {
-        // tick goes from 0 to 100; normalize to between 0 and PI, then plug into sin
-        // and multiply by amplitude for the height of the vertex
-        tick = currentTile.a;
-    } else {
-        tick = currentTile.a + 1;
-    }
-
-    newHeightMap.write(ushort4(0, 0, 0, tick), gid);
+    newHeightMap.write(ushort4(0, 0, 0, 0), gid);
 };

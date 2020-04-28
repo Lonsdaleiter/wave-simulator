@@ -24,6 +24,8 @@ pub struct Wave {
     // x | 4 == left
     // x | 8 == right
     pub directions: u8,
+    // in vertices
+    pub wavelength: u8,
     // amplitude of the wave; may be negative
     // amplitude is calculated in the vertex shader
     pub amplitude_factor: f32,
@@ -37,7 +39,8 @@ impl Wave {
         // }
         Wave { // TODO use the prior declaration after testing
             directions: 15,
-            amplitude_factor: 1.0
+            wavelength: 2,
+            amplitude_factor: 1.0,
         }
     }
 }

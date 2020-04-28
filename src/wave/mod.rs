@@ -26,7 +26,7 @@ pub struct WaveApp {
     pub matrix_bundle: Option<MatrixBundle>,
     pub ui_bundle: Option<UiBundle>,
     pub water: Option<WaterBundle>,
-    pub waves: [Wave; 8],
+    pub waves: [Wave; 4],
     pub time: u64,
     pub mouse_pos: (f64, f64),
 }
@@ -40,7 +40,7 @@ impl Application for WaveApp {
             matrix_bundle: None,
             ui_bundle: None,
             water: None,
-            waves: [Wave::empty(); 8],
+            waves: [Wave::empty(); 4],
             time: 0,
             mouse_pos: (0.0, 0.0),
         }
