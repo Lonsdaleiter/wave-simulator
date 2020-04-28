@@ -100,11 +100,13 @@ kernel void process_water(constant Wave *waves [[ buffer(0) ]],
                           texture2d<ushort, access::write> newHeightMap [[ texture(1) ]],
                           uint2 gid [[ thread_position_in_grid ]])
 {
-    // ushort4 currentTile = heightMap.read(gid);
+    ushort4 currentTile = heightMap.read(gid);
+    currentTile += 1; // incrementing the ticks
+
     // ushort4 above = heightMap.read(uint2(gid.x, gid.y + 1));
     // ushort4 below = heightMap.read(uint2(gid.x, gid.y - 1));
     // ushort4 left = heightMap.read(uint2(gid.x - 1, gid.y));
     // ushort4 right = heightMap.read(uint2(gid.x + 1, gid.y));
 
-    // newHeightMap.write(ushort4(0, 0, 0, 0), gid);
+    newHeightMap.write(currentTile, gid);
 };
