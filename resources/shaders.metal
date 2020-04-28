@@ -62,7 +62,7 @@ vertex WaterFragment water_vert(device WaterVertex *vertexArray [[ buffer(0) ]],
     // TODO do actual stuff here
 
     WaterFragment out;
-    out.position = projection * view * float4(pos.x, -1.0, pos.y, 1.0);
+    out.position = projection * view * float4(pos.x, -1.0 + encodedInfo.a, pos.y, 1.0);
     return out;
 };
 
@@ -84,7 +84,12 @@ kernel void process_water(constant Wave *waves [[ buffer(0) ]],
     // ushort4 left = heightMap.read(uint2(gid.x - 1, gid.y));
     // ushort4 right = heightMap.read(uint2(gid.x + 1, gid.y));
 
+    ushort tick = currentTile.a;
+    if (currentTile.a != 5) {
+        tick += 1;
+    }
+
     // TODO do actual stuff here
 
-    newHeightMap.write(ushort4(0, 0, 0, 0), gid);
+    newHeightMap.write(ushort4(0, 0, 0, tick), gid);
 };

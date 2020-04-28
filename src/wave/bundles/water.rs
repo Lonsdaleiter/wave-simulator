@@ -37,7 +37,8 @@ impl Wave {
         //     directions: 0,
         //     amplitude_factor: 0.0,
         // }
-        Wave { // TODO use the prior declaration after testing
+        Wave {
+            // TODO use the prior declaration after testing
             directions: 15,
             wavelength: 2,
             amplitude_factor: 1.0,
@@ -133,12 +134,16 @@ impl WaterBundle {
             desc
         });
         texture.replace_region(
+            (1, 1, VERTEX_COUNT as u64, VERTEX_COUNT as u64),
+            0,
+            [[0u16, 0, 0, 0]; VERTEX_COUNT as usize * VERTEX_COUNT as usize]
+                .as_ptr() as *mut c_void,
+            VERTEX_COUNT as u64 * 8,
+        );
+        texture.replace_region(
             (1, 1, 1, 1),
             0,
-            [
-                0u16, 0, 0, 0
-            ]
-            .as_ptr() as *mut c_void,
+            [0u16, 0, 0, 5].as_ptr() as *mut c_void,
             VERTEX_COUNT as u64 * 8,
         );
 
