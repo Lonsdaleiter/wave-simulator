@@ -72,6 +72,7 @@ impl Behavior<WaveApp> for MainBehavior {
 
     fn draw(&self, state: &mut WaveApp) {
         let bundle = state.base_metal_bundle.as_ref().unwrap();
+        let ui = state.ui_bundle.as_ref().unwrap();
         let water = state.water.as_ref().unwrap();
         let matrices = state.matrix_bundle.as_ref().unwrap();
 
@@ -121,6 +122,13 @@ impl Behavior<WaveApp> for MainBehavior {
                     0,
                     0,
                 );
+
+                encoder.set_render_pipeline_state(ui.pipeline.clone());
+                encoder.set_vertex_buffer(ui.quad.clone(), 0, 0);
+                // encoder.set_fragment_texture(); // TODO finish this
+                // encoder.set_fragment_sampler_state();
+                encoder.draw_primitives(3, 0, 6, 1, 0);
+
                 encoder.end_encoding();
 
                 if state.time != 0 && state.time % FREQ_OF_UPDATES == 0 {

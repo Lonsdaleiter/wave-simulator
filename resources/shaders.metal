@@ -22,7 +22,7 @@ vertex UiFragment ui_vert(device UiVertex *vertexArray [[ buffer(0) ]],
                           uint vid [[ vertex_id ]])
 {
     UiFragment frag;
-    frag.position = float4(vertexArray[vid].position * transformation.size + transformation.centre, 0.0, 1.0);
+    frag.position = float4(vertexArray[vid].position, 0.0, 1.0);
     frag.textureCoords = vertexArray[vid].textureCoords;
     return frag;
 }
@@ -31,7 +31,7 @@ fragment float4 ui_frag(UiFragment in [[stage_in]],
                         texture2d<float> texture [[ texture(0) ]],
                         sampler sam [[ sampler(0) ]])
 {
-    return float4(0.0, 1.0, 1.0, 1.0);
+    return texture.sample(sam, in.textureCoords);
 }
 
 struct WaterVertex {
