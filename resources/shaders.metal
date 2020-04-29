@@ -104,41 +104,95 @@ kernel void process_water(constant Wave *waves [[ buffer(0) ]],
                           uint2 gid [[ thread_position_in_grid ]])
 {
     ushort4 currentTile = heightMap.read(gid);
+
+    ushort4 above = heightMap.read(uint2(gid.x, gid.y + 1));
+
+    if (((currentTile.r >> 8) & 255) != 1 && ((above.r >> 8) & 255) == 1) {
+        currentTile.r = 256;
+    }
+    if (((currentTile.g >> 8) & 255) != 1 && ((above.g >> 8) & 255) == 1) {
+        currentTile.g = 256;
+    }
+    if (((currentTile.b >> 8) & 255) != 1 && ((above.b >> 8) & 255) == 1) {
+        currentTile.b = 256;
+    }
+    if (((currentTile.a >> 8) & 255) != 1 && ((above.a >> 8) & 255) == 1) {
+        currentTile.a = 256;
+    }
+
+    ushort4 below = heightMap.read(uint2(gid.x, gid.y - 1));
+    
+    if (((currentTile.r >> 8) & 255) != 1 && ((below.r >> 8) & 255) == 1) {
+        currentTile.r = 256;
+    }
+    if (((currentTile.g >> 8) & 255) != 1 && ((below.g >> 8) & 255) == 1) {
+        currentTile.g = 256;
+    }
+    if (((currentTile.b >> 8) & 255) != 1 && ((below.b >> 8) & 255) == 1) {
+        currentTile.b = 256;
+    }
+    if (((currentTile.a >> 8) & 255) != 1 && ((below.a >> 8) & 255) == 1) {
+        currentTile.a = 256;
+    }
+    
+    ushort4 left = heightMap.read(uint2(gid.x - 1, gid.y));
+    
+    if (((currentTile.r >> 8) & 255) != 1 && ((left.r >> 8) & 255) == 1) {
+        currentTile.r = 256;
+    }
+    if (((currentTile.g >> 8) & 255) != 1 && ((left.g >> 8) & 255) == 1) {
+        currentTile.g = 256;
+    }
+    if (((currentTile.b >> 8) & 255) != 1 && ((left.b >> 8) & 255) == 1) {
+        currentTile.b = 256;
+    }
+    if (((currentTile.a >> 8) & 255) != 1 && ((left.a >> 8) & 255) == 1) {
+        currentTile.a = 256;
+    }
+    
+    ushort4 right = heightMap.read(uint2(gid.x + 1, gid.y));
+
+    if (((currentTile.r >> 8) & 255) != 1 && ((right.r >> 8) & 255) == 1) {
+        currentTile.r = 256;
+    }
+    if (((currentTile.g >> 8) & 255) != 1 && ((right.g >> 8) & 255) == 1) {
+        currentTile.g = 256;
+    }
+    if (((currentTile.b >> 8) & 255) != 1 && ((right.b >> 8) & 255) == 1) {
+        currentTile.b = 256;
+    }
+    if (((currentTile.a >> 8) & 255) != 1 && ((right.a >> 8) & 255) == 1) {
+        currentTile.a = 256;
+    }
+
     if (((currentTile.r >> 8) & 255) == 1) {
-        if ((currentTile.r & 255) < waves[((currentTile.r >> 8) & 255)].wavelength) {
+        if ((currentTile.r & 255) < waves[0].wavelength) {
             currentTile.r += 1;
         } else {
             currentTile.r = 0;
         }
     }
     if (((currentTile.g >> 8) & 255) == 1) {
-        if ((currentTile.g & 255) < waves[((currentTile.g >> 8) & 255)].wavelength) {
+        if ((currentTile.g & 255) < waves[1].wavelength) {
             currentTile.g += 1;
         } else {
             currentTile.g = 0;
         }
     }
     if (((currentTile.b >> 8) & 255) == 1) {
-        if ((currentTile.b & 255) < waves[((currentTile.b >> 8) & 255)].wavelength) {
+        if ((currentTile.b & 255) < waves[2].wavelength) {
             currentTile.b += 1;
         } else {
             currentTile.b = 0;
         }
     }
     if (((currentTile.a >> 8) & 255) == 1) {
-        if ((currentTile.a & 255) < waves[((currentTile.a >> 8) & 255)].wavelength) {
+        if ((currentTile.a & 255) < waves[3].wavelength) {
             currentTile.a += 1;
         } else {
             currentTile.a = 0;
         }
     }
-
-    // TODO add an increment cap
-
-    // ushort4 above = heightMap.read(uint2(gid.x, gid.y + 1));
-    // ushort4 below = heightMap.read(uint2(gid.x, gid.y - 1));
-    // ushort4 left = heightMap.read(uint2(gid.x - 1, gid.y));
-    // ushort4 right = heightMap.read(uint2(gid.x + 1, gid.y));
 
     newHeightMap.write(currentTile, gid);
 };
