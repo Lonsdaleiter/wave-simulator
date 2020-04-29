@@ -39,7 +39,7 @@ impl Wave {
         // }
         Wave {
             // TODO use the prior declaration after testing
-            directions: 2,
+            directions: 2 | 4,
             wavelength: 20,
             amplitude_factor: 10.0,
         }
