@@ -107,21 +107,29 @@ kernel void process_water(constant Wave *waves [[ buffer(0) ]],
     if (((currentTile.r >> 8) & 255) == 1) {
         if ((currentTile.r & 255) < waves[((currentTile.r >> 8) & 255)].wavelength) {
             currentTile.r += 1;
+        } else {
+            currentTile.r = 0;
         }
     }
     if (((currentTile.g >> 8) & 255) == 1) {
         if ((currentTile.g & 255) < waves[((currentTile.g >> 8) & 255)].wavelength) {
             currentTile.g += 1;
+        } else {
+            currentTile.g = 0;
         }
     }
     if (((currentTile.b >> 8) & 255) == 1) {
         if ((currentTile.b & 255) < waves[((currentTile.b >> 8) & 255)].wavelength) {
             currentTile.b += 1;
+        } else {
+            currentTile.b = 0;
         }
     }
     if (((currentTile.a >> 8) & 255) == 1) {
         if ((currentTile.a & 255) < waves[((currentTile.a >> 8) & 255)].wavelength) {
             currentTile.a += 1;
+        } else {
+            currentTile.a = 0;
         }
     }
 
