@@ -125,6 +125,15 @@ impl Behavior<WaveApp> for MainBehavior {
 
                 encoder.set_render_pipeline_state(ui.pipeline.clone());
                 encoder.set_vertex_buffer(ui.quad.clone(), 0, 0);
+                let aspect_ratio = {
+                    let b = state.window_bundle.as_ref().unwrap().window.inner_size();
+                    b.width as f32 / b.height as f32
+                };
+                encoder.set_vertex_bytes(
+                    [0.0f32, 0.0, 0.05, 0.05 * aspect_ratio]
+                        .as_ptr() as *const c_void,
+                    16, 1
+                );
                 encoder.set_fragment_texture(water.crosshair.clone(), 0);
                 encoder.set_fragment_sampler_state(water.sampler.clone(), 0);
                 encoder.draw_primitives(3, 0, 6, 1, 0);
