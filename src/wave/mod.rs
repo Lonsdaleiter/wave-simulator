@@ -29,6 +29,7 @@ pub struct WaveApp {
     pub waves: [Wave; 4],
     pub time: u64,
     pub mouse_pos: (f64, f64),
+    pub paused: bool,
 }
 
 impl Application for WaveApp {
@@ -43,6 +44,7 @@ impl Application for WaveApp {
             waves: [Wave::empty(); 4],
             time: 0,
             mouse_pos: (0.0, 0.0),
+            paused: false,
         }
     }
 
@@ -73,7 +75,9 @@ impl Application for WaveApp {
                             }
                         }
                         now = Instant::now();
-                        self.time += 1;
+                        if !self.paused {
+                            self.time += 1;
+                        };
                     }
                     _ => {}
                 },

@@ -65,6 +65,13 @@ impl Behavior<WaveApp> for MainBehavior {
             cam.y -= CAMERA_SPEED;
         };
 
+        if state.keyboard.is_key_down(VirtualKeyCode::P) {
+            state.paused = true;
+        }
+        if state.keyboard.is_key_down(VirtualKeyCode::L) {
+            state.paused = false;
+        }
+
         unsafe { state.matrix_bundle.as_ref().unwrap().edit_view() };
 
         None
@@ -140,7 +147,7 @@ impl Behavior<WaveApp> for MainBehavior {
 
                 encoder.end_encoding();
 
-                if state.time != 0 && state.time % FREQ_OF_UPDATES == 0 {
+                if !state.paused && state.time != 0 && state.time % FREQ_OF_UPDATES == 0 {
                     let encoder = command_buffer.new_compute_command_encoder();
                     encoder.set_compute_pipeline_state(water.compute_pipeline.clone());
                     encoder.set_bytes(
