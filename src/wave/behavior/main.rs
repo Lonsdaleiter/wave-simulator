@@ -125,8 +125,8 @@ impl Behavior<WaveApp> for MainBehavior {
 
                 encoder.set_render_pipeline_state(ui.pipeline.clone());
                 encoder.set_vertex_buffer(ui.quad.clone(), 0, 0);
-                // encoder.set_fragment_texture(); // TODO finish this
-                // encoder.set_fragment_sampler_state();
+                encoder.set_fragment_texture(water.crosshair.clone(), 0);
+                encoder.set_fragment_sampler_state(water.sampler.clone(), 0);
                 encoder.draw_primitives(3, 0, 6, 1, 0);
 
                 encoder.end_encoding();

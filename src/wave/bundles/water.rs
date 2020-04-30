@@ -1,11 +1,8 @@
 use crate::wave::bundles::basemetal::BaseMetalBundle;
 use crate::wave::constants::VERTEX_COUNT;
-use cull_canyon::{
-    MTLBuffer, MTLComputePipelineState, MTLRenderPipelineColorAttachmentDescriptor,
-    MTLRenderPipelineDescriptor, MTLRenderPipelineState, MTLTexture, MTLTextureDescriptor,
-    MTLVertexDescriptor,
-};
+use cull_canyon::{MTLBuffer, MTLComputePipelineState, MTLRenderPipelineColorAttachmentDescriptor, MTLRenderPipelineDescriptor, MTLRenderPipelineState, MTLTexture, MTLTextureDescriptor, MTLVertexDescriptor, MTLSamplerState, MTLSamplerDescriptor};
 use std::os::raw::c_void;
+use std::fs::File;
 
 pub struct WaterBundle {
     pub render_pipeline: MTLRenderPipelineState,
@@ -14,6 +11,8 @@ pub struct WaterBundle {
     pub water_indices: MTLBuffer,
     pub indices_count: usize,
     pub texture: MTLTexture,
+    pub crosshair: MTLTexture,
+    pub sampler: MTLSamplerState,
 }
 
 #[repr(C)]
@@ -134,7 +133,7 @@ impl WaterBundle {
             desc
         });
         texture.replace_region(
-            (1, 1, VERTEX_COUNT as u64, VERTEX_COUNT as u64),
+            (0, 0, VERTEX_COUNT as u64, VERTEX_COUNT as u64),
             0,
             [[0u16, 0, 0, 0]; VERTEX_COUNT as usize * VERTEX_COUNT as usize]
                 .as_ptr() as *mut c_void,
@@ -145,6 +144,25 @@ impl WaterBundle {
             0,
             [1u16 << 8, 0, 0, 0].as_ptr() as *mut c_void, // use the zeroth, red wave on this tile
             VERTEX_COUNT as u64 * 8,
+        );
+
+        let crosshair = bundle.device.new_texture_with_descriptor({
+            let desc = MTLTextureDescriptor::new();
+            desc.set_width(5);
+            desc.set_height(5);
+            desc.set_pixel_format(70); // rgba8unorm
+            desc.set_texture_type(2);
+            desc
+        });
+        let decoder = png::Decoder::new(File::open("resources/crosshair.png").unwrap());
+        let (info, mut reader) = decoder.read_info().unwrap();
+        let mut img = vec![0; info.buffer_size()];
+        reader.next_frame(&mut img).unwrap();
+        crosshair.replace_region(
+            (0, 0, 5, 5),
+            0,
+            img.as_ptr() as *mut c_void,
+            20,
         );
 
         WaterBundle {
@@ -162,6 +180,8 @@ impl WaterBundle {
             ),
             indices_count: INDICES_COUNT,
             texture,
+            crosshair,
+            sampler: bundle.device.new_sampler_state_with_descriptor(MTLSamplerDescriptor::new()),
         }
     }
 }
