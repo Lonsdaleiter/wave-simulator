@@ -6,7 +6,7 @@ pub fn cast_ray(
     mouse_pos: (f64, f64),
     display_size: (u32, u32),
     projection_matrix: cgmath::Matrix4<f32>,
-    view_matrix: cgmath::Matrix4<f32>,
+    camera: &Camera,
     water: MTLTexture,
 ) {
     let clip_coords = cgmath::Vector3 {
@@ -21,7 +21,21 @@ pub fn cast_ray(
         y: eye_coords.y,
         z: -1.0,
     };
-    let inverted_view = view_matrix.invert().unwrap();
-    let ray_world = inverted_view.transform_vector(eye_coords);
-    println!("{:?}", ray_world);
+    let inverted_view = camera.get_matrix().invert().unwrap();
+    let ray = inverted_view.transform_vector(eye_coords);
+    get_point_on_ray(camera, ray, 1.0);
+}
+
+fn get_point_on_ray(cam: &Camera, ray: cgmath::Vector3<f32>, distance: f32) {
+    let scaled_ray = cgmath::Vector3 {
+        x: ray.x * distance,
+        y: ray.y * distance,
+        z: ray.z * distance,
+    };
+    let start = cgmath::Vector3 {
+        x: cam.x,
+        y: cam.y,
+        z: cam.z,
+    };
+    println!("{:?}", start + scaled_ray);
 }

@@ -24,7 +24,7 @@ impl Behavior<WaveApp> for MainBehavior {
             (640.0, 360.0),
             (1280, 720),
             crate::wave::constants::new_projection_matrix(1.77778),
-            state.matrix_bundle.as_ref().unwrap().camera.get_matrix(),
+            &state.matrix_bundle.as_ref().unwrap().camera,
             state.water.as_ref().unwrap().texture.clone(),
         );
         state
