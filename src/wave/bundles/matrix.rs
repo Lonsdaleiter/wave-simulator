@@ -21,8 +21,9 @@ impl MatrixBundle {
         ];
         MatrixBundle {
             projection: bundle.device.new_buffer_with_bytes(
-                projection.as_ptr() as *const c_void,
-                projection.len() as u64 * 4,
+                std::mem::transmute::<cgmath::Matrix4<f32>, [f32; 16]>(projection).as_ptr()
+                    as *const c_void,
+                64,
                 0,
             ),
             view: bundle.device.new_buffer_with_bytes(
@@ -42,7 +43,7 @@ impl MatrixBundle {
     }
     pub unsafe fn edit_projection(&self, aspect_ratio: f32) {
         let projection = new_projection_matrix(aspect_ratio);
-        let contents = self.projection.get_contents() as *mut [f32; 16];
+        let contents = self.projection.get_contents() as *mut cgmath::Matrix4<f32>;
         std::mem::replace(&mut *contents, projection);
     }
     pub unsafe fn edit_view(&self) {

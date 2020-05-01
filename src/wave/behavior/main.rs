@@ -1,7 +1,7 @@
 use crate::behavior::Behavior;
 use crate::wave::bundles::ui::UiBundle;
 use crate::wave::bundles::water::{WaterBundle, Wave};
-use crate::wave::constants::{CAMERA_SPEED, FILL_MODE, VERTEX_COUNT, FREQ_OF_UPDATES};
+use crate::wave::constants::{CAMERA_SPEED, FILL_MODE, FREQ_OF_UPDATES, VERTEX_COUNT};
 use crate::wave::WaveApp;
 use cull_canyon::{
     MTLCommandEncoder, MTLRenderPassAttachmentDescriptor, MTLRenderPassColorAttachmentDescriptor,
@@ -137,9 +137,9 @@ impl Behavior<WaveApp> for MainBehavior {
                     b.width as f32 / b.height as f32
                 };
                 encoder.set_vertex_bytes(
-                    [0.0f32, 0.0, 0.05, 0.05 * aspect_ratio]
-                        .as_ptr() as *const c_void,
-                    16, 1
+                    [0.0f32, 0.0, 0.05, 0.05 * aspect_ratio].as_ptr() as *const c_void,
+                    16,
+                    1,
                 );
                 encoder.set_fragment_texture(water.crosshair.clone(), 0);
                 encoder.set_fragment_sampler_state(water.sampler.clone(), 0);
@@ -182,5 +182,16 @@ impl Behavior<WaveApp> for MainBehavior {
 
     fn on_death(&self, _state: &mut WaveApp) {
         //
+    }
+
+    fn on_keyboard_update(&self, _state: &mut WaveApp, _key: VirtualKeyCode) {
+        // if state.paused {
+        //     match key {
+        //         VirtualKeyCode::D => {
+        //             println!("{}")
+        //         },
+        //         _ => {},
+        //     }
+        // }
     }
 }

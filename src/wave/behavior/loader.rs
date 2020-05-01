@@ -3,6 +3,7 @@ use crate::wave::behavior::main::MainBehavior;
 use crate::wave::bundles::basemetal::BaseMetalBundle;
 use crate::wave::bundles::matrix::MatrixBundle;
 use crate::wave::WaveApp;
+use winit::event::VirtualKeyCode;
 
 pub struct BaseLoaderBehavior;
 impl Behavior<WaveApp> for BaseLoaderBehavior {
@@ -28,4 +29,6 @@ impl Behavior<WaveApp> for BaseLoaderBehavior {
     fn on_resize(&self, _state: &mut WaveApp, _size: (u32, u32)) {}
 
     fn on_death(&self, _state: &mut WaveApp) {}
+
+    fn on_keyboard_update(&self, _state: &mut WaveApp, _key: VirtualKeyCode) {}
 }

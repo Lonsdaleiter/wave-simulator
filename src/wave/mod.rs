@@ -17,6 +17,7 @@ pub mod bundles;
 pub mod camera;
 pub mod constants;
 pub mod keyboard;
+pub mod raycaster;
 pub mod widget;
 
 pub struct WaveApp {
@@ -100,6 +101,8 @@ impl Application for WaveApp {
                             .set_key(input.virtual_keycode.unwrap(), !unsafe {
                                 transmute(input.state)
                             });
+                        current_behavior
+                            .on_keyboard_update(&mut self, input.virtual_keycode.unwrap());
                     }
                     #[allow(deprecated)]
                     WindowEvent::MouseInput {

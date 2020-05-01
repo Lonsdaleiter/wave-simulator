@@ -12,7 +12,7 @@ pub const VERTEX_COUNT: u32 = 100;
 pub const FILL_MODE: u64 = 0; // 0 = triangles, 1 = lines
 pub const FREQ_OF_UPDATES: u64 = 5; // the lower the more frequent
 
-pub fn new_projection_matrix(aspect_ratio: f32) -> [f32; 16] {
+pub fn new_projection_matrix(aspect_ratio: f32) -> cgmath::Matrix4<f32> {
     let persp = cgmath::perspective(Deg(FOV), aspect_ratio, NEAR_PLANE, FAR_PLANE);
-    unsafe { std::mem::transmute(persp) }
+    persp
 }
