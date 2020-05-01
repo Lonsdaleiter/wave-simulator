@@ -10,7 +10,7 @@ pub struct Camera {
 }
 
 impl Camera {
-    pub fn get_matrix(&self) -> [f32; 16] {
+    pub fn get_matrix(&self) -> cgmath::Matrix4<f32> {
         let mat: Matrix4<f32> = Matrix4::identity();
         let mat = mat
             * Matrix4::from_axis_angle(
@@ -46,6 +46,6 @@ impl Camera {
                 z: -self.z,
             });
 
-        unsafe { std::mem::transmute(mat) }
+        mat
     }
 }

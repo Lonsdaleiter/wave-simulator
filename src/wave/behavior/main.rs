@@ -20,6 +20,13 @@ impl Behavior<WaveApp> for MainBehavior {
     }
 
     fn update(&self, state: &mut WaveApp) -> Option<Box<dyn Behavior<WaveApp>>> {
+        crate::wave::raycaster::cast_ray(
+            (640.0, 360.0),
+            (1280, 720),
+            crate::wave::constants::new_projection_matrix(1.77778),
+            state.matrix_bundle.as_ref().unwrap().camera.get_matrix(),
+            state.water.as_ref().unwrap().texture.clone(),
+        );
         state
             .window_bundle
             .as_ref()

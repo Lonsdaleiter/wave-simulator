@@ -48,7 +48,7 @@ impl MatrixBundle {
     }
     pub unsafe fn edit_view(&self) {
         let view = self.camera.get_matrix();
-        let contents = self.view.get_contents() as *mut [f32; 16];
+        let contents = self.view.get_contents() as *mut cgmath::Matrix4<f32>;
         std::mem::replace(&mut *contents, view);
     }
 }
