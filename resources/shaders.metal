@@ -2,6 +2,30 @@
 
 using namespace metal;
 
+struct StaticVertex {
+    packed_float3 position;
+};
+
+struct StaticFragment {
+    float4 position [[ position ]];
+};
+
+vertex StaticFragment static_vert(device StaticVertex *vertexArray [[ buffer(0) ]],
+                                  constant float4x4 &projection [[ buffer(1) ]],
+                                  constant float4x4 &view [[ buffer(2) ]],
+                                  uint vid [[ vertex_id ]])
+{
+    StaticFragment frag;
+    frag.position = float4(vertexArray[vid].position, 1.0);
+    return frag;
+}
+
+fragment float4 static_frag(StaticFragment in [[ stage_in ]],
+                            constant float4 &colour [[ buffer(1) ]])
+{
+    return float4(1.0, 0.0, 0.0, 1.0);
+}
+
 struct UiVertex {
 	float2 position;
 	float2 textureCoords;
@@ -13,7 +37,7 @@ struct UiTransformation {
 };
 
 struct UiFragment {
-    float4 position [[position]];
+    float4 position [[ position ]];
     float2 textureCoords;
 };
 
