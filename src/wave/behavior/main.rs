@@ -156,8 +156,11 @@ impl Behavior<WaveApp> for MainBehavior {
                     &matrices.camera,
                     water.texture.clone(),
                 );
-                let transformation =
-                    generate_transformation(point, (0.0, 0.0, 0.0), (1.0, 1.0, 1.0));
+                let transformation = generate_transformation(
+                    point,
+                    (0.0, 0.0, 0.0),
+                    (1.0, 1.0, 1.0)
+                );
                 encoder.set_vertex_bytes(
                     std::mem::transmute::<Matrix4<f32>, [f32; 16]>(transformation).as_ptr()
                         as *const c_void,
