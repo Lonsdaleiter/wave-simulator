@@ -134,12 +134,12 @@ impl Behavior<WaveApp> for MainBehavior {
                     0,
                 );
 
-                encoder.set_render_pipeline_state(debug.pipeline.clone());
-                encoder.set_vertex_buffer(debug.vertices.clone(), 0, 0);
-                encoder.set_vertex_buffer(matrices.projection.clone(), 0, 1);
-                encoder.set_vertex_buffer(matrices.view.clone(), 0, 2);
                 let point = cast_ray(matrices.proj_contents, &matrices.camera);
                 if let Some(point) = point {
+                    encoder.set_render_pipeline_state(debug.pipeline.clone());
+                    encoder.set_vertex_buffer(debug.vertices.clone(), 0, 0);
+                    encoder.set_vertex_buffer(matrices.projection.clone(), 0, 1);
+                    encoder.set_vertex_buffer(matrices.view.clone(), 0, 2);
                     let transformation =
                         generate_transformation(point, (0.0, 0.0, 0.0), (1.0, 1.0, 1.0));
                     encoder.set_vertex_bytes(
@@ -215,14 +215,14 @@ impl Behavior<WaveApp> for MainBehavior {
         //
     }
 
-    fn on_keyboard_update(&self, _state: &mut WaveApp, _key: VirtualKeyCode) {
-        // if state.paused {
-        //     match key {
-        //         VirtualKeyCode::D => {
-        //             println!("{}")
-        //         },
-        //         _ => {},
-        //     }
-        // }
+    fn on_keyboard_update(&self, state: &mut WaveApp, key: VirtualKeyCode) {
+        if state.paused {
+            match key {
+                VirtualKeyCode::G => {
+                    println!("I'm going to make this key the one that generates waves.");
+                },
+                _ => {},
+            }
+        }
     }
 }

@@ -26,6 +26,8 @@ pub fn cast_ray(projection_matrix: cgmath::Matrix4<f32>, camera: &Camera) -> Opt
     search(ray, camera)
 }
 
+// naive; doesn't place properly on preexisting waves
+// TODO add a kernel for processing these points and move constants into it
 fn search(ray: Vector3<f32>, cam: &Camera) -> Option<Vector3<f32>> {
     let mut the_point: Option<Vector3<f32>> = None;
     (0..RAYCAST_RES).for_each(|index| {
