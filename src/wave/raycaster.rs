@@ -1,5 +1,5 @@
 use crate::wave::camera::Camera;
-use cgmath::{SquareMatrix, Transform};
+use cgmath::{SquareMatrix, Transform, Vector3};
 use cull_canyon::MTLTexture;
 
 pub fn cast_ray(
@@ -8,7 +8,7 @@ pub fn cast_ray(
     projection_matrix: cgmath::Matrix4<f32>,
     camera: &Camera,
     water: MTLTexture,
-) {
+) -> Vector3<f32> {
     let clip_coords = cgmath::Vector3 {
         x: (mouse_pos.0 * 2.0) as f32 / display_size.0 as f32,
         y: (mouse_pos.1 * 2.0) as f32 / display_size.1 as f32,
@@ -23,10 +23,14 @@ pub fn cast_ray(
     };
     let inverted_view = camera.get_matrix().invert().unwrap();
     let ray = inverted_view.transform_vector(eye_coords);
-    get_point_on_ray(camera, ray, 1.0);
+    get_point_on_ray(camera, ray, 10.0)
 }
 
-fn get_point_on_ray(cam: &Camera, ray: cgmath::Vector3<f32>, distance: f32) {
+pub fn get_point_on_ray(
+    cam: &Camera,
+    ray: cgmath::Vector3<f32>,
+    distance: f32,
+) -> cgmath::Vector3<f32> {
     let scaled_ray = cgmath::Vector3 {
         x: ray.x * distance,
         y: ray.y * distance,
@@ -37,5 +41,5 @@ fn get_point_on_ray(cam: &Camera, ray: cgmath::Vector3<f32>, distance: f32) {
         y: cam.y,
         z: cam.z,
     };
-    println!("{:?}", start + scaled_ray);
+    start + scaled_ray
 }

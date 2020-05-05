@@ -1,4 +1,4 @@
-use cgmath::{Matrix4, Vector3, SquareMatrix, Deg};
+use cgmath::{Deg, Matrix4, SquareMatrix, Vector3};
 
 pub fn generate_transformation(
     location: Vector3<f32>,
@@ -7,21 +7,33 @@ pub fn generate_transformation(
 ) -> Matrix4<f32> {
     let matrix = Matrix4::identity();
     let matrix = matrix * Matrix4::from_translation(location);
-    let matrix = matrix * Matrix4::from_axis_angle(Vector3 {
-        x: 1.0,
-        y: 0.0,
-        z: 0.0,
-    }, Deg(rotation.0));
-    let matrix = matrix * Matrix4::from_axis_angle(Vector3 {
-        x: 0.0,
-        y: 1.0,
-        z: 0.0,
-    }, Deg(rotation.1));
-    let matrix = matrix * Matrix4::from_axis_angle(Vector3 {
-        x: 0.0,
-        y: 0.0,
-        z: 1.0,
-    }, Deg(rotation.2));
+    let matrix = matrix
+        * Matrix4::from_axis_angle(
+            Vector3 {
+                x: 1.0,
+                y: 0.0,
+                z: 0.0,
+            },
+            Deg(rotation.0),
+        );
+    let matrix = matrix
+        * Matrix4::from_axis_angle(
+            Vector3 {
+                x: 0.0,
+                y: 1.0,
+                z: 0.0,
+            },
+            Deg(rotation.1),
+        );
+    let matrix = matrix
+        * Matrix4::from_axis_angle(
+            Vector3 {
+                x: 0.0,
+                y: 0.0,
+                z: 1.0,
+            },
+            Deg(rotation.2),
+        );
     let matrix = matrix * Matrix4::from_nonuniform_scale(scale.0, scale.1, scale.2);
     matrix
 }

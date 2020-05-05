@@ -2,7 +2,10 @@ use crate::behavior::Behavior;
 use crate::wave::bundles::ui::UiBundle;
 use crate::wave::bundles::water::{WaterBundle, Wave};
 use crate::wave::constants::{CAMERA_SPEED, FILL_MODE, FREQ_OF_UPDATES, VERTEX_COUNT};
+use crate::wave::raycaster::{cast_ray, get_point_on_ray};
+use crate::wave::util::generate_transformation;
 use crate::wave::WaveApp;
+use cgmath::{Matrix4, Vector3};
 use cull_canyon::{
     MTLCommandEncoder, MTLRenderPassAttachmentDescriptor, MTLRenderPassColorAttachmentDescriptor,
     MTLRenderPassDescriptor,
@@ -90,6 +93,7 @@ impl Behavior<WaveApp> for MainBehavior {
         let water = state.water.as_ref().unwrap();
         let debug = state.debug_bundle.as_ref().unwrap();
         let matrices = state.matrix_bundle.as_ref().unwrap();
+        let window = state.window_bundle.as_ref().unwrap();
 
         unsafe {
             if let Some(drawable) = bundle.surface.next_drawable() {
@@ -142,6 +146,24 @@ impl Behavior<WaveApp> for MainBehavior {
                 encoder.set_vertex_buffer(debug.vertices.clone(), 0, 0);
                 encoder.set_vertex_buffer(matrices.projection.clone(), 0, 1);
                 encoder.set_vertex_buffer(matrices.view.clone(), 0, 2);
+                let point = cast_ray(
+                    state.mouse_pos,
+                    (
+                        window.window.inner_size().width,
+                        window.window.inner_size().height,
+                    ),
+                    matrices.proj_contents,
+                    &matrices.camera,
+                    water.texture.clone(),
+                );
+                let transformation =
+                    generate_transformation(point, (0.0, 0.0, 0.0), (1.0, 1.0, 1.0));
+                encoder.set_vertex_bytes(
+                    std::mem::transmute::<Matrix4<f32>, [f32; 16]>(transformation).as_ptr()
+                        as *const c_void,
+                    64,
+                    3,
+                );
                 encoder.set_depth_stencil_state(bundle.basic_depth.clone());
                 encoder.draw_indexed_primitives(
                     3,

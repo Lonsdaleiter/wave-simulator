@@ -1,11 +1,13 @@
 use crate::wave::bundles::basemetal::BaseMetalBundle;
 use crate::wave::camera::Camera;
 use crate::wave::constants::new_projection_matrix;
+use cgmath::Matrix4;
 use cull_canyon::MTLBuffer;
 use std::os::raw::c_void;
 
 pub struct MatrixBundle {
     pub projection: MTLBuffer,
+    pub proj_contents: Matrix4<f32>,
     pub view: MTLBuffer,
     pub camera: Camera,
 }
@@ -26,6 +28,7 @@ impl MatrixBundle {
                 64,
                 0,
             ),
+            proj_contents: projection,
             view: bundle.device.new_buffer_with_bytes(
                 view.as_ptr() as *const c_void,
                 view.len() as u64 * 4,
