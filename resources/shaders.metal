@@ -13,6 +13,7 @@ struct StaticFragment {
 vertex StaticFragment static_vert(device StaticVertex *vertexArray [[ buffer(0) ]],
                                   constant float4x4 &projection [[ buffer(1) ]],
                                   constant float4x4 &view [[ buffer(2) ]],
+                                  constant float4x4 &transformation [[ buffer(3) ]],
                                   uint vid [[ vertex_id ]])
 {
     StaticFragment frag;
