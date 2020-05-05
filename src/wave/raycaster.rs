@@ -11,7 +11,7 @@ pub fn cast_ray(
 ) -> Vector3<f32> {
     let clip_coords = cgmath::Vector3 {
         x: ((mouse_pos.0 * 2.0) as f32 / display_size.0 as f32) - 1.0,
-        y: ((mouse_pos.1 * 2.0) as f32 / display_size.1 as f32) - 1.0,
+        y: -(((mouse_pos.1 * 2.0) as f32 / display_size.1 as f32) - 1.0),
         z: -1.0,
     };
     let inverted_proj = projection_matrix.invert().unwrap();

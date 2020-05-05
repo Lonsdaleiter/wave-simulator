@@ -2,10 +2,10 @@ use crate::behavior::Behavior;
 use crate::wave::bundles::ui::UiBundle;
 use crate::wave::bundles::water::{WaterBundle, Wave};
 use crate::wave::constants::{CAMERA_SPEED, FILL_MODE, FREQ_OF_UPDATES, VERTEX_COUNT};
-use crate::wave::raycaster::{cast_ray, get_point_on_ray};
+use crate::wave::raycaster::cast_ray;
 use crate::wave::util::generate_transformation;
 use crate::wave::WaveApp;
-use cgmath::{Matrix4, Vector3};
+use cgmath::Matrix4;
 use cull_canyon::{
     MTLCommandEncoder, MTLRenderPassAttachmentDescriptor, MTLRenderPassColorAttachmentDescriptor,
     MTLRenderPassDescriptor,
