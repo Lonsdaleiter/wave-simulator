@@ -24,11 +24,8 @@ impl Behavior<WaveApp> for MainBehavior {
 
     fn update(&self, state: &mut WaveApp) -> Option<Box<dyn Behavior<WaveApp>>> {
         crate::wave::raycaster::cast_ray(
-            (640.0, 360.0),
-            (1280, 720),
             crate::wave::constants::new_projection_matrix(1.77778),
             &state.matrix_bundle.as_ref().unwrap().camera,
-            state.water.as_ref().unwrap().texture.clone(),
         );
         state
             .window_bundle
@@ -93,7 +90,6 @@ impl Behavior<WaveApp> for MainBehavior {
         let water = state.water.as_ref().unwrap();
         let debug = state.debug_bundle.as_ref().unwrap();
         let matrices = state.matrix_bundle.as_ref().unwrap();
-        let window = state.window_bundle.as_ref().unwrap();
 
         unsafe {
             if let Some(drawable) = bundle.surface.next_drawable() {
@@ -147,14 +143,8 @@ impl Behavior<WaveApp> for MainBehavior {
                 encoder.set_vertex_buffer(matrices.projection.clone(), 0, 1);
                 encoder.set_vertex_buffer(matrices.view.clone(), 0, 2);
                 let point = cast_ray(
-                    state.mouse_pos,
-                    (
-                        window.window.inner_size().width,
-                        window.window.inner_size().height,
-                    ),
                     matrices.proj_contents,
                     &matrices.camera,
-                    water.texture.clone(),
                 );
                 let transformation = generate_transformation(
                     point,

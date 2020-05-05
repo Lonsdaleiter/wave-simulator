@@ -1,13 +1,9 @@
 use crate::wave::camera::Camera;
 use cgmath::{SquareMatrix, Transform, Vector3};
-use cull_canyon::MTLTexture;
 
 pub fn cast_ray(
-    mouse_pos: (f64, f64),
-    display_size: (u32, u32),
     projection_matrix: cgmath::Matrix4<f32>,
     camera: &Camera,
-    water: MTLTexture,
 ) -> Vector3<f32> {
     // let clip_coords = cgmath::Vector3 {
     //     x: ((mouse_pos.0 * 2.0) as f32 / display_size.0 as f32) - 1.0,
