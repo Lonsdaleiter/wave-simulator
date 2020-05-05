@@ -19,6 +19,7 @@ pub mod camera;
 pub mod constants;
 pub mod keyboard;
 pub mod raycaster;
+pub mod util;
 pub mod widget;
 
 pub struct WaveApp {

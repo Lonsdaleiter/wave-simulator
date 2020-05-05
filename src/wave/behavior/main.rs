@@ -88,6 +88,7 @@ impl Behavior<WaveApp> for MainBehavior {
         let bundle = state.base_metal_bundle.as_ref().unwrap();
         let ui = state.ui_bundle.as_ref().unwrap();
         let water = state.water.as_ref().unwrap();
+        let debug = state.debug_bundle.as_ref().unwrap();
         let matrices = state.matrix_bundle.as_ref().unwrap();
 
         unsafe {
@@ -131,6 +132,22 @@ impl Behavior<WaveApp> for MainBehavior {
                     water.indices_count as u64,
                     1,
                     water.water_indices.clone(),
+                    0,
+                    1,
+                    0,
+                    0,
+                );
+
+                encoder.set_render_pipeline_state(debug.pipeline.clone());
+                encoder.set_vertex_buffer(debug.vertices.clone(), 0, 0);
+                encoder.set_vertex_buffer(matrices.projection.clone(), 0, 1);
+                encoder.set_vertex_buffer(matrices.view.clone(), 0, 2);
+                encoder.set_depth_stencil_state(bundle.basic_depth.clone());
+                encoder.draw_indexed_primitives(
+                    3,
+                    debug.indices_count,
+                    0,
+                    debug.indices.clone(),
                     0,
                     1,
                     0,

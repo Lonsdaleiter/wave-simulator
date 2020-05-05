@@ -17,7 +17,7 @@ vertex StaticFragment static_vert(device StaticVertex *vertexArray [[ buffer(0) 
                                   uint vid [[ vertex_id ]])
 {
     StaticFragment frag;
-    frag.position = float4(vertexArray[vid].position, 1.0);
+    frag.position = projection * view * float4(vertexArray[vid].position, 1.0);
     return frag;
 }
 
