@@ -23,10 +23,6 @@ impl Behavior<WaveApp> for MainBehavior {
     }
 
     fn update(&self, state: &mut WaveApp) -> Option<Box<dyn Behavior<WaveApp>>> {
-        crate::wave::raycaster::cast_ray(
-            crate::wave::constants::new_projection_matrix(1.77778),
-            &state.matrix_bundle.as_ref().unwrap().camera,
-        );
         state
             .window_bundle
             .as_ref()
@@ -142,32 +138,28 @@ impl Behavior<WaveApp> for MainBehavior {
                 encoder.set_vertex_buffer(debug.vertices.clone(), 0, 0);
                 encoder.set_vertex_buffer(matrices.projection.clone(), 0, 1);
                 encoder.set_vertex_buffer(matrices.view.clone(), 0, 2);
-                let point = cast_ray(
-                    matrices.proj_contents,
-                    &matrices.camera,
-                );
-                let transformation = generate_transformation(
-                    point,
-                    (0.0, 0.0, 0.0),
-                    (1.0, 1.0, 1.0)
-                );
-                encoder.set_vertex_bytes(
-                    std::mem::transmute::<Matrix4<f32>, [f32; 16]>(transformation).as_ptr()
-                        as *const c_void,
-                    64,
-                    3,
-                );
-                encoder.set_depth_stencil_state(bundle.basic_depth.clone());
-                encoder.draw_indexed_primitives(
-                    3,
-                    debug.indices_count,
-                    0,
-                    debug.indices.clone(),
-                    0,
-                    1,
-                    0,
-                    0,
-                );
+                let point = cast_ray(matrices.proj_contents, &matrices.camera);
+                if let Some(point) = point {
+                    let transformation =
+                        generate_transformation(point, (0.0, 0.0, 0.0), (1.0, 1.0, 1.0));
+                    encoder.set_vertex_bytes(
+                        std::mem::transmute::<Matrix4<f32>, [f32; 16]>(transformation).as_ptr()
+                            as *const c_void,
+                        64,
+                        3,
+                    );
+                    encoder.set_depth_stencil_state(bundle.basic_depth.clone());
+                    encoder.draw_indexed_primitives(
+                        3,
+                        debug.indices_count,
+                        0,
+                        debug.indices.clone(),
+                        0,
+                        1,
+                        0,
+                        0,
+                    );
+                }
 
                 encoder.set_render_pipeline_state(ui.pipeline.clone());
                 encoder.set_vertex_buffer(ui.quad.clone(), 0, 0);
