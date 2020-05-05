@@ -219,7 +219,10 @@ impl Behavior<WaveApp> for MainBehavior {
         if state.paused {
             match key {
                 VirtualKeyCode::G => {
-                    println!("I'm going to make this key the one that generates waves.");
+                    println!("You want to generate a wave. Enter input:");
+                    let mut s = String::new();
+                    std::io::stdin().read_line(&mut s).unwrap();
+                    println!("You said {}", s);
                 },
                 _ => {},
             }
