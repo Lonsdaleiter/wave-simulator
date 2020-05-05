@@ -1,6 +1,7 @@
 use crate::behavior::Behavior;
 use crate::wave::behavior::main::MainBehavior;
 use crate::wave::bundles::basemetal::BaseMetalBundle;
+use crate::wave::bundles::debug::DebugBundle;
 use crate::wave::bundles::matrix::MatrixBundle;
 use crate::wave::WaveApp;
 use winit::event::VirtualKeyCode;
@@ -15,9 +16,11 @@ impl Behavior<WaveApp> for BaseLoaderBehavior {
             size.width as f32 / size.height as f32
         };
         let matrix_bundle = unsafe { MatrixBundle::new(&base_metal_bundle, aspect_ratio) };
+        let debug_bundle = unsafe { DebugBundle::new(&base_metal_bundle) };
 
         state.base_metal_bundle = Some(base_metal_bundle);
         state.matrix_bundle = Some(matrix_bundle);
+        state.debug_bundle = Some(debug_bundle);
     }
 
     fn update(&self, _state: &mut WaveApp) -> Option<Box<dyn Behavior<WaveApp>>> {
