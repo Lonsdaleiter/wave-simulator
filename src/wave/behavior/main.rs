@@ -138,6 +138,7 @@ impl Behavior<WaveApp> for MainBehavior {
                     matrices.proj_contents,
                     &matrices.camera,
                     water.texture.clone(),
+                    state,
                 );
                 if let Some(point) = point {
                     encoder.set_render_pipeline_state(debug.pipeline.clone());

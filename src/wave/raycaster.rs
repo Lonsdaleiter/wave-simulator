@@ -1,13 +1,16 @@
 use crate::wave::camera::Camera;
 use crate::wave::constants::{MAX_RAYCAST_DISTANCE, RAYCAST_CLOSENESS_REQ, RAYCAST_RES};
+use crate::wave::WaveApp;
 use cgmath::{SquareMatrix, Transform, Vector3};
 use cull_canyon::MTLTexture;
+use std::f32::consts::PI;
 use std::os::raw::c_void;
 
 pub fn cast_ray(
     projection_matrix: cgmath::Matrix4<f32>,
     camera: &Camera,
     water: MTLTexture,
+    state: &WaveApp,
 ) -> Option<Vector3<f32>> {
     // let clip_coords = Vector3 {
     //     x: ((mouse_pos.0 * 2.0) as f32 / display_size.0 as f32) - 1.0,
@@ -29,12 +32,17 @@ pub fn cast_ray(
     let inverted_view = camera.get_matrix().invert().unwrap();
     let ray = inverted_view.transform_vector(eye_coords);
     // Some(get_point_on_ray(camera, ray, 10.0))
-    search(ray, camera, water)
+    search(ray, camera, water, state)
 }
 
 // naive; doesn't place properly on preexisting waves
 // TODO add a kernel for processing these points and move constants into it
-fn search(ray: Vector3<f32>, cam: &Camera, water: MTLTexture) -> Option<Vector3<f32>> {
+fn search(
+    ray: Vector3<f32>,
+    cam: &Camera,
+    water: MTLTexture,
+    state: &WaveApp,
+) -> Option<Vector3<f32>> {
     let mut the_point: Option<Vector3<f32>> = None;
     (0..RAYCAST_RES).for_each(|index| {
         let point = get_point_on_ray(
@@ -59,15 +67,23 @@ fn search(ray: Vector3<f32>, cam: &Camera, water: MTLTexture) -> Option<Vector3<
         // println!("{:?}", height);
         let activated: Vec<u16> = height.iter().map(|el| el & 256).collect();
         let ticks: Vec<u16> = height.iter().map(|el| el & 255).collect();
-        activated.iter().enumerate().for_each(|is|{
-            println!("So, {}", *is.1);
-            if (*is.1 >> 8) == 1 {
-                let pos = ticks[is.0];
-                println!("Tick: {:?}", pos);
-            }
-        });
+        let heights: Vec<f32> = activated
+            .iter()
+            .enumerate()
+            .map(|is| {
+                if (*is.1 >> 8) == 1 {
+                    let pos = ticks[is.0];
+                    state.waves[is.0].amplitude_factor
+                        * (pos as f32 * (PI / state.waves[is.0].wavelength as f32)).sin()
+                } else {
+                    0.0
+                }
+            })
+            .collect();
+        let height = heights[0] + heights[1] + heights[2] + heights[3];
+        println!("{} compared with {}", height, point.y.abs());
 
-        if point.y.abs() <= RAYCAST_CLOSENESS_REQ {
+        if point.y.abs() - height as f32 <= RAYCAST_CLOSENESS_REQ {
             the_point = Some(point);
             return;
         }
