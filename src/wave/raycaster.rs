@@ -81,9 +81,11 @@ fn search(
             })
             .collect();
         let height = heights[0] + heights[1] + heights[2] + heights[3];
-        println!("{} compared with {}", height, point.y.abs());
+        // if height != 0.0 {
+        //     println!("{}", height);
+        // }
 
-        if point.y.abs() - height as f32 <= RAYCAST_CLOSENESS_REQ {
+        if (point.y - height as f32).abs() <= RAYCAST_CLOSENESS_REQ {
             the_point = Some(point);
             return;
         }
