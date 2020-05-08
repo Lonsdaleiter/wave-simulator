@@ -56,7 +56,17 @@ fn search(ray: Vector3<f32>, cam: &Camera, water: MTLTexture) -> Option<Vector3<
             );
             b
         };
-        println!("{:?}", height);
+        // println!("{:?}", height);
+        let activated: Vec<u16> = height.iter().map(|el| el & 256).collect();
+        let ticks: Vec<u16> = height.iter().map(|el| el & 255).collect();
+        activated.iter().enumerate().for_each(|is|{
+            println!("So, {}", *is.1);
+            if (*is.1 >> 8) == 1 {
+                let pos = ticks[is.0];
+                println!("Tick: {:?}", pos);
+            }
+        });
+
         if point.y.abs() <= RAYCAST_CLOSENESS_REQ {
             the_point = Some(point);
             return;
