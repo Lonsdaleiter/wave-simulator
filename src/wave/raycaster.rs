@@ -1,8 +1,14 @@
 use crate::wave::camera::Camera;
 use crate::wave::constants::{MAX_RAYCAST_DISTANCE, RAYCAST_CLOSENESS_REQ, RAYCAST_RES};
 use cgmath::{SquareMatrix, Transform, Vector3};
+use cull_canyon::MTLTexture;
+use std::os::raw::c_void;
 
-pub fn cast_ray(projection_matrix: cgmath::Matrix4<f32>, camera: &Camera) -> Option<Vector3<f32>> {
+pub fn cast_ray(
+    projection_matrix: cgmath::Matrix4<f32>,
+    camera: &Camera,
+    water: MTLTexture,
+) -> Option<Vector3<f32>> {
     // let clip_coords = Vector3 {
     //     x: ((mouse_pos.0 * 2.0) as f32 / display_size.0 as f32) - 1.0,
     //     y: -(((mouse_pos.1 * 2.0) as f32 / display_size.1 as f32) - 1.0),
@@ -23,12 +29,12 @@ pub fn cast_ray(projection_matrix: cgmath::Matrix4<f32>, camera: &Camera) -> Opt
     let inverted_view = camera.get_matrix().invert().unwrap();
     let ray = inverted_view.transform_vector(eye_coords);
     // Some(get_point_on_ray(camera, ray, 10.0))
-    search(ray, camera)
+    search(ray, camera, water)
 }
 
 // naive; doesn't place properly on preexisting waves
 // TODO add a kernel for processing these points and move constants into it
-fn search(ray: Vector3<f32>, cam: &Camera) -> Option<Vector3<f32>> {
+fn search(ray: Vector3<f32>, cam: &Camera, water: MTLTexture) -> Option<Vector3<f32>> {
     let mut the_point: Option<Vector3<f32>> = None;
     (0..RAYCAST_RES).for_each(|index| {
         let point = get_point_on_ray(
@@ -36,6 +42,21 @@ fn search(ray: Vector3<f32>, cam: &Camera) -> Option<Vector3<f32>> {
             ray,
             (index * MAX_RAYCAST_DISTANCE) as f32 / RAYCAST_RES as f32,
         );
+        let norm = ((point.x + 50.0) as u64, (point.y + 50.0) as u64);
+        let height = unsafe {
+            if (point.x < -50.0 || point.x >= 50.0) || (point.y < -50.0 || point.y > 50.0) {
+                return;
+            }
+            let mut b = [0u16; 4];
+            water.get_bytes(
+                b.as_mut_ptr() as *mut c_void,
+                800,
+                (norm.0, norm.1, 1, 1),
+                0,
+            );
+            b
+        };
+        println!("{:?}", height);
         if point.y.abs() <= RAYCAST_CLOSENESS_REQ {
             the_point = Some(point);
             return;

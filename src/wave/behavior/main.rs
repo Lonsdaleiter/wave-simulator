@@ -134,7 +134,11 @@ impl Behavior<WaveApp> for MainBehavior {
                     0,
                 );
 
-                let point = cast_ray(matrices.proj_contents, &matrices.camera);
+                let point = cast_ray(
+                    matrices.proj_contents,
+                    &matrices.camera,
+                    water.texture.clone(),
+                );
                 if let Some(point) = point {
                     encoder.set_render_pipeline_state(debug.pipeline.clone());
                     encoder.set_vertex_buffer(debug.vertices.clone(), 0, 0);
@@ -223,8 +227,8 @@ impl Behavior<WaveApp> for MainBehavior {
                     let mut s = String::new();
                     std::io::stdin().read_line(&mut s).unwrap();
                     println!("You said {}", s);
-                },
-                _ => {},
+                }
+                _ => {}
             }
         }
     }
