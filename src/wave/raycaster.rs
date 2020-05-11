@@ -50,9 +50,9 @@ fn search(
             ray,
             (index * MAX_RAYCAST_DISTANCE) as f32 / RAYCAST_RES as f32,
         );
-        let norm = ((point.x + 50.0) as u64, (point.y + 50.0) as u64);
+        let norm = ((point.x + 50.0) as u64, (point.z + 50.0) as u64);
         let height = unsafe {
-            if (point.x < -50.0 || point.x >= 50.0) || (point.y < -50.0 || point.y > 50.0) {
+            if (point.x < -50.0 || point.x >= 50.0) || (point.z < -50.0 || point.z > 50.0) {
                 return;
             }
             let mut b = [0u16; 4];
@@ -64,7 +64,6 @@ fn search(
             );
             b
         };
-        // println!("{:?}", height);
         let activated: Vec<u16> = height.iter().map(|el| el & 256).collect();
         let ticks: Vec<u16> = height.iter().map(|el| el & 255).collect();
         let heights: Vec<f32> = activated
@@ -81,9 +80,9 @@ fn search(
             })
             .collect();
         let height = heights[0] + heights[1] + heights[2] + heights[3];
-        // if height != 0.0 {
-        //     println!("{}", height);
-        // }
+        if height != 0.0 {
+            println!("Height {} with delta {}", height, point.y - height);
+        }
 
         if (point.y - height as f32).abs() <= RAYCAST_CLOSENESS_REQ {
             the_point = Some(point);
