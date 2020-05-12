@@ -379,7 +379,6 @@ impl Behavior<WaveApp> for MainBehavior {
                     );
 
                     unsafe {
-                        println!("Here");
                         state.water.as_ref().unwrap().texture.replace_region(
                             (normalized_ray_coords.0, normalized_ray_coords.1, 1, 1),
                             0,
