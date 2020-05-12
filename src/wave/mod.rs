@@ -105,8 +105,12 @@ impl Application for WaveApp {
                             .set_key(input.virtual_keycode.unwrap(), !unsafe {
                                 transmute(input.state)
                             });
-                        current_behavior
-                            .on_keyboard_update(&mut self, input.virtual_keycode.unwrap());
+
+                        current_behavior.on_keyboard_update(
+                            &mut self,
+                            input.virtual_keycode.unwrap(),
+                            input.state,
+                        );
                     }
                     #[allow(deprecated)]
                     WindowEvent::MouseInput {

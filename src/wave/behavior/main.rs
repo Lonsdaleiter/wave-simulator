@@ -11,7 +11,7 @@ use cull_canyon::{
     MTLRenderPassDescriptor,
 };
 use std::os::raw::c_void;
-use winit::event::VirtualKeyCode;
+use winit::event::{ElementState, VirtualKeyCode};
 
 pub struct MainBehavior;
 impl Behavior<WaveApp> for MainBehavior {
@@ -220,8 +220,8 @@ impl Behavior<WaveApp> for MainBehavior {
         //
     }
 
-    fn on_keyboard_update(&self, state: &mut WaveApp, key: VirtualKeyCode) {
-        if state.paused {
+    fn on_keyboard_update(&self, state: &mut WaveApp, key: VirtualKeyCode, el_state: ElementState) {
+        if state.paused && el_state == ElementState::Pressed {
             match key {
                 VirtualKeyCode::G => {
                     println!("You want to generate a wave. Enter input:");

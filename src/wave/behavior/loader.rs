@@ -4,7 +4,7 @@ use crate::wave::bundles::basemetal::BaseMetalBundle;
 use crate::wave::bundles::debug::DebugBundle;
 use crate::wave::bundles::matrix::MatrixBundle;
 use crate::wave::WaveApp;
-use winit::event::VirtualKeyCode;
+use winit::event::{ElementState, VirtualKeyCode};
 
 pub struct BaseLoaderBehavior;
 impl Behavior<WaveApp> for BaseLoaderBehavior {
@@ -33,5 +33,11 @@ impl Behavior<WaveApp> for BaseLoaderBehavior {
 
     fn on_death(&self, _state: &mut WaveApp) {}
 
-    fn on_keyboard_update(&self, _state: &mut WaveApp, _key: VirtualKeyCode) {}
+    fn on_keyboard_update(
+        &self,
+        _state: &mut WaveApp,
+        _key: VirtualKeyCode,
+        _el_state: ElementState,
+    ) {
+    }
 }

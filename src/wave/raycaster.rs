@@ -31,12 +31,9 @@ pub fn cast_ray(
     };
     let inverted_view = camera.get_matrix().invert().unwrap();
     let ray = inverted_view.transform_vector(eye_coords);
-    // Some(get_point_on_ray(camera, ray, 10.0))
     search(ray, camera, water, state)
 }
 
-// naive; doesn't place properly on preexisting waves
-// TODO add a kernel for processing these points and move constants into it
 fn search(
     ray: Vector3<f32>,
     cam: &Camera,

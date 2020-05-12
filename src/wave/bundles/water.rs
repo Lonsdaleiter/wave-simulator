@@ -133,7 +133,7 @@ impl WaterBundle {
             desc.set_height(VERTEX_COUNT as u64);
             desc.set_pixel_format(113); // 113 = rgba16uint; 63 = rg16uint
             desc.set_texture_type(2); // 2d
-            desc.set_usage(0x0001 | 0x002); // shader read + write
+            desc.set_usage(0x0001 | 0x0002); // shader read + write
             desc
         });
         texture.replace_region(
