@@ -224,10 +224,117 @@ impl Behavior<WaveApp> for MainBehavior {
         if state.paused && el_state == ElementState::Pressed {
             match key {
                 VirtualKeyCode::G => {
-                    println!("You want to generate a wave. Enter input:");
-                    let mut s = String::new();
+                    println!("Let's build a wave!");
+                    println!(
+                        "To abort wave production, just give \"abort\" as an input at any \
+                        time, and we'll abort."
+                    );
+                    let mut s;
+
+                    let mut amplitude: i8 = 0;
+                    let mut wavelength: u8 = 0;
+                    let mut directions: u8 = 0;
+
+                    println!("Enter the desired amplitude.");
+                    loop {
+                        s = String::new();
+                        std::io::stdin().read_line(&mut s).unwrap();
+                        s = s.trim().to_string();
+                        if s.to_lowercase().eq(&"abort".to_string()) {
+                            println!("Aborting.");
+                            return;
+                        };
+                        let value = s.parse::<i8>();
+                        let b = match value {
+                            Ok(val) => {
+                                if val < -50 || val > 50 {
+                                    println!(
+                                        "Amplitude {} is invalid; -50 <= amplitude <= 50.",
+                                        val
+                                    );
+                                    false
+                                } else {
+                                    amplitude = val;
+                                    true
+                                }
+                            }
+                            Err(_) => {
+                                println!("Invalid amplitude value {}.", s);
+                                false
+                            }
+                        };
+                        if b {
+                            break;
+                        };
+                    }
+                    println!("Amplitude = {}", amplitude);
+
+                    println!("Enter the desired wavelength.");
+                    loop {
+                        s = String::new();
+                        std::io::stdin().read_line(&mut s).unwrap();
+                        s = s.trim().to_string();
+                        if s.to_lowercase().eq(&"abort".to_string()) {
+                            println!("Aborting.");
+                            return;
+                        };
+                        let value = s.parse::<u8>();
+                        let b = match value {
+                            Ok(val) => {
+                                wavelength = val;
+                                true
+                            },
+                            Err(_) => {
+                                println!("Invalid wavelength value {}.", s);
+                                false
+                            },
+                        };
+                        if b {
+                            break;
+                        };
+                    };
+                    println!("Wavelength = {}", wavelength);
+
+                    println!("Enter the desired directions of propagation for the wave.");
+                    println!("Valid directions are up, left, right, and down.");
+                    println!("Direction instructions should be formatted like: \"up right\".");
+                    s = String::new();
                     std::io::stdin().read_line(&mut s).unwrap();
-                    println!("You said {}", s);
+                    s = s.trim().to_string();
+                    if s.to_lowercase().eq(&"abort".to_string()) {
+                        println!("Aborting.");
+                        return;
+                    };
+                    let mut up = false;
+                    let mut down = false;
+                    let mut right = false;
+                    let mut left = false;
+                    let parts = s.split(" ").collect::<Vec<&str>>();
+                    parts.iter().for_each(|item: &&str|{
+                        match *item {
+                            "up" => up = true,
+                            "left" => left = true,
+                            "down" => down = true,
+                            "right" => right = true,
+                            _ => {},
+                        };
+                    });
+                    println!("Your wave will{}go up.", match up {
+                        true => " ",
+                        false => " not ",
+                    });
+                    println!("Your wave will{}go left.", match left {
+                        true => " ",
+                        false => " not ",
+                    });
+                    println!("Your wave will{}go right.", match right {
+                        true => " ",
+                        false => " not ",
+                    });
+                    println!("Your wave will{}go down.", match down {
+                        true => " ",
+                        false => " not ",
+                    });
                 }
                 _ => {}
             }
