@@ -8,6 +8,7 @@ use crate::wave::bundles::water::{WaterBundle, Wave};
 use crate::wave::bundles::window::WindowBundle;
 use crate::wave::constants::FPS;
 use crate::wave::keyboard::Keyboard;
+use cgmath::Vector3;
 use std::intrinsics::transmute;
 use std::time::{Duration, Instant};
 use winit::event::{Event, StartCause, WindowEvent};
@@ -30,6 +31,7 @@ pub struct WaveApp {
     pub ui_bundle: Option<UiBundle>,
     pub debug_bundle: Option<DebugBundle>,
     pub water: Option<WaterBundle>,
+    pub current_ray_pos: Vector3<f32>,
     pub waves: [Wave; 4],
     pub time: u64,
     pub mouse_pos: (f64, f64),
@@ -46,6 +48,11 @@ impl Application for WaveApp {
             ui_bundle: None,
             debug_bundle: None,
             water: None,
+            current_ray_pos: Vector3 {
+                x: 0.0,
+                y: 0.0,
+                z: 0.0,
+            },
             waves: [Wave::empty(); 4],
             time: 0,
             mouse_pos: (0.0, 0.0),

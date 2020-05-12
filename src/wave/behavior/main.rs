@@ -141,6 +141,7 @@ impl Behavior<WaveApp> for MainBehavior {
                     state,
                 );
                 if let Some(point) = point {
+                    state.current_ray_pos = point;
                     encoder.set_render_pipeline_state(debug.pipeline.clone());
                     encoder.set_vertex_buffer(debug.vertices.clone(), 0, 0);
                     encoder.set_vertex_buffer(matrices.projection.clone(), 0, 1);
@@ -231,9 +232,9 @@ impl Behavior<WaveApp> for MainBehavior {
                     );
                     let mut s;
 
-                    let mut amplitude: i8 = 0;
+                    let mut amplitude: f32 = 0.0;
                     let mut wavelength: u8 = 0;
-                    let mut directions: u8 = 0;
+                    let mut directions: u8;
 
                     println!("Enter the desired amplitude.");
                     loop {
@@ -244,10 +245,10 @@ impl Behavior<WaveApp> for MainBehavior {
                             println!("Aborting.");
                             return;
                         };
-                        let value = s.parse::<i8>();
+                        let value = s.parse::<f32>();
                         let b = match value {
                             Ok(val) => {
-                                if val < -50 || val > 50 {
+                                if val < -50.0 || val > 50.0 {
                                     println!(
                                         "Amplitude {} is invalid; -50 <= amplitude <= 50.",
                                         val
@@ -283,16 +284,16 @@ impl Behavior<WaveApp> for MainBehavior {
                             Ok(val) => {
                                 wavelength = val;
                                 true
-                            },
+                            }
                             Err(_) => {
                                 println!("Invalid wavelength value {}.", s);
                                 false
-                            },
+                            }
                         };
                         if b {
                             break;
                         };
-                    };
+                    }
                     println!("Wavelength = {}", wavelength);
 
                     println!("Enter the desired directions of propagation for the wave.");
@@ -310,31 +311,79 @@ impl Behavior<WaveApp> for MainBehavior {
                     let mut right = false;
                     let mut left = false;
                     let parts = s.split(" ").collect::<Vec<&str>>();
-                    parts.iter().for_each(|item: &&str|{
+                    parts.iter().for_each(|item: &&str| {
                         match *item {
                             "up" => up = true,
                             "left" => left = true,
                             "down" => down = true,
                             "right" => right = true,
-                            _ => {},
+                            _ => {}
                         };
                     });
-                    println!("Your wave will{}go up.", match up {
-                        true => " ",
-                        false => " not ",
-                    });
-                    println!("Your wave will{}go left.", match left {
-                        true => " ",
-                        false => " not ",
-                    });
-                    println!("Your wave will{}go right.", match right {
-                        true => " ",
-                        false => " not ",
-                    });
-                    println!("Your wave will{}go down.", match down {
-                        true => " ",
-                        false => " not ",
-                    });
+                    println!(
+                        "Your wave will{}go up.",
+                        match up {
+                            true => " ",
+                            false => " not ",
+                        }
+                    );
+                    println!(
+                        "Your wave will{}go left.",
+                        match left {
+                            true => " ",
+                            false => " not ",
+                        }
+                    );
+                    println!(
+                        "Your wave will{}go right.",
+                        match right {
+                            true => " ",
+                            false => " not ",
+                        }
+                    );
+                    println!(
+                        "Your wave will{}go down.",
+                        match down {
+                            true => " ",
+                            false => " not ",
+                        }
+                    );
+
+                    directions = match up {
+                        true => 1,
+                        false => 0,
+                    } | match down {
+                        true => 2,
+                        false => 0,
+                    } | match left {
+                        true => 4,
+                        false => 0,
+                    } | match right {
+                        true => 8,
+                        false => 0,
+                    };
+
+                    // TODO fix the bug with waves going in all directions not working
+                    // TODO also make the wave slot customizeable
+
+                    state.waves[0].wavelength = wavelength;
+                    state.waves[0].amplitude_factor = amplitude;
+                    state.waves[0].directions = directions;
+
+                    let normalized_ray_coords = (
+                        (state.current_ray_pos.x + 50.0) as u64,
+                        100 - (state.current_ray_pos.z + 50.0) as u64,
+                    );
+
+                    unsafe {
+                        println!("Here");
+                        state.water.as_ref().unwrap().texture.replace_region(
+                            (normalized_ray_coords.0, normalized_ray_coords.1, 1, 1),
+                            0,
+                            [1u16 << 8, 0, 0, 0].as_ptr() as *mut c_void, // use the zeroth, red wave on this tile
+                            VERTEX_COUNT as u64 * 8,
+                        );
+                    };
                 }
                 _ => {}
             }

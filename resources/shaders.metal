@@ -107,7 +107,7 @@ vertex WaterFragment water_vert(device WaterVertex *vertexArray [[ buffer(0) ]],
     }
 
     float amplitude = r + g + b + a;
-    float4 finalPosition = float4(pos.x, -1.0 + amplitude, pos.y, 1.0);
+    float4 finalPosition = float4(pos.x, amplitude, pos.y, 1.0);
 
     WaterFragment out;
     out.position = projection * view * finalPosition;
@@ -117,7 +117,7 @@ vertex WaterFragment water_vert(device WaterVertex *vertexArray [[ buffer(0) ]],
 
 fragment float4 water_frag(WaterFragment in [[ stage_in ]])
 {
-    return float4(in.realHeight, 0.7, 1.0, 1.0);
+    return float4(abs(in.realHeight), 0.7, 1.0, 1.0);
 };
 
 // max 4 waves at once (on a given pixel); 1 for R, G, B, and A channels,

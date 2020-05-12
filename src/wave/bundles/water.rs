@@ -143,12 +143,6 @@ impl WaterBundle {
                 as *mut c_void,
             VERTEX_COUNT as u64 * 8,
         );
-        texture.replace_region(
-            (1, 1, 1, 1),
-            0,
-            [1u16 << 8, 0, 0, 0].as_ptr() as *mut c_void, // use the zeroth, red wave on this tile
-            VERTEX_COUNT as u64 * 8,
-        );
 
         let crosshair = bundle.device.new_texture_with_descriptor({
             let desc = MTLTextureDescriptor::new();
