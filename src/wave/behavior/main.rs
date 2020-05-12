@@ -5,7 +5,7 @@ use crate::wave::constants::{CAMERA_SPEED, FILL_MODE, FREQ_OF_UPDATES, VERTEX_CO
 use crate::wave::raycaster::cast_ray;
 use crate::wave::util::generate_transformation;
 use crate::wave::WaveApp;
-use cgmath::Matrix4;
+use cgmath::{Matrix4, Vector3};
 use cull_canyon::{
     MTLCommandEncoder, MTLRenderPassAttachmentDescriptor, MTLRenderPassColorAttachmentDescriptor,
     MTLRenderPassDescriptor,
@@ -146,8 +146,11 @@ impl Behavior<WaveApp> for MainBehavior {
                     encoder.set_vertex_buffer(debug.vertices.clone(), 0, 0);
                     encoder.set_vertex_buffer(matrices.projection.clone(), 0, 1);
                     encoder.set_vertex_buffer(matrices.view.clone(), 0, 2);
-                    let transformation =
-                        generate_transformation(point, (0.0, 0.0, 0.0), (1.0, 1.0, 1.0));
+                    let transformation = generate_transformation(Vector3 {
+                        x: point.x,
+                        y: point.y + 1.0,
+                        z: point.z,
+                    }, (0.0, 0.0, 0.0), (1.0, 1.0, 1.0));
                     encoder.set_vertex_bytes(
                         std::mem::transmute::<Matrix4<f32>, [f32; 16]>(transformation).as_ptr()
                             as *const c_void,
@@ -234,7 +237,7 @@ impl Behavior<WaveApp> for MainBehavior {
 
                     let mut amplitude: f32 = 0.0;
                     let mut wavelength: u8 = 0;
-                    let mut directions: u8;
+                    let directions: u8;
 
                     println!("Enter the desired amplitude.");
                     loop {
