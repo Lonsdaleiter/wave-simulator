@@ -50,11 +50,11 @@ fn search(
             ray,
             (index * MAX_RAYCAST_DISTANCE) as f32 / RAYCAST_RES as f32,
         );
-        let norm = ((point.x + 50.0) as u64, (point.z + 50.0) as u64);
+        if (point.x < -50.0 || point.x >= 50.0) || (point.z < -50.0 || point.z > 50.0) {
+            return;
+        }
+        let norm = ((point.x + 50.0) as u64, 100 - (point.z + 50.0) as u64);
         let height = unsafe {
-            if (point.x < -50.0 || point.x >= 50.0) || (point.z < -50.0 || point.z > 50.0) {
-                return;
-            }
             let mut b = [0u16; 4];
             water.get_bytes(
                 b.as_mut_ptr() as *mut c_void,
@@ -80,9 +80,6 @@ fn search(
             })
             .collect();
         let height = heights[0] + heights[1] + heights[2] + heights[3];
-        if height != 0.0 {
-            println!("Height {} with delta {}", height, point.y - height);
-        }
 
         if (point.y - height as f32).abs() <= RAYCAST_CLOSENESS_REQ {
             the_point = Some(point);
