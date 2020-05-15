@@ -234,6 +234,10 @@ impl Behavior<WaveApp> for MainBehavior {
                 VirtualKeyCode::G => {
                     println!("Let's build a wave!");
                     println!(
+                        "This wave will NOT be placed on the scene.\
+                        We will JUST be filling the wave slot."
+                    );
+                    println!(
                         "To abort wave production, just give \"abort\" as an input at any \
                         time, and we'll abort."
                     );
@@ -384,10 +388,7 @@ impl Behavior<WaveApp> for MainBehavior {
                         let b = match value {
                             Ok(val) => {
                                 if val > 3 {
-                                    println!(
-                                        "Invalid wave id {}; 0 <= id <= 3",
-                                        val
-                                    );
+                                    println!("Invalid wave id {}; 0 <= id <= 3", val);
                                     false
                                 } else {
                                     wave_id = val;
@@ -412,6 +413,50 @@ impl Behavior<WaveApp> for MainBehavior {
                     state.waves[wave_id].amplitude_factor = amplitude;
                     state.waves[wave_id].directions = directions;
 
+                    println!("Done!");
+                },
+                VirtualKeyCode::N => {
+                    println!("Alright, let's place a wave!");
+                    println!("We will place a wave on the tile you are currently pointing at.");
+                    println!(
+                        "To abort wave placement, just give \"abort\" as an input at any \
+                        time, and we'll abort."
+                    );
+                    let mut s;
+                    let mut wave_id = 0;
+                    loop {
+                        println!("Pick a wave slot.");
+                        println!("If a wave slot picked is empty, the wave will not be placed.");
+                        s = String::new();
+                        std::io::stdin().read_line(&mut s).unwrap();
+                        s = s.trim().to_string();
+                        if s.to_lowercase().eq(&"abort".to_string()) {
+                            println!("Aborting.");
+                            return;
+                        };
+                        let value = s.parse::<usize>();
+                        let b = match value {
+                            Ok(val) => {
+                                if val > 3 {
+                                    println!("Invalid wave id {}; 0 <= id <= 3", val);
+                                    false
+                                } else {
+                                    wave_id = val;
+                                    true
+                                }
+                            }
+                            Err(_) => {
+                                println!("Invalid wave id {}.", s);
+                                false
+                            }
+                        };
+                        if b {
+                            break;
+                        };
+                    }
+
+                    println!("Wave id {}", wave_id);
+
                     let normalized_ray_coords = (
                         (state.current_ray_pos.x + 50.0) as u64,
                         100 - (state.current_ray_pos.z + 50.0) as u64,
@@ -427,7 +472,9 @@ impl Behavior<WaveApp> for MainBehavior {
                             VERTEX_COUNT as u64 * 8,
                         );
                     };
-                }
+
+                    println!("Done!");
+                },
                 _ => {}
             }
         }
