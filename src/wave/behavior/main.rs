@@ -146,11 +146,15 @@ impl Behavior<WaveApp> for MainBehavior {
                     encoder.set_vertex_buffer(debug.vertices.clone(), 0, 0);
                     encoder.set_vertex_buffer(matrices.projection.clone(), 0, 1);
                     encoder.set_vertex_buffer(matrices.view.clone(), 0, 2);
-                    let transformation = generate_transformation(Vector3 {
-                        x: point.x,
-                        y: point.y + 1.0,
-                        z: point.z,
-                    }, (0.0, 0.0, 0.0), (1.0, 1.0, 1.0));
+                    let transformation = generate_transformation(
+                        Vector3 {
+                            x: point.x,
+                            y: point.y + 1.0,
+                            z: point.z,
+                        },
+                        (0.0, 0.0, 0.0),
+                        (1.0, 1.0, 1.0),
+                    );
                     encoder.set_vertex_bytes(
                         std::mem::transmute::<Matrix4<f32>, [f32; 16]>(transformation).as_ptr()
                             as *const c_void,
@@ -366,23 +370,60 @@ impl Behavior<WaveApp> for MainBehavior {
                         false => 0,
                     };
 
-                    // TODO fix the bug with waves going in all directions not working
-                    // TODO also make the wave slot customizeable
+                    println!("Enter the desired wave slot.");
+                    let mut wave_id = 0;
+                    loop {
+                        s = String::new();
+                        std::io::stdin().read_line(&mut s).unwrap();
+                        s = s.trim().to_string();
+                        if s.to_lowercase().eq(&"abort".to_string()) {
+                            println!("Aborting.");
+                            return;
+                        };
+                        let value = s.parse::<usize>();
+                        let b = match value {
+                            Ok(val) => {
+                                if val > 3 {
+                                    println!(
+                                        "Invalid wave id {}; 0 <= id <= 3",
+                                        val
+                                    );
+                                    false
+                                } else {
+                                    wave_id = val;
+                                    true
+                                }
+                            }
+                            Err(_) => {
+                                println!("Invalid wave id {}.", s);
+                                false
+                            }
+                        };
+                        if b {
+                            break;
+                        };
+                    }
 
-                    state.waves[0].wavelength = wavelength;
-                    state.waves[0].amplitude_factor = amplitude;
-                    state.waves[0].directions = directions;
+                    println!("Wave id {}", wave_id);
+
+                    // TODO fix the bug with waves going in all directions not working
+
+                    state.waves[wave_id].wavelength = wavelength;
+                    state.waves[wave_id].amplitude_factor = amplitude;
+                    state.waves[wave_id].directions = directions;
 
                     let normalized_ray_coords = (
                         (state.current_ray_pos.x + 50.0) as u64,
                         100 - (state.current_ray_pos.z + 50.0) as u64,
                     );
 
+                    let mut k = [0, 0, 0, 0];
+                    k[wave_id] = 1u16 << 8;
                     unsafe {
                         state.water.as_ref().unwrap().texture.replace_region(
                             (normalized_ray_coords.0, normalized_ray_coords.1, 1, 1),
                             0,
-                            [1u16 << 8, 0, 0, 0].as_ptr() as *mut c_void, // use the zeroth, red wave on this tile
+                            k.as_ptr() as *mut c_void, // use the zeroth, red wave on this tile
                             VERTEX_COUNT as u64 * 8,
                         );
                     };
