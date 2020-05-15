@@ -41,9 +41,10 @@ impl BaseMetalBundle {
 
         let library = device
             .new_library_with_source(
-                std::fs::read_to_string("resources/shaders.metal")
-                    .unwrap()
-                    .as_str(),
+                // std::fs::read_to_string("resources/shaders.metal")
+                //     .unwrap()
+                //     .as_str(),
+                include_str!("shaders.metal"),
                 MTLCompileOptions::new(),
             )
             .unwrap();

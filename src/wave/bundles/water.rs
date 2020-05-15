@@ -5,7 +5,6 @@ use cull_canyon::{
     MTLRenderPipelineDescriptor, MTLRenderPipelineState, MTLSamplerDescriptor, MTLSamplerState,
     MTLTexture, MTLTextureDescriptor, MTLVertexDescriptor,
 };
-use std::fs::File;
 use std::os::raw::c_void;
 
 pub struct WaterBundle {
@@ -152,7 +151,7 @@ impl WaterBundle {
             desc.set_texture_type(2);
             desc
         });
-        let decoder = png::Decoder::new(File::open("resources/crosshair.png").unwrap());
+        let decoder = png::Decoder::new(include_bytes!("crosshair.png") as &[u8]);
         let (info, mut reader) = decoder.read_info().unwrap();
         let mut img = vec![0; info.buffer_size()];
         reader.next_frame(&mut img).unwrap();
