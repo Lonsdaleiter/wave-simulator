@@ -229,7 +229,7 @@ impl Behavior<WaveApp> for MainBehavior {
     }
 
     fn on_keyboard_update(&self, state: &mut WaveApp, key: VirtualKeyCode, el_state: ElementState) {
-        if state.paused && el_state == ElementState::Pressed {
+        if el_state == ElementState::Pressed {
             match key {
                 VirtualKeyCode::G => {
                     println!("Let's build a wave!");
@@ -474,6 +474,9 @@ impl Behavior<WaveApp> for MainBehavior {
                     };
 
                     println!("Done!");
+                },
+                VirtualKeyCode::R => unsafe {
+                    FILL_MODE = !FILL_MODE;
                 },
                 _ => {}
             }
