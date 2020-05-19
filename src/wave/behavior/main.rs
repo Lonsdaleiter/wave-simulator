@@ -310,6 +310,12 @@ impl Behavior<WaveApp> for MainBehavior {
                     println!("Enter the desired directions of propagation for the wave.");
                     println!("Valid directions are up, left, right, and down.");
                     println!("Direction instructions should be formatted like: \"up right\".");
+                    println!(
+                        "Warning: if you input two opposed directions (ie. left and right) \
+                         for the same wave, some very not-wavelike chaos ensues. If \
+                         you want a wave to propagate in all directions, I recommend \
+                         making several waves to achieve that effect."
+                    );
                     s = String::new();
                     std::io::stdin().read_line(&mut s).unwrap();
                     s = s.trim().to_string();
@@ -414,7 +420,7 @@ impl Behavior<WaveApp> for MainBehavior {
                     state.waves[wave_id].directions = directions;
 
                     println!("Done!");
-                },
+                }
                 VirtualKeyCode::N => {
                     println!("Alright, let's place a wave!");
                     println!("We will place a wave on the tile you are currently pointing at.");
@@ -459,7 +465,8 @@ impl Behavior<WaveApp> for MainBehavior {
 
                     let normalized_ray_coords = (
                         (state.current_ray_pos.x + (VERTEX_COUNT / 2) as f32) as u64,
-                        VERTEX_COUNT as u64 - (state.current_ray_pos.z + VERTEX_COUNT as f32 / 2.0) as u64,
+                        VERTEX_COUNT as u64
+                            - (state.current_ray_pos.z + VERTEX_COUNT as f32 / 2.0) as u64,
                     );
 
                     let mut k = [0, 0, 0, 0];
@@ -474,7 +481,7 @@ impl Behavior<WaveApp> for MainBehavior {
                     };
 
                     println!("Done!");
-                },
+                }
                 VirtualKeyCode::R => unsafe {
                     FILL_MODE = !FILL_MODE;
                 },
