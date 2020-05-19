@@ -35,15 +35,10 @@ pub struct Wave {
 
 impl Wave {
     pub fn empty() -> Wave {
-        // Wave {
-        //     directions: 0,
-        //     amplitude_factor: 0.0,
-        // }
         Wave {
-            // TODO use the prior declaration after testing
-            directions: 2 | 4,
-            wavelength: 20,
-            amplitude_factor: 10.0,
+            directions: 0,
+            wavelength: 0,
+            amplitude_factor: 0.0,
         }
     }
 }

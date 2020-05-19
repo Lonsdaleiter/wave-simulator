@@ -458,8 +458,8 @@ impl Behavior<WaveApp> for MainBehavior {
                     println!("Wave id {}", wave_id);
 
                     let normalized_ray_coords = (
-                        (state.current_ray_pos.x + 50.0) as u64,
-                        100 - (state.current_ray_pos.z + 50.0) as u64,
+                        (state.current_ray_pos.x + (VERTEX_COUNT / 2) as f32) as u64,
+                        VERTEX_COUNT as u64 - (state.current_ray_pos.z + VERTEX_COUNT as f32 / 2.0) as u64,
                     );
 
                     let mut k = [0, 0, 0, 0];
