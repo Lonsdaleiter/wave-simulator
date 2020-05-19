@@ -65,7 +65,7 @@ struct WaterVertex {
 
 struct WaterFragment {
     float4 position [[ position ]];
-    float realHeight;
+    float2 textureCoords;
 };
 
 struct Wave {
@@ -111,13 +111,15 @@ vertex WaterFragment water_vert(device WaterVertex *vertexArray [[ buffer(0) ]],
 
     WaterFragment out;
     out.position = projection * view * finalPosition;
-    out.realHeight = finalPosition.y;
+    out.textureCoords = ((finalPosition.xz / 100.0) + 1.0) / 2.0;
     return out;
 };
 
-fragment float4 water_frag(WaterFragment in [[ stage_in ]])
+fragment float4 water_frag(WaterFragment in [[ stage_in ]],
+                           texture2d<float, access::sample> waterTexture [[ texture(0) ]],
+                           sampler sam [[ sampler(0) ]])
 {
-    return float4(abs(in.realHeight), 0.7, 1.0, 1.0);
+    return waterTexture.sample(sam, in.textureCoords);
 };
 
 // max 4 waves at once (on a given pixel); 1 for R, G, B, and A channels,

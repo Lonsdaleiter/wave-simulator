@@ -13,6 +13,7 @@ pub struct WaterBundle {
     pub water_buffer: MTLBuffer,
     pub water_indices: MTLBuffer,
     pub indices_count: usize,
+    pub water_surface: MTLTexture,
     pub texture: MTLTexture,
     pub crosshair: MTLTexture,
     pub sampler: MTLSamplerState,
@@ -152,6 +153,20 @@ impl WaterBundle {
         reader.next_frame(&mut img).unwrap();
         crosshair.replace_region((0, 0, 5, 5), 0, img.as_ptr() as *mut c_void, 20);
 
+        let surface = bundle.device.new_texture_with_descriptor({
+            let desc = MTLTextureDescriptor::new();
+            desc.set_width(384);
+            desc.set_height(384);
+            desc.set_pixel_format(70);
+            desc.set_texture_type(2);
+            desc
+        });
+        let decoder = png::Decoder::new(include_bytes!("thatiswater.png") as &[u8]);
+        let (info, mut reader) = decoder.read_info().unwrap();
+        let mut img = vec![0; info.buffer_size()];
+        reader.next_frame(&mut img).unwrap();
+        surface.replace_region((0, 0, 384, 384), 0, img.as_ptr() as *mut c_void, 3 * 512);
+
         WaterBundle {
             render_pipeline,
             compute_pipeline,
@@ -166,6 +181,7 @@ impl WaterBundle {
                 0,
             ),
             indices_count: INDICES_COUNT,
+            water_surface: surface,
             texture,
             crosshair,
             sampler: bundle

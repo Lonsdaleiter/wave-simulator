@@ -10,7 +10,7 @@ pub const NEAR_PLANE: f32 = 0.1;
 pub const CAMERA_SPEED: f32 = 0.1;
 pub const VERTEX_COUNT: u32 = 100;
 
-pub static mut FILL_MODE: u64 = 1; // 0 = triangles, 1 = lines
+pub static mut FILL_MODE: u64 = 0; // 0 = triangles, 1 = lines
 
 pub const FREQ_OF_UPDATES: u64 = 5; // the lower the more frequent
 pub const MAX_RAYCAST_DISTANCE: u64 = 100;

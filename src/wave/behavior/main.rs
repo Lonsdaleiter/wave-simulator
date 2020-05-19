@@ -122,6 +122,8 @@ impl Behavior<WaveApp> for MainBehavior {
                 encoder.set_triangle_fill_mode(FILL_MODE);
                 encoder.set_depth_stencil_state(bundle.basic_depth.clone());
                 encoder.set_vertex_texture(water.texture.clone(), 0);
+                encoder.set_fragment_texture(water.water_surface.clone(), 0);
+                encoder.set_fragment_sampler_state(water.sampler.clone(), 0);
 
                 encoder.draw_indexed_primitives(
                     3,
