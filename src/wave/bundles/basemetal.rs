@@ -45,7 +45,11 @@ impl BaseMetalBundle {
                 //     .unwrap()
                 //     .as_str(),
                 include_str!("shaders.metal"),
-                MTLCompileOptions::new(),
+                {
+                    let k = MTLCompileOptions::new();
+                    k.set_language_version(2 << 16);
+                    k
+                },
             )
             .unwrap();
 
