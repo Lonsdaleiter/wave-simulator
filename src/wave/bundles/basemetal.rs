@@ -1,10 +1,9 @@
 use crate::wave::bundles::window::WindowBundle;
 use crate::wave::constants::VSYNC;
-use cull_canyon::{
-    set_layer_for_raw_window_handle, CAMetalLayer, MTLCommandQueue, MTLCompileOptions,
-    MTLDepthStencilDescriptor, MTLDepthStencilState, MTLDevice, MTLLibrary, MTLTexture,
-    MTLTextureDescriptor,
-};
+use cull_canyon::{set_layer_for_raw_window_handle, CAMetalLayer, MTLCommandQueue, MTLCompileOptions, MTLDepthStencilDescriptor, MTLDepthStencilState, MTLDevice, MTLLibrary, MTLTexture, MTLTextureDescriptor};
+use objc::runtime::Object;
+use objc::{msg_send, class, sel, sel_impl};
+use std::os::raw::c_void;
 
 pub struct BaseMetalBundle {
     pub device: MTLDevice,
@@ -13,6 +12,19 @@ pub struct BaseMetalBundle {
     pub library: MTLLibrary,
     pub basic_depth: MTLDepthStencilState,
     pub depth_texture: MTLTexture,
+}
+
+unsafe fn string_to_nsstring(src: &str) -> *mut Object {
+    let cls = class!(NSString);
+    let bytes = src.as_ptr() as *const c_void;
+    let obj: *mut objc::runtime::Object = msg_send![cls, alloc];
+    let obj: *mut objc::runtime::Object = msg_send![
+       obj,
+       initWithBytes:bytes
+       length:src.len()
+       encoding:4
+    ];
+    obj
 }
 
 impl BaseMetalBundle {
@@ -39,19 +51,27 @@ impl BaseMetalBundle {
         surface.set_presents_with_transaction(false);
         set_layer_for_raw_window_handle(surface.clone(), &window_bundle.window);
 
-        let library = device
-            .new_library_with_source(
-                // std::fs::read_to_string("resources/shaders.metal")
-                //     .unwrap()
-                //     .as_str(),
-                include_str!("shaders.metal"),
-                {
-                    let k = MTLCompileOptions::new();
-                    k.set_language_version(2 << 16);
-                    k
-                },
-            )
-            .unwrap();
+        let options = MTLCompileOptions::new();
+        options.set_language_version(2 << 16);
+        let mut err: *mut Object = std::ptr::null_mut();
+        let source = string_to_nsstring(include_str!("shaders.metal"));
+        let lib: *mut Object =
+            msg_send![device.0, newLibraryWithSource:source options:options.0 error:&mut err];
+        let library = MTLLibrary(lib);
+
+        // let library = device
+        //     .new_library_with_source(
+        //         // std::fs::read_to_string("resources/shaders.metal")
+        //         //     .unwrap()
+        //         //     .as_str(),
+        //         include_str!("shaders.metal"),
+        //         {
+        //             let k = MTLCompileOptions::new();
+        //             k.set_language_version(2 << 16);
+        //             k
+        //         },
+        //     )
+        //     .unwrap();
 
         let depth_stencil = device.new_depth_stencil_state({
             let desc = MTLDepthStencilDescriptor::new();
