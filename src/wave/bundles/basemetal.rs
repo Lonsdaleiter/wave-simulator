@@ -4,6 +4,7 @@ use cull_canyon::{set_layer_for_raw_window_handle, CAMetalLayer, MTLCommandQueue
 use objc::runtime::Object;
 use objc::{msg_send, class, sel, sel_impl};
 use std::os::raw::c_void;
+use std::ptr::null_mut;
 
 pub struct BaseMetalBundle {
     pub device: MTLDevice,
@@ -57,6 +58,9 @@ impl BaseMetalBundle {
         let source = string_to_nsstring(include_str!("shaders.metal"));
         let lib: *mut Object =
             msg_send![device.0, newLibraryWithSource:source options:options.0 error:&mut err];
+        if lib == null_mut() {
+            panic!("The library is null!");
+        };
         let library = MTLLibrary(lib);
 
         // let library = device
