@@ -9,7 +9,6 @@ use crate::wave::bundles::window::WindowBundle;
 use crate::wave::constants::FPS;
 use crate::wave::keyboard::Keyboard;
 use cgmath::Vector3;
-use std::intrinsics::transmute;
 use std::time::{Duration, Instant};
 use winit::event::{Event, StartCause, WindowEvent};
 use winit::event_loop::{ControlFlow, EventLoop};
@@ -109,9 +108,7 @@ impl Application for WaveApp {
                         is_synthetic: _,
                     } => {
                         self.keyboard
-                            .set_key(input.virtual_keycode.unwrap(), !unsafe {
-                                transmute(input.state)
-                            });
+                            .set_key(input.virtual_keycode.unwrap(), input.state as u32 == 0);
 
                         current_behavior.on_keyboard_update(
                             &mut self,

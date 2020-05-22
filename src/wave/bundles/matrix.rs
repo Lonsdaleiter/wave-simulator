@@ -1,7 +1,7 @@
 use crate::wave::bundles::basemetal::BaseMetalBundle;
 use crate::wave::camera::Camera;
 use crate::wave::constants::new_projection_matrix;
-use cgmath::Matrix4;
+use cgmath::{Matrix4, Matrix};
 use cull_canyon::MTLBuffer;
 use std::os::raw::c_void;
 
@@ -23,8 +23,7 @@ impl MatrixBundle {
         ];
         MatrixBundle {
             projection: bundle.device.new_buffer_with_bytes(
-                std::mem::transmute::<cgmath::Matrix4<f32>, [f32; 16]>(projection).as_ptr()
-                    as *const c_void,
+                projection.as_ptr() as *const c_void,
                 64,
                 0,
             ),
