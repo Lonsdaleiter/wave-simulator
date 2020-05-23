@@ -477,7 +477,7 @@ impl Behavior<WaveApp> for MainBehavior {
                         state.water.as_ref().unwrap().texture.replace_region(
                             (normalized_ray_coords.0, normalized_ray_coords.1, 1, 1),
                             0,
-                            k.as_ptr() as *mut c_void, // use the zeroth, red wave on this tile
+                            k.as_ptr() as *mut c_void,
                             VERTEX_COUNT as u64 * 8,
                         );
                     };
