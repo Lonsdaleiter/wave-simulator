@@ -53,7 +53,6 @@ impl BaseMetalBundle {
         set_layer_for_raw_window_handle(surface.clone(), &window_bundle.window);
 
         let options = MTLCompileOptions::new();
-        options.set_language_version(2 << 16);
         let mut err: *mut Object = std::ptr::null_mut();
         let source = string_to_nsstring(include_str!("shaders.metal"));
         let lib: *mut Object =
