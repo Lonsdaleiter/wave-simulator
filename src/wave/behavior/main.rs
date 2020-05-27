@@ -158,8 +158,7 @@ impl Behavior<WaveApp> for MainBehavior {
                         (1.0, 1.0, 1.0),
                     );
                     encoder.set_vertex_bytes(
-                        std::mem::transmute::<Matrix4<f32>, [f32; 16]>(transformation).as_ptr()
-                            as *const c_void,
+                        &transformation as *const Matrix4<f32> as *const c_void,
                         64,
                         3,
                     );
